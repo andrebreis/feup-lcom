@@ -25,7 +25,7 @@ void vt_fill(char ch, char attr) {
 }
 
 void vt_blank() {
-
+	vt_fill(00, 00);
 }
 
 int vt_print_char(char ch, char attr, int r, int c) {
