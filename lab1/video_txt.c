@@ -45,8 +45,16 @@ int vt_print_char(char ch, char attr, int r, int c) {
 }
 
 int vt_print_string(char *str, char attr, int r, int c) {
-
-	/* To complete ... */
+	if(r*lineSize+c*elementSize+(strlen(str)-1)*elementSize < scr_lines*scr_width*elementSize){
+		int i;
+		for(i = 0; i<strlen(str)*elementSize; i+=elementSize){
+			video_mem[r*lineSize+c*elementSize+i] = str[i/2];
+			video_mem[r*lineSize+c*elementSize+i+1]=attr;
+		}
+		return 0;
+	}
+	else
+		return -1;
 
 }
 
