@@ -15,9 +15,13 @@ static char *video_mem;		/* Address to which VRAM is mapped */
 static unsigned scr_width;	/* Width of screen in columns */
 static unsigned scr_lines;	/* Height of screen in lines */
 
+/* Custom Variables */
+
+int elementSize, lineSize;
+
 void vt_fill(char ch, char attr) {
 	int i;
-	for(i = 0; i < scr_lines*scr_width*2 ; i+=2){
+	for(i = 0; i < scr_lines*scr_width*elementSize ; i+=elementSize){
 		video_mem[i] = ch;
 		video_mem[i+1] = attr;
 	}
@@ -30,7 +34,13 @@ void vt_blank() {
 
 int vt_print_char(char ch, char attr, int r, int c) {
 
-	/* To complete ... */
+	if(r > scr_lines-1 || c > scr_width-1 || r < 0 || c < 0)
+		return -1;
+	else{
+		video_mem[r*lineSize+c*elementSize]=ch;
+		video_mem[r*lineSize+c*elementSize+1]=attr;
+		return 0;
+	}
 
 }
 
@@ -81,6 +91,11 @@ char *vt_init(vt_info_t *vi_p) {
 
 	scr_lines = vi_p->scr_lines;
 	scr_width = vi_p->scr_width;
+
+	/* Custom Variables */
+
+	elementSize = 2;
+	lineSize = scr_width*elementSize;
 
 	return video_mem;
 }
