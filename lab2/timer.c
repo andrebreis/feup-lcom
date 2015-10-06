@@ -2,8 +2,41 @@
 #include <minix/drivers.h>
 
 int timer_set_square(unsigned long timer, unsigned long freq) {
+	if(timer > 2 || timer < 0)
+		return -1;
 
-	return 1;
+	int div = TIMER_FREQ/freq;
+	char lsb = (char) div;
+	char msb = (char) div>>8;
+	char timerInfo;
+
+	if(timer == 0)
+		timerInfo = TIMER_SEL0;
+	else
+		timerInfo = BIT(timer+5);
+
+	char setDiv = timerInfo | TIMER_LSB_MSB | TIMER_SQR_WAVE | TIMER_BIN;
+	int returnValue = sys_outb(TIMER_CTRL, setDiv);
+	if(returnValue != 0){
+		printf("Error in sys_outb");
+		return returnValue;
+	}
+
+	returnValue = sys_outb(TIMER_0+timer, lsb);
+
+	if(returnValue != 0){
+			printf("Error in sys_outb");
+			return returnValue;
+		}
+
+	returnValue = sys_outb(TIMER_0+timer, msb);
+
+	if(returnValue != 0){
+			printf("Error in sys_outb");
+			return returnValue;
+		}
+
+	return 0;
 }
 
 int timer_subscribe_int(void ) {
@@ -105,8 +138,7 @@ int timer_display_conf(unsigned char conf) {
 }
 
 int timer_test_square(unsigned long freq) {
-	//TODO lab2
-	return 1;
+	return timer_set_square(0, freq);
 }
 
 int timer_test_int(unsigned long time) {
