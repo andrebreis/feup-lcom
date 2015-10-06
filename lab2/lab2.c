@@ -1,5 +1,6 @@
 #include <minix/drivers.h>
 #include <minix/syslib.h>
+#include "timer.h"
 
 int main(int argc, char **argv) {
 

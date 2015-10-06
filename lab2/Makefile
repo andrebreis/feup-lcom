@@ -5,12 +5,12 @@ COMPILER_TYPE= gnu
 CC=gcc
 
 PROG=	lab2
-SRCS=	lab2.c timer.c 
+SRCS=	lab2.c timer.c
 
 CCFLAGS= -Wall
 
 DPADD+=	${LIBDRIVER} ${LIBSYS}
-LDADD+=	-lvt -ldriver -lsys
+LDADD+= -ldriver -lsys
 
 LDFLAGS+= -L .
 

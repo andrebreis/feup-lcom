@@ -1,5 +1,7 @@
 #include <minix/syslib.h>
 #include <minix/drivers.h>
+#include "timer.h"
+#include "i8254.h"
 
 int timer_set_square(unsigned long timer, unsigned long freq) {
 	if(timer > 2 || timer < 0)
@@ -15,7 +17,7 @@ int timer_set_square(unsigned long timer, unsigned long freq) {
 	else
 		timerInfo = BIT(timer+5);
 
-	char setDiv = timerInfo | TIMER_LSB_MSB | TIMER_SQR_WAVE | TIMER_BIN;
+	char setDiv = timerInfo | TIMER_LSB_MSB | TIMER_SQR_WAVE;
 	int returnValue = sys_outb(TIMER_CTRL, setDiv);
 	if(returnValue != 0){
 		printf("Error in sys_outb");
@@ -64,11 +66,13 @@ int timer_get_conf(unsigned long timer, unsigned char *st) {
 		printf("Error in sys_outb");
 		return returnValue;
 	}
-	returnValue = sys_inb(TIMER_0+timer, st);
+	unsigned long stLong;
+	returnValue = sys_inb(TIMER_0+timer, &stLong);
 	if(returnValue != 0){
 		printf("Error in sys_inb");
 		return returnValue;
 	}
+	*st = stLong;
 	return 0;
 }
 
@@ -92,7 +96,7 @@ int timer_display_conf(unsigned char conf) {
 		printf("True\n");
 	else
 		printf("False\n");
-	printf("Type of Access: ")
+	printf("Type of Access: ");
 	switch(accessType){
 		case 1:
 			printf("LSB\n");
@@ -153,8 +157,8 @@ int timer_test_int(unsigned long time) {
 }
 
 int timer_test_config(unsigned long timer) {
-	char *st;
-	int returnValue = timer_get_conf(timer, st);
+	unsigned char st;
+	int returnValue = timer_get_conf(timer, &st);
 	if(returnValue != 0){
 		printf("Error in timer_get_conf");
 		return returnValue;
