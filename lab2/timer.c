@@ -154,7 +154,7 @@ int timer_test_int(unsigned long time) {
 
 int timer_test_config(unsigned long timer) {
 	char *st;
-	int returnValue = timer_get_conf(0, st);
+	int returnValue = timer_get_conf(timer, st);
 	if(returnValue != 0){
 		printf("Error in timer_get_conf");
 		return returnValue;
