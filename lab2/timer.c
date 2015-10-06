@@ -73,19 +73,25 @@ int timer_get_conf(unsigned long timer, unsigned char *st) {
 }
 
 int timer_display_conf(unsigned char conf) {
-	int counterNumber = conf>>6 & (BIT(1)|BIT(0)); //000000BIT(7)BIT(6)
+	int output = conf>>7 & BIT(0); //0000000BIT(7)
+	int nullCount = conf>>6 & BIT(0); //0000000BIT(6)
 	int accessType = conf>>4 & (BIT(1)|BIT(0)); //000000BIT(5)BIT(4)
 	int operatingMode = conf>>1 & (BIT(2)|BIT(1)|BIT(0)); //00000BIT(3)BIT(2)BIT(1)
 	int countingMode = conf & BIT(0);
-	if(counterNumber == 3){
-		printf("Error in Counter bits");
-		return -1;
-	}
 	if(accessType == 0){
 		printf("Error in Type of Access bits");
-		return -2;
+		return -1;
 	}
-	printf("Counter number: %d\n", counterNumber);
+	printf("Output: ");
+	if(output)
+		printf("True\n");
+	else
+		printf("False\n");
+	printf("Null Count: ");
+	if(nullCount)
+		printf("True\n");
+	else
+		printf("False\n");
 	printf("Type of Access: ")
 	switch(accessType){
 		case 1:
@@ -147,6 +153,16 @@ int timer_test_int(unsigned long time) {
 }
 
 int timer_test_config(unsigned long timer) {
-	//TODO lab2
-	return 1;
+	char *st;
+	int returnValue = timer_get_conf(0, st);
+	if(returnValue != 0){
+		printf("Error in timer_get_conf");
+		return returnValue;
+	}
+	returnValue = timer_display_conf(st);
+	if(returnValue != 0){
+		printf("Error in timer_display_conf");
+		return returnValue;
+	}
+	return 0;
 }
