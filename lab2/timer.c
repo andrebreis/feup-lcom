@@ -3,10 +3,8 @@
 #include "timer.h"
 #include "i8254.h"
 
+int id = 7;
 unsigned long counter = 0;
-
-
-int
 
 int timer_set_square(unsigned long timer, unsigned long freq) {
 	if (timer > 2 || timer < 0)
@@ -49,14 +47,19 @@ int timer_set_square(unsigned long timer, unsigned long freq) {
 }
 
 int timer_subscribe_int(void) {
-
-	return 1;
-
+	int hookId = id;
+	if(sys_irqsetpolicy(TIMER0_IRQ, IRQ_REENABLE, &hookId) == OK)
+		if(sys_irqenable(&hook_id) == OK)
+			return BIT(id);
+	return -1;
 }
 
 int timer_unsubscribe_int() {
-
-	return 1;
+	int hookId = id;
+	if(sys_irqrmpolicy(TIMER0_IRQ, IRQ_REENABLE, &hookId) == OK)
+			if(sys_irqdisable(&hook_id) == OK)
+				return 0;
+		return 1;
 }
 
 void timer_int_handler() {
