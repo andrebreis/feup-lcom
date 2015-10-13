@@ -8,7 +8,7 @@ int main(int argc, char **argv) {
 
   sef_startup();
 
-  timer_test_int(15);
+  timer_test_square(120);
   return 0;
 
 }
