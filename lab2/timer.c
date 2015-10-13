@@ -3,6 +3,11 @@
 #include "timer.h"
 #include "i8254.h"
 
+unsigned long counter = 0;
+
+
+int
+
 int timer_set_square(unsigned long timer, unsigned long freq) {
 	if (timer > 2 || timer < 0)
 		return -1;
@@ -13,14 +18,13 @@ int timer_set_square(unsigned long timer, unsigned long freq) {
 	char timerInfo;
 	unsigned char st;
 	timer_get_conf(timer, &st);
-	st = st >> 4;
 
 	if (timer == 0)
 		timerInfo = TIMER_SEL0;
 	else
 		timerInfo = BIT(timer + 5);
-
-	char setDiv = timerInfo | TIMER_LSB_MSB | TIMER_SQR_WAVE | ((BIT(3)|BIT(2)|BIT(1)|BIT(0)) & st);
+	//WITH TIME, CHECK IF SQR
+	char setDiv = timerInfo | TIMER_LSB_MSB | ((BIT(3)|BIT(2)|BIT(1)|BIT(0)) & st);
 	int returnValue = sys_outb(TIMER_CTRL, setDiv);
 	if (returnValue != 0) {
 		printf("Error in sys_outb");
@@ -45,7 +49,9 @@ int timer_set_square(unsigned long timer, unsigned long freq) {
 }
 
 int timer_subscribe_int(void) {
+
 	return 1;
+
 }
 
 int timer_unsubscribe_int() {
@@ -54,7 +60,7 @@ int timer_unsubscribe_int() {
 }
 
 void timer_int_handler() {
-
+	counter++;
 }
 
 int timer_get_conf(unsigned long timer, unsigned char *st) {
