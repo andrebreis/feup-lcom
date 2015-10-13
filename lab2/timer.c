@@ -1,9 +1,10 @@
 #include <minix/syslib.h>
 #include <minix/drivers.h>
+#include <minix/com.h>
 #include "timer.h"
 #include "i8254.h"
 
-int id = 7;
+static int hook = TIMER0_IRQ;
 unsigned long counter = 0;
 
 int timer_set_square(unsigned long timer, unsigned long freq) {
@@ -47,19 +48,18 @@ int timer_set_square(unsigned long timer, unsigned long freq) {
 }
 
 int timer_subscribe_int(void) {
-	int hookId = id;
-	if(sys_irqsetpolicy(TIMER0_IRQ, IRQ_REENABLE, &hookId) == OK)
-		if(sys_irqenable(&hook_id) == OK)
-			return BIT(id);
+	int bitmask = BIT(hook);
+	if(sys_irqsetpolicy(TIMER0_IRQ, IRQ_REENABLE, &hook) == OK)
+		if(sys_irqenable(&hook) == OK)
+			return bitmask;
 	return -1;
 }
 
 int timer_unsubscribe_int() {
-	int hookId = id;
-	if(sys_irqrmpolicy(TIMER0_IRQ, IRQ_REENABLE, &hookId) == OK)
-			if(sys_irqdisable(&hook_id) == OK)
-				return 0;
-		return 1;
+	if(sys_irqrmpolicy(&hook) == OK)
+		if(sys_irqdisable(&hook) == OK)
+			return 0;
+	return 1;
 }
 
 void timer_int_handler() {
@@ -163,8 +163,39 @@ int timer_test_square(unsigned long freq) {
 }
 
 int timer_test_int(unsigned long time) {
-	//TODO lab3
-	return 1;
+	int ipc_status;
+	message msg;
+	int r;
+
+	int irq_set = timer_subscribe_int();
+
+	if(irq_set == -1)
+		return irq_set;
+
+	while( counter < time * 60) { //60Hz, so 60 clock ticks per second
+		if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
+			printf("driver_receive failed with: %d", r);
+			continue;
+		}
+		if (is_ipc_notify(ipc_status)) { /* received notification */
+			switch (_ENDPOINT_P(msg.m_source)) {
+			case HARDWARE: /* hardware interrupt notification */
+				if (msg.NOTIFY_ARG & irq_set) { /* subscribed interrupt */
+					timer_int_handler();
+					if(counter % 60 == 0)
+						printf("A second has passed.\n");
+				}
+				break;
+			default:
+				break; /* no other notifications expected: do nothing */
+			}
+		}
+		else { /* received a standard message, not a notification */
+			/* no standard messages expected: do nothing */
+		}
+	}
+
+	return timer_unsubscribe_int();
 }
 
 int timer_test_config(unsigned long timer) {
@@ -179,6 +210,5 @@ int timer_test_config(unsigned long timer) {
 		printf("Error in timer_display_conf");
 		return returnValue;
 	}
-
 	return 0;
 }
