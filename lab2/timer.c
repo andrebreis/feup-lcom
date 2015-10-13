@@ -11,13 +11,16 @@ int timer_set_square(unsigned long timer, unsigned long freq) {
 	char lsb = (char) div;
 	char msb = (char) (div >> 8);
 	char timerInfo;
+	unsigned char st;
+	timer_get_conf(timer, &st);
+	st = st >> 4;
 
 	if (timer == 0)
 		timerInfo = TIMER_SEL0;
 	else
 		timerInfo = BIT(timer + 5);
 
-	char setDiv = (timerInfo | TIMER_LSB_MSB | TIMER_SQR_WAVE);
+	char setDiv = timerInfo | TIMER_LSB_MSB | TIMER_SQR_WAVE | ((BIT(3)|BIT(2)|BIT(1)|BIT(0)) & st);
 	int returnValue = sys_outb(TIMER_CTRL, setDiv);
 	if (returnValue != 0) {
 		printf("Error in sys_outb");
@@ -167,5 +170,6 @@ int timer_test_config(unsigned long timer) {
 		printf("Error in timer_display_conf");
 		return returnValue;
 	}
+
 	return 0;
 }
