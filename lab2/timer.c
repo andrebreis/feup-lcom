@@ -58,8 +58,8 @@ int timer_subscribe_int(void) {
 }
 
 int timer_unsubscribe_int() {
-	if(sys_irqrmpolicy(&hook) == OK)
-		if(sys_irqdisable(&hook) == OK)
+	if(sys_irqdisable(&hook) == OK)
+		if(sys_irqrmpolicy(&hook) == OK)
 			return 0;
 	return 1;
 }
