@@ -83,7 +83,7 @@ static int proc_args(int argc, char *argv[]) {
 	  }
 	  unsigned short leds[arraySize];
 	  argvIndex = 3;
-	  for(arrayIndex = 0; i < arraySize; arrayIndex++){
+	  for(arrayIndex = 0; arrayIndex < arraySize; arrayIndex++){
 		  if((arrayElement = parse_ulong(argv[argvIndex], 10)) == ULONG_MAX)
 			  return 1;
 		  leds[arrayIndex] = arrayElement;
