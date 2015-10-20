@@ -1,5 +1,5 @@
-#include <minix/drivers.h>
 #include <minix/syslib.h>
+#include <minix/drivers.h>
 #include "test3.h"
 
 static void print_usage(char *argv[]) {
@@ -9,8 +9,6 @@ static void print_usage(char *argv[]) {
 	 "\t service run %s -args \"timed_scan <duration>\"\n",
 	 argv[0], argv[0], argv[0]);
 }
-
-
 
 static unsigned long parse_ulong(char *str, int base) {
   char *endptr;
