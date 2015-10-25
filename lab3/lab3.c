@@ -87,7 +87,7 @@ static int proc_args(int argc, char *argv[]) {
 		  leds[arrayIndex] = arrayElement;
 		  argvIndex++;
 	  }
-	  printf("test3: kbd_test_leds(%d, ["); /* Actually, it was already invoked */
+	  printf("test3: kbd_test_leds(%d, [", arraySize); /* Actually, it was already invoked */
 	  for(arrayIndex = 0; arrayIndex < arraySize; arrayIndex++){
 		  if(arrayIndex == arraySize - 1)
 			  printf("%d])\n", leds[arrayIndex]);

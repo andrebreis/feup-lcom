@@ -9,5 +9,7 @@ int sendCommandtoKBC(unsigned long cmd);
 
 int kbdReadKey(unsigned char* resultKey);
 
+int interruptNotification(int kbc_set);
+
 
 #endif /*_LCOM_KEYBOARD_H_*/
