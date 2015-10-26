@@ -99,12 +99,13 @@ int kbd_test_timed_scan(unsigned short n){
 			printf("driver_receive failed with: %d", r);
 			continue;
 		}
-		if(interruptNotification(msg, ipc_status, irq_kbc)){
+		if(interruptNotification(msg, ipc_status, irq_kbc) == 0){
 			returnValue = printCodes(&firstByte);
 			if(returnValue != 0)
 				return returnValue;
+			counter = 0;
 		}
-		if(interruptNotification(msg, ipc_status, irq_timer)){
+		if(interruptNotification(msg, ipc_status, irq_timer) == 0){
 			counter++;
 		}
 
