@@ -89,14 +89,7 @@ int toggleLed(int led){
 	return sendCommandtoKBC(ledsByte);
 }
 
-int interruptNotification(int set){
-	int r;
-	message msg;
-	int ipc_status;
-	if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
-		printf("driver_receive failed with: %d", r);
-		return -2;
-	}
+int interruptNotification(message msg, int ipc_status, int set){
 	if (is_ipc_notify(ipc_status)) { /* received notification */
 		switch (_ENDPOINT_P(msg.m_source)) {
 		case HARDWARE: /* hardware interrupt notification */
@@ -114,7 +107,7 @@ int interruptNotification(int set){
 	return -1;
 }
 
-int doubleInterruptNotification(int set1, int set2){
+/*int doubleInterruptNotification(int set1, int set2){
 	int r;
 	message msg;
 	int ipc_status;
@@ -139,4 +132,4 @@ int doubleInterruptNotification(int set1, int set2){
 		}
 	}
 	return 0;
-}
+}*/
