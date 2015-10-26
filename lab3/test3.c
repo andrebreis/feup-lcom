@@ -5,36 +5,45 @@
 #include "i8042.h"
 #include "timer.h"
 
+int printCodes(unsigned char* firstByte){
+	unsigned char secondByte;
+	int returnValue = kbdReadKey(firstByte);
+	if(returnValue != 0)
+		return returnValue;
+	if(*firstByte == 0xE0){
+		returnValue = kbdReadKey(&secondByte);
+		if(returnValue != 0)
+			return returnValue;
+		if((secondByte & BIT(7)) == 0)
+			printf("MakeCode: 0x%02X%02X\n", *firstByte, secondByte);
+		else
+			printf("BreakCode: 0x%02X%02X\n", *firstByte, secondByte);
+	}
+	else
+		if((*firstByte & BIT(7)) == 0)
+			printf("MakeCode: 0x%02X\n", *firstByte);
+		else
+			printf("BreakCode: 0x%02X\n", *firstByte);
+	return 0;
+}
+
 int kbd_test_scan(unsigned short ass) {
-	unsigned char firstByte, secondByte;
+
 	int ipc_status;
 	message msg;
 	int returnValue;
+	unsigned char firstByte;
 	int kbc_set = kbc_subscribe_int();
 	do{
 		int driverReceive = interruptNotification(kbc_set);
 		if (driverReceive == 0){
-			returnValue = kbdReadKey(&firstByte);
+			returnValue = printCodes(&firstByte);
 			if(returnValue != 0)
 				return returnValue;
-			if(firstByte == 0xE0){
-				returnValue = kbdReadKey(&secondByte);
-				if(returnValue != 0)
-					return returnValue;
-				if((secondByte & BIT(7)) == 0)
-					printf("MakeCode: 0x%02X%02X\n", firstByte, secondByte);
-				else
-					printf("BreakCode: 0x%02X%02X\n", firstByte, secondByte);
-			}
-			else
-				if((firstByte & BIT(7)) == 0)
-					printf("MakeCode: 0x%02X\n", firstByte);
-				else
-					printf("BreakCode: 0x%02X\n", firstByte);
 		}
 		else if(driverReceive == -2)
 			continue;
-	}while(firstByte != 0x81);
+	}while(firstByte != ESC);
 	kbc_unsubscribe_int();
 	return 0;
 }
@@ -65,46 +74,47 @@ int kbd_test_leds(unsigned short n, unsigned short *toggle){
 				continue;
 		}
 	}
-		else
-			return returnValue;
+	else
+		return returnValue;
 }
 
-int kbd_test_timed_scan(unsigned short n, unsigned short *toggle){
-	//	int ipc_status;
-	//	message msg;
-	//	int r, k = 0;
-	//
-	//	int irq_set = timer_subscribe_int();
-	//	kbc_subscribe_int();
-	//
-	//	if(irq_set == -1)
-	//		return irq_set;
-	//		while( k < n) { //60Hz, so 60 clock ticks per second
-	//			if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
-	//				printf("driver_receive failed with: %d", r);
-	//				continue;
-	//			}
-	//			if (is_ipc_notify(ipc_status)) { /* received notification */
-	//				switch (_ENDPOINT_P(msg.m_source)) {
-	//				case HARDWARE: /* hardware interrupt notification */
-	//					if (msg.NOTIFY_ARG & irq_set) { /* subscribed interrupt */
-	//						timer_int_handler();
-	//						if(counter % 60 == 0){
-	//							toggleLed(toggle[k]);
-	//							k++;
-	//						}
-	//					}
-	//					break;
-	//				default:
-	//					break; /* no other notifications expected: do nothing */
-	//				}
-	//			}
-	//			else { /* received a standard message, not a notification */
-	//				/* no standard messages expected: do nothing */
-	//			}
-	//		}
-	//	kbc_unsubscribe_int();
-	//	return timer_unsubscribe_int();
-	return 0;
+int kbd_test_timed_scan(unsigned short n){
+	int irq_kbc, irq_timer, counter = 0, returnValue;
+	unsigned char firstByte;
+	int r;
+	message msg;
+	int ipc_status;
+	irq_timer = timer_subscribe_int();
+	irq_kbc = kbc_subscribe_int();
+
+	if(irq_timer == -1 || irq_kbc == -1)
+		return -1;
+	do{
+		if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
+			printf("driver_receive failed with: %d", r);
+			return -2;
+		}
+
+		if (is_ipc_notify(ipc_status)){
+			switch (_ENDPOINT_P(msg.m_source)){
+			case HARDWARE:
+				if (msg.NOTIFY_ARG & irq_kbc){
+					returnValue = printCodes(&firstByte);
+					if(returnValue != 0)
+						return returnValue;
+				}
+				if (msg.NOTIFY_ARG & irq_timer)
+				{
+					counter++;
+				}
+				break;
+			default:
+				break;
+			}
+		}
+
+	}while(firstByte != ESC && counter < (n * 60));
+	kbc_unsubscribe_int();
+	timer_unsubscribe_int();
 }
 

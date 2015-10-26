@@ -13,6 +13,7 @@
 #define OBF 		BIT(0)
 #define IBF 		BIT(1)
 #define SET_COMMAND 0xED
+#define ESC			0x81
 
 
 

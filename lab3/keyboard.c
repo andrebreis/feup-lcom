@@ -67,6 +67,7 @@ int kbdReadKey(unsigned char* resultKey){
 }
 
 int setLedsToDefault(){
+	ledsByte = 0;
 	int returnValue = sendCommandtoKBC(SET_COMMAND);
 	if(returnValue != 0)
 		return -1;
@@ -111,4 +112,31 @@ int interruptNotification(int set){
 		/* no standard messages expected: do nothing */
 	}
 	return -1;
+}
+
+int doubleInterruptNotification(int set1, int set2){
+	int r;
+	message msg;
+	int ipc_status;
+	if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
+		printf("driver_receive failed with: %d", r);
+		return -2;
+	}
+
+	if (is_ipc_notify(ipc_status)){
+		switch (_ENDPOINT_P(msg.m_source)){
+		case HARDWARE:
+			if (msg.NOTIFY_ARG & set1){
+				return 1;
+			}
+			if (msg.NOTIFY_ARG & set2)
+			{
+				return 2;
+			}
+			break;
+		default:
+			break;
+		}
+	}
+	return 0;
 }
