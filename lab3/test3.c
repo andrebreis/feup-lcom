@@ -32,12 +32,8 @@ int printCodes(unsigned char* firstByte){
 
 int printCodesASM(){
 	asmReadFromKBD();
-	if(scanCode == -1)
-		return -1;
 	if(scanCode == 0xE0){
 		asmReadFromKBD();
-		if(scanCode == -1)
-			return -1;
 		if((scanCode & BIT(7)) == 0)
 			printf("MakeCode: 0xE0%02X\n", scanCode);
 		else
