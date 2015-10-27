@@ -5,6 +5,8 @@
 #include "i8042.h"
 #include "timer.h"
 
+unsigned char scanCode;
+
 int printCodes(unsigned char* firstByte){
 	unsigned char secondByte;
 	int returnValue = kbdReadKey(firstByte);
@@ -27,23 +29,59 @@ int printCodes(unsigned char* firstByte){
 	return 0;
 }
 
+
+int printCodesASM(){
+	asmReadFromKBD();
+	if(scanCode == -1)
+		return -1;
+	if(scanCode == 0xE0){
+		asmReadFromKBD();
+		if(scanCode == -1)
+			return -1;
+		if((scanCode & BIT(7)) == 0)
+			printf("MakeCode: 0xE0%02X\n", scanCode);
+		else
+			printf("BreakCode: 0xE0%02X\n", scanCode);
+	}
+	else
+		if((scanCode & BIT(7)) == 0)
+			printf("MakeCode: 0x%02X\n", scanCode);
+		else
+			printf("BreakCode: 0x%02X\n", scanCode);
+	return 0;
+}
+
 int kbd_test_scan(unsigned short ass) {
 	message msg;
 	int r, ipc_status;
 	int returnValue;
-	unsigned char firstByte;
+	unsigned char firstByte = 0;
 	int kbc_set = kbc_subscribe_int();
-	do{
-		if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
-			printf("driver_receive failed with: %d", r);
-			continue;
-		}
-		if (interruptNotification(msg, ipc_status, kbc_set) == 0){
-			returnValue = printCodes(&firstByte);
-			if(returnValue != 0)
-				return returnValue;
-		}
-	}while(firstByte != ESC);
+	if(ass == 0){
+		do{
+			if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
+				printf("driver_receive failed with: %d", r);
+				continue;
+			}
+			if (interruptNotification(msg, ipc_status, kbc_set) == 0){
+				returnValue = printCodes(&firstByte);
+				if(returnValue != 0)
+					return returnValue;
+			}
+		}while(firstByte != ESC);
+	}
+	else
+		do{
+			if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
+				printf("driver_receive failed with: %d", r);
+				continue;
+			}
+			if (interruptNotification(msg, ipc_status, kbc_set) == 0){
+				returnValue = printCodesASM();
+				if(returnValue != 0)
+					return returnValue;
+			}
+		}while(scanCode != ESC);
 	kbc_unsubscribe_int();
 	return 0;
 }
@@ -70,10 +108,8 @@ int kbd_test_leds(unsigned short n, unsigned short *toggle){
 						printf("Invalid LED on element %d\n", i);
 					else if(returnValue != 0)
 						printf("Error sending command to KBC\n");
-					else{
-						printf("toggled, a second has passed\n");
+					else
 						i++;
-					}
 				}
 			}
 		}

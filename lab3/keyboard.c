@@ -27,7 +27,8 @@ int kbc_unsubscribe_int() {
 int sendCommandtoKBC(unsigned long cmd){
 	unsigned long stat;
 	int returnValue;
-	while( 1 ) {
+	int i = 0;
+	while( i < 10 ) {
 		returnValue = sys_inb(STAT_REG, &stat);
 		if(returnValue != 0)
 			return returnValue;
@@ -40,13 +41,15 @@ int sendCommandtoKBC(unsigned long cmd){
 				return 0;
 		}
 		tickdelay(micros_to_ticks(DELAY_US));
+		i++;
 	}
 }
 
 int kbdReadKey(unsigned char* resultKey){
 	int returnValue;
 	unsigned long stat, data;
-	while( 1 ) {
+	int i = 0;
+	while( i < 10 ) {
 		returnValue = sys_inb(STAT_REG, &stat);
 		if(returnValue != 0)
 			return returnValue;
@@ -55,7 +58,7 @@ int kbdReadKey(unsigned char* resultKey){
 			returnValue = sys_inb(OUT_BUF, &data);
 			if(returnValue != 0)
 				return returnValue;
-			if ( (stat &(PAR_ERR | TO_ERR)) == 0 ) {
+			if ( (stat & (PAR_ERR | TO_ERR) ) == 0 ) {
 				*resultKey = data;
 				return 0;
 			}
@@ -63,6 +66,7 @@ int kbdReadKey(unsigned char* resultKey){
 				return -1;
 		}
 		tickdelay(micros_to_ticks(DELAY_US));
+		i++;
 	}
 }
 
@@ -106,30 +110,3 @@ int interruptNotification(message msg, int ipc_status, int set){
 	}
 	return -1;
 }
-
-/*int doubleInterruptNotification(int set1, int set2){
-	int r;
-	message msg;
-	int ipc_status;
-	if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
-		printf("driver_receive failed with: %d", r);
-		return -2;
-	}
-
-	if (is_ipc_notify(ipc_status)){
-		switch (_ENDPOINT_P(msg.m_source)){
-		case HARDWARE:
-			if (msg.NOTIFY_ARG & set1){
-				return 1;
-			}
-			if (msg.NOTIFY_ARG & set2)
-			{
-				return 2;
-			}
-			break;
-		default:
-			break;
-		}
-	}
-	return 0;
-}*/
