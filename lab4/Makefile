@@ -1,11 +1,11 @@
-# Makefile for the lab3 driver (based on that of lab1).
+# Makefile for the lab4 driver (based on the other labs).
 
 COMPILER_TYPE= gnu
 
 CC=gcc
 
-PROG=	lab3
-SRCS=	test3.c lab3.c kbd_interrupt_handler.S keyboard.c timer.c 
+PROG=	lab4
+SRCS=	test4.c lab4.c
 
 CCFLAGS= -Wall
 
