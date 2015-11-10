@@ -15,6 +15,16 @@
 #define SET_COMMAND 0xED
 #define ESC			0x81
 
+#define MOUSE_IRQ		12
+#define WRITE_TO_MOUSE 	0xD4
+#define ACK				0xFA
+#define NACK			0xFE
+#define ERROR 			0xFC
+#define RESEND 			0xFE
+#define STAT_REQ		0xE9
+
+#define TRUE	1
+
 
 
 
