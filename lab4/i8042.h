@@ -22,6 +22,9 @@
 #define ERROR 			0xFC
 #define RESEND 			0xFE
 #define STAT_REQ		0xE9
+#define SET_STREAM_MODE	0xEA
+#define DIS_STREAM_MODE 0xF5
+#define ENA_DATA_PACKS	0xF4
 
 #define TRUE	1
 

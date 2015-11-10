@@ -115,7 +115,19 @@ int writeToMouse(unsigned long cmd){
 	return 0;
 }
 
-/*char getPacket(){
+int enableStreamMode(){
+	return writeToMouse(SET_STREAM_MODE);
+}
+
+int disableStreamMode(){
+	return writeToMouse(DIS_STREAM_MODE);
+}
+
+int enableSendingDataPackets(){
+	return writeToMouse(ENA_DATA_PACKS);
+}
+
+/*int getPacket(char* packet){
 
 }*/
 
