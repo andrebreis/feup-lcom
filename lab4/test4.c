@@ -231,19 +231,17 @@ int checkVerticalLine(char packet[3], int* xVar, int* yVar, short length,
 			else
 				*xVar = *yVar = 0; //if you are moving in the wrong direction, shouldnt add the horizontal movement to tolerance
 		}
-		if ((packet[0] & BIT(4)) == 0) {
-			if(packet[1] != 0)
+		if ((packet[0] & BIT(4)) == 0 && packet[1] != 0) {
 			*xVar += packet[1];
 		} else {
 			if(packet[1] != 0)
 			*xVar += (packet[1] | (-1 << 8));
 		}
-		if (abs(*xVar) >= tolerance) {
+		if (*xVar >= tolerance) {
 			*xVar = *yVar = 0;
 			return 1;
 		}
 	}
-
 	if (*yVar >= abs(length))
 		return 0;
 	else
