@@ -170,11 +170,11 @@ void printPacket(char packet[3]) {
 
 	X = packet[1];
 	if (xSign) {
-		X = (~packet[1] + 1);
+		X |= (-1 << 8);
 	}
 	Y = packet[2];
 	if (ySign) {
-		Y = (~packet[2] + 1);
+		Y |= (-1 << 8);
 	}
 
 	printf("LB=%d  MB=%d  RB=%d  XOV=%d  YOV=%d  X=%d  Y=%d\n", LB, MB, RB, XOV,
@@ -182,6 +182,7 @@ void printPacket(char packet[3]) {
 }
 
 void printConfig(char status[3]) {
+
 	if ((status[0] & BIT(6)) == 0) {
 		printf("Stream Mode\n");
 		if ((status[0] & BIT(5)) == 0)
@@ -190,48 +191,81 @@ void printConfig(char status[3]) {
 			printf("Data reporting enabled\n");
 	} else
 		printf("Remote Mode\n");
-	if((status[0] & BIT(4)) == 0)
-			printf("Scaling is 1:1\n");
+
+	if ((status[0] & BIT(4)) == 0)
+		printf("Scaling is 1:1\n");
 	else
 		printf("Scaling is 2:1\n");
 
-	if((status[0] & BIT(2)) == 0)
+	if ((status[0] & BIT(2)) == 0)
 		printf("Left button is currently released\n");
 	else
 		printf("Left button is currently pressed\n");
 
-	if((status[0] & BIT(1)) == 0)
+	if ((status[0] & BIT(1)) == 0)
 		printf("Middle button is currently released\n");
 	else
 		printf("Middle button is currently pressed\n");
 
-	if((status[0] & BIT(0)) == 0)
+	if ((status[0] & BIT(0)) == 0)
 		printf("Right button is currently released\n");
 	else
 		printf("Right button is currently pressed\n");
 
 	printf("Resolution: ");
-			switch(status[1])
-			{
-			case 0:
-				printf("1 count/mm\n");
-				break;
-			case 1:
-				printf("2 count/mm\n");
-				break;
-			case 2:
-				printf("4 count/mm\n");
-				break;
-			case 3:
-				printf("8 count/mm\n");
-				break;
+	switch (status[1]) {
+	case 0:
+		printf("1 count/mm\n");
+		break;
+	case 1:
+		printf("2 count/mm\n");
+		break;
+	case 2:
+		printf("4 count/mm\n");
+		break;
+	case 3:
+		printf("8 count/mm\n");
+		break;
+	}
+
+	printf("Sample rate: %d\n", status[2]);
+}
+
+int checkVerticalLine(char packet[3], int* xVar, int* yVar, short length,
+		unsigned short tolerance) {
+	if ((packet[0] & BIT(1)) == 0)
+		*xVar = *yVar = 0;
+	else {
+		if ((packet[0] & BIT(5)) == 0) { // positive movement on y
+			if (length > 0) {
+				*yVar += packet[2];
+			} else {
+				*xVar = *yVar = 0; //if you are moving in the wrong direction, shouldnt add the horizontal movement to tolerance
 			}
-
-			printf("Sample rate: %d\n", status[2]);
+		} else {        //if (packet[0] & BIT(5)) == 0 -> negative movement on y
+			if (length < 0)
+				*yVar += (packet[2] | (-1 << 8));
+			else
+				*xVar = *yVar = 0; //if you are moving in the wrong direction, shouldnt add the horizontal movement to tolerance
 		}
+		if ((packet[0] & BIT(4)) == 0) {
+			if(packet[1] != 0)
+			*xVar += packet[1];
+		} else {
+			if(packet[1] != 0)
+			*xVar += (packet[1] | (-1 << 8));
+		}
+		if (abs(*xVar) >= tolerance) {
+			*xVar = *yVar = 0;
+			return 1;
+		}
+	}
 
-
-
+	if (*yVar >= abs(length))
+		return 0;
+	else
+		return 1;
+}
 
 int test_packet(unsigned short cnt) {
 	message msg;
@@ -339,7 +373,10 @@ int test_async(unsigned short idle_time) {
 }
 
 int test_config(void) {
+	message msg;
+	int r, ipc_status;
 	int mouseSet, returnValue, i;
+	unsigned long stat;
 	char status[3];
 
 	mouseSet = subscribe_int(MOUSE_IRQ, IRQ_REENABLE | IRQ_EXCLUSIVE, &hook);
@@ -354,11 +391,27 @@ int test_config(void) {
 	if (returnValue != 0)
 		return returnValue;
 
-	for (i = 0; i < 3; i++) {
-		//dá warning char em vez de unsigned long int mas pinta na mesma
-		returnValue = sys_inb(OUT_BUF, &status[i]);
-		if (returnValue != OK)
-			return returnValue;
+	while (i < 3) {
+		if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
+			printf("driver_receive failed with: %d", r);
+			continue;
+		}
+		if (is_ipc_notify(ipc_status)) { /* received notification */
+			switch (_ENDPOINT_P(msg.m_source)) {
+			case HARDWARE: /* hardware interrupt notification */
+				if (msg.NOTIFY_ARG & mouseSet) {
+					returnValue = sys_inb(OUT_BUF, &stat);
+					if (returnValue != OK)
+						return returnValue;
+					status[i] = stat;
+					i++;
+				}
+				break;
+			default:
+				break; /* no other notifications expected: do nothing */
+			}
+		} else {
+		}
 	}
 
 	printConfig(status);
@@ -368,5 +421,57 @@ int test_config(void) {
 }
 
 int test_gesture(short length, unsigned short tolerance) {
-	/* To be completed ... */
+	message msg;
+	int r, ipc_status;
+	int mouseSet, returnValue, i = 0;
+	char packet[3];
+	int xVar = 0;
+	int yVar = 0;
+
+	mouseSet = subscribe_int(MOUSE_IRQ, IRQ_REENABLE | IRQ_EXCLUSIVE, &hook);
+	if (mouseSet == -1) {
+		return -1;
+	}
+	returnValue = enableSendingDataPackets();
+	if (returnValue != 0) {
+		return returnValue;
+	}
+
+	while (1) {
+		if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
+			printf("driver_receive failed with: %d", r);
+			continue;
+		}
+		if (is_ipc_notify(ipc_status)) { /* received notification */
+			switch (_ENDPOINT_P(msg.m_source)) {
+			case HARDWARE: /* hardware interrupt notification */
+				if (msg.NOTIFY_ARG & mouseSet) { /* subscribed interrupt */
+					returnValue = getPacket(&packet[i % 3]);
+					if (returnValue == -1)
+						continue;
+					if (returnValue != 0) {
+						return returnValue;
+					}
+					if ((i % 3 == 0) && (packet[i % 3] & BIT(3) == 0)) {
+						continue;
+					}
+					if ((i % 3) == 2) {
+						if (checkVerticalLine(packet, &xVar, &yVar, length,
+								tolerance) == 0) {
+							printf("Done!");
+							disableStreamMode();
+							unsubscribe_int(&hook);
+							return 0;
+						}
+					}
+					i++;
+				}
+				break;
+			default:
+				break; /* no other notifications expected: do nothing */
+			}
+		} else {
+		}
+	}
+
 }
