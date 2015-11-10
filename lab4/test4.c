@@ -124,18 +124,77 @@ int disableStreamMode(){
 }
 
 int enableSendingDataPackets(){
-	return writeToMouse(ENA_DATA_PACKS);
+	int returnValue;
+
+	returnValue = disableStreamMode();
+	if(returnValue != 0)
+		return returnValue;
+
+	returnValue = writeToMouse(ENA_DATA_PACKS);
+	if(returnValue != 0)
+		return returnValue;
+
+	return enableStreamMode();
 }
 
-/*int getPacket(char* packet){
+int getPacket(char* packet){
+	int returnValue;
 
-}*/
+	returnValue = readFromKBC(packet);
+	return returnValue;
+}
 
-int test_packet(unsigned short cnt){
-    //get packet
+void printPacket(char packet[]){
+	char LB, MB, RB, XOV, YOV, xSign, ySign;
+	int X = 0, Y = 0;
+	printf("B1=%02X  B2=%02X  B3=%02X  ", packet[0], packet[1], packet[2]);
+	LB = packet[0] & BIT(0);
+	RB = packet[0] & BIT(1);
+	MB = packet[0] & BIT(2);
+	XOV = packet[0] & BIT(6);
+	YOV = packet[0] & BIT(7);
+	xSign = packet[0] & BIT(4);
+	ySign = packet[0] & BIT(5);
+	if(xSign)
+		X = (~packet[1] + 1);
+	else
+		X = packet[1];
+	if(ySign)
+			Y = (~packet[2] + 1);
+		else
+			Y = packet[2];
+	printf("LB=%02X  MB=%02X  RB=%02X  XOV=%d  YOV=%d  X=%d  Y=%d\n", LB, MB, RB, XOV, YOV, X, Y);
+}
+
+/*int test_packet(unsigned short cnt){
+	message msg;
+	int r, ipc_status;
+    char packet[3];
+    int returnValue, i = 0, mouseSet;
+
+    mouseSet = subscribe_int(MOUSE_IRQ, IRQ_REENABLE | IRQ_EXCLUSIVE, )
+
+    while(i < (cnt*3)){
+    	if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
+    					printf("driver_receive failed with: %d", r);
+    					continue;
+    				}
+    				if (interruptNotification(msg, ipc_status, kbc_set) == 0){
+    					returnValue = getPacket(packet[i % 3]);
+    					if(returnValue != 0)
+    						return returnValue;
+    				}
+
+    if(returnValue != 0)
+    	return -1;
+    if(i % 3 == 0 && (packet[i % 3] & BIT(3) == 0)
+    	continue;
+
+    }
+	//get packet
 	//
 	/* To be completed ... */
-}	
+//}
 	
 int test_async(unsigned short idle_time) {
     /* To be completed ... */
