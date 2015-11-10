@@ -155,7 +155,7 @@ int getPacket(char* packet) {
 
 void printPacket(char packet[3]) {
 	char LB, MB, RB, XOV, YOV, xSign, ySign;
-	int X , Y;
+	int X, Y;
 
 	printf("B1=0x%02X  B2=0x%02X  B3=0x%02X  ", (unsigned char) packet[0],
 			(unsigned char) packet[1], (unsigned char) packet[2]);
@@ -169,17 +169,69 @@ void printPacket(char packet[3]) {
 	ySign = (packet[0] & BIT(5)) != 0;
 
 	X = packet[1];
-	if (xSign){
+	if (xSign) {
 		X = (~packet[1] + 1);
 	}
 	Y = packet[2];
-	if (ySign){
+	if (ySign) {
 		Y = (~packet[2] + 1);
 	}
 
 	printf("LB=%d  MB=%d  RB=%d  XOV=%d  YOV=%d  X=%d  Y=%d\n", LB, MB, RB, XOV,
 			YOV, X, Y);
 }
+
+void printConfig(char status[3]) {
+	if ((status[0] & BIT(6)) == 0) {
+		printf("Stream Mode\n");
+		if ((status[0] & BIT(5)) == 0)
+			printf("Data reporting disabled\n");
+		else
+			printf("Data reporting enabled\n");
+	} else
+		printf("Remote Mode\n");
+	if((status[0] & BIT(4)) == 0)
+			printf("Scaling is 1:1\n");
+	else
+		printf("Scaling is 2:1\n");
+
+	if((status[0] & BIT(2)) == 0)
+		printf("Left button is currently released\n");
+	else
+		printf("Left button is currently pressed\n");
+
+	if((status[0] & BIT(1)) == 0)
+		printf("Middle button is currently released\n");
+	else
+		printf("Middle button is currently pressed\n");
+
+	if((status[0] & BIT(0)) == 0)
+		printf("Right button is currently released\n");
+	else
+		printf("Right button is currently pressed\n");
+
+	printf("Resolution: ");
+			switch(status[1])
+			{
+			case 0:
+				printf("1 count/mm\n");
+				break;
+			case 1:
+				printf("2 count/mm\n");
+				break;
+			case 2:
+				printf("4 count/mm\n");
+				break;
+			case 3:
+				printf("8 count/mm\n");
+				break;
+			}
+
+			printf("Sample rate: %d\n", status[2]);
+		}
+
+
+
 
 int test_packet(unsigned short cnt) {
 	message msg;
@@ -244,8 +296,8 @@ int test_async(unsigned short idle_time) {
 	}
 	timerSet = subscribe_int(TIMER0_IRQ, IRQ_REENABLE, &timerHook);
 	if (timerSet == -1) {
-			return -1;
-		}
+		return -1;
+	}
 	while (counter < (idle_time * 60)) {
 		if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
 			printf("driver_receive failed with: %d", r);
@@ -270,7 +322,7 @@ int test_async(unsigned short idle_time) {
 					}
 					i++;
 				}
-				if(msg.NOTIFY_ARG & timerSet)
+				if (msg.NOTIFY_ARG & timerSet)
 					counter++;
 				break;
 			default:
@@ -287,7 +339,32 @@ int test_async(unsigned short idle_time) {
 }
 
 int test_config(void) {
-	/* To be completed ... */
+	int mouseSet, returnValue, i;
+	char status[3];
+
+	mouseSet = subscribe_int(MOUSE_IRQ, IRQ_REENABLE | IRQ_EXCLUSIVE, &hook);
+	if (mouseSet == -1)
+		return -1;
+
+	returnValue = disableStreamMode();
+	if (returnValue != 0)
+		return returnValue;
+
+	returnValue = writeToMouse(STAT_REQ);
+	if (returnValue != 0)
+		return returnValue;
+
+	for (i = 0; i < 3; i++) {
+		//dá warning char em vez de unsigned long int mas pinta na mesma
+		returnValue = sys_inb(OUT_BUF, &status[i]);
+		if (returnValue != OK)
+			return returnValue;
+	}
+
+	printConfig(status);
+	unsubscribe_int(&hook);
+	return 0;
+
 }
 
 int test_gesture(short length, unsigned short tolerance) {
