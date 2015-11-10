@@ -99,13 +99,13 @@ int writeToMouse(unsigned long cmd){
 	if(returnValue != 0)
 		return returnValue;
 
-	returnValue = sys_inb(OUT_BUF, &cmd_Feedback);
+	returnValue = sys_inb(OUT_BUF, &cmdFeedback);
 	if(returnValue != 0)
 		return returnValue;
 
-	if(cmd_Feedback == ACK)
+	if(cmdFeedback == ACK)
 		goodFeedback = TRUE;
-	else if(cmd_Feedback == ERROR){
+	else if(cmdFeedback == ERROR){
 		printf("Error sending command!\n");
 		return -1;
 	}
