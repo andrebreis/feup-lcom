@@ -22,23 +22,6 @@ int unsubscribe_int(int* hookId) {
 	return 1;
 }
 
-int interruptNotification(message msg, int ipc_status, int set) {
-	if (is_ipc_notify(ipc_status)) { /* received notification */
-		switch (_ENDPOINT_P(msg.m_source)) {
-		case HARDWARE: /* hardware interrupt notification */
-			if (msg.NOTIFY_ARG & set) {
-				return 0;
-			}
-			break;
-		default:
-			break; /* no other notifications expected: do nothing */
-		}
-	} else { /* received a standard message, not a notification */
-		/* no standard messages expected: do nothing */
-	}
-	return -1;
-}
-
 int sendCommandtoKBC(unsigned long port, unsigned long cmd) {
 	unsigned long stat;
 	int returnValue;
