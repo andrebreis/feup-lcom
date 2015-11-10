@@ -2,8 +2,10 @@
 #include <minix/drivers.h>
 
 #include "i8042.h"
+#include "i8254.h"
 
-static int hook = 1;
+static int hook = MOUSE_IRQ;
+static int timerHook = TIMER0_IRQ;
 
 int subscribe_int(int irqLine, int policy, int* hookId) {
 	int bitmask = BIT(*hookId);
@@ -153,7 +155,7 @@ int getPacket(char* packet) {
 
 void printPacket(char packet[3]) {
 	char LB, MB, RB, XOV, YOV, xSign, ySign;
-	int X = 0, Y = 0;
+	int X , Y;
 
 	printf("B1=0x%02X  B2=0x%02X  B3=0x%02X  ", (unsigned char) packet[0],
 			(unsigned char) packet[1], (unsigned char) packet[2]);
@@ -167,12 +169,13 @@ void printPacket(char packet[3]) {
 	ySign = (packet[0] & BIT(5)) != 0;
 
 	X = packet[1];
-	if (xSign)
+	if (xSign){
 		X = (~packet[1] + 1);
-
+	}
 	Y = packet[2];
-	if (ySign)
+	if (ySign){
 		Y = (~packet[2] + 1);
+	}
 
 	printf("LB=%d  MB=%d  RB=%d  XOV=%d  YOV=%d  X=%d  Y=%d\n", LB, MB, RB, XOV,
 			YOV, X, Y);
@@ -227,7 +230,60 @@ int test_packet(unsigned short cnt) {
 }
 
 int test_async(unsigned short idle_time) {
-	/* To be completed ... */
+	message msg;
+	int r, ipc_status;
+	char packet[3];
+	int returnValue, i = 0, mouseSet, timerSet, counter;
+	mouseSet = subscribe_int(MOUSE_IRQ, IRQ_REENABLE | IRQ_EXCLUSIVE, &hook);
+	if (mouseSet == -1) {
+		return -1;
+	}
+	returnValue = enableSendingDataPackets();
+	if (returnValue != 0) {
+		return returnValue;
+	}
+	timerSet = subscribe_int(TIMER0_IRQ, IRQ_REENABLE, &timerHook);
+	if (timerSet == -1) {
+			return -1;
+		}
+	while (counter < (idle_time * 60)) {
+		if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
+			printf("driver_receive failed with: %d", r);
+			continue;
+		}
+		if (is_ipc_notify(ipc_status)) { /* received notification */
+			switch (_ENDPOINT_P(msg.m_source)) {
+			case HARDWARE: /* hardware interrupt notification */
+				if (msg.NOTIFY_ARG & mouseSet) { /* subscribed interrupt */
+					returnValue = getPacket(&packet[i % 3]);
+					if (returnValue == -1)
+						continue;
+					if (returnValue != 0) {
+						return returnValue;
+					}
+					if ((i % 3 == 0) && (packet[i % 3] & BIT(3) == 0)) {
+						continue;
+					}
+					if ((i % 3) == 2) {
+						printPacket(packet);
+						counter = 0;
+					}
+					i++;
+				}
+				if(msg.NOTIFY_ARG & timerSet)
+					counter++;
+				break;
+			default:
+				break; /* no other notifications expected: do nothing */
+			}
+		} else {
+		}
+	}
+	disableStreamMode();
+	unsubscribe_int(&timerHook);
+	unsubscribe_int(&hook);
+	return 0;
+
 }
 
 int test_config(void) {
