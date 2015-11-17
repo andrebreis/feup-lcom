@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define INT_VIDEO 0x10
+
 /** @defgroup vbe vbe
  * @{
  *

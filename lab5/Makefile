@@ -10,7 +10,7 @@ SRCS=	test5.c lab5.c video_gr.c vbe.c
 CCFLAGS= -Wall
 
 DPADD+=	${LIBDRIVER} ${LIBSYS}
-LDADD+= -ldriver -lsys
+LDADD+= -ldriver -lsys -llm
 
 LDFLAGS+= -L .
 
