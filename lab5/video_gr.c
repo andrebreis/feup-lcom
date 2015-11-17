@@ -45,6 +45,7 @@ int vg_exit() {
 
 void *vg_init(unsigned short mode) {
 	struct reg86u r;
+	int returnValue;
 	r.u.w.ax = 0x4F02; // VBE call, function 02 -- set VBE mode - set vi
 	r.u.w.bx = 1 << 14 | mode; // set bit 14: linear framebuffer
 	r.u.b.intno = INT_VIDEO;
@@ -66,8 +67,8 @@ void *vg_init(unsigned short mode) {
 	memRange.mr_base = VRAM_PHYS_ADDR;
 	memRange.mr_limit = memRange.mr_base + video_mem_size;
 
-	if (OK != (r = sys_privctl(SELF, SYS_PRIV_ADD_MEM, &memRange)))
-		panic("video_grafic: sys_privctl (ADD_MEM) failed: %d\n", r);
+	if (OK != (returnValue = sys_privctl(SELF, SYS_PRIV_ADD_MEM, &memRange)))
+		panic("video_grafic: sys_privctl (ADD_MEM) failed: %d\n", returnValue);
 
 	video_mem = vm_map_phys(SELF, (void *) memRange.mr_base, video_mem_size);
 
