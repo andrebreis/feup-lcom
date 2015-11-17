@@ -77,16 +77,14 @@ void *vg_init(unsigned short mode) {
 }
 
 int vg_draw_square(unsigned short x, unsigned short y, unsigned short size, unsigned long color){
-	unsigned long index = h_res*y + x;
-	char* pixelPtr;
 	int i, j;
 	if(x + size > h_res || y + size > v_res)
 		return -1;
-	vg_init(0x105);
 	for(i = 0; i < size; i++){
 		for(j = 0; j < size; j++){
-			video_mem[index + j + i * h_res ] = color;
+			video_mem[(y+i)*h_res+x+j] = color;
 		}
 	}
+
 
 }

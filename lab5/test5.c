@@ -16,6 +16,7 @@ void *test_init(unsigned short mode, unsigned short delay) {
 
 int test_square(unsigned short x, unsigned short y, unsigned short size, unsigned long color) {
 
+	vg_init(0x105);
 	vg_draw_square(x, y, size, color);
 	timer_test_int(5);
 	vg_exit();
