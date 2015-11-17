@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #define INT_VIDEO 0x10
+#define SET_VBE_MODE 0x4F02
 
 /** @defgroup vbe vbe
  * @{

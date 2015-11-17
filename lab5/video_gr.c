@@ -46,7 +46,7 @@ int vg_exit() {
 void *vg_init(unsigned short mode) {
 	struct reg86u r;
 	int returnValue;
-	r.u.w.ax = 0x4F02; // VBE call, function 02 -- set VBE mode - set vi
+	r.u.w.ax = SET_VBE_MODE; // VBE call, function 02 -- set VBE mode - set vi
 	r.u.w.bx = 1 << 14 | mode; // set bit 14: linear framebuffer
 	r.u.b.intno = INT_VIDEO;
 
@@ -73,5 +73,20 @@ void *vg_init(unsigned short mode) {
 	video_mem = vm_map_phys(SELF, (void *) memRange.mr_base, video_mem_size);
 
 	return video_mem;
+
+}
+
+int vg_draw_square(unsigned short x, unsigned short y, unsigned short size, unsigned long color){
+	unsigned long index = h_res*y + x;
+	char* pixelPtr;
+	int i, j;
+	if(x + size > h_res || y + size > v_res)
+		return -1;
+	vg_init(0x105);
+	for(i = 0; i < size; i++){
+		for(j = 0; j < size; j++){
+			video_mem[index + j + i * h_res ] = color;
+		}
+	}
 
 }

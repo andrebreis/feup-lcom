@@ -3,20 +3,22 @@
 #include "timer.h"
 
 void *test_init(unsigned short mode, unsigned short delay) {
-	unsigned short counter = 0;
-	message msg;
-	int r, ipc_status;
-	vg_init(mode);
-	timer_test_int(delay);
-	vg_exit();
 
+	vg_init(mode);
+
+	timer_test_int(delay);
+
+	if(vg_exit() == 1)
+		return 1;
 
 }
 
 
 int test_square(unsigned short x, unsigned short y, unsigned short size, unsigned long color) {
 
-	/* To be completed */
+	vg_draw_square(x, y, size, color);
+	timer_test_int(5);
+	vg_exit();
 
 }
 
