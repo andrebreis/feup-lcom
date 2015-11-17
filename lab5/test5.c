@@ -1,39 +1,48 @@
+#include <minix/drivers.h>
+
+#include "timer.h"
+
 void *test_init(unsigned short mode, unsigned short delay) {
-	
-	/* To be completed */
-	
+	unsigned short counter = 0;
+	message msg;
+	int r, ipc_status;
+	vg_init(mode);
+	timer_test_int(delay);
+	vg_exit();
+
+
 }
 
 
 int test_square(unsigned short x, unsigned short y, unsigned short size, unsigned long color) {
-	
+
 	/* To be completed */
-	
+
 }
 
 int test_line(unsigned short xi, unsigned short yi, 
-		           unsigned short xf, unsigned short yf, unsigned long color) {
-	
+		unsigned short xf, unsigned short yf, unsigned long color) {
+
 	/* To be completed */
-	
+
 }
 
 int test_xpm(unsigned short xi, unsigned short yi, char *xpm[]) {
-	
+
 	/* To be completed */
-	
+
 }	
 
 int test_move(unsigned short xi, unsigned short yi, char *xpm[], 
-				unsigned short hor, short delta, unsigned short time) {
-	
+		unsigned short hor, short delta, unsigned short time) {
+
 	/* To be completed */
-	
+
 }					
 
 int test_controller() {
-	
+
 	/* To be completed */
-	
+
 }					
-	
+

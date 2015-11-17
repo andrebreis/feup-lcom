@@ -15,7 +15,7 @@
  * Better run my version of lab5 as follows:
  *     service run `pwd`/lab5 -args "mode 0x105"
  */
-#define VRAM_PHYS_ADDR	  0xF0000000
+#define VRAM_PHYS_ADDR	  0xE0000000
 #define H_RES             1024
 #define V_RES		  	  768
 #define BITS_PER_PIXEL	  8
@@ -61,7 +61,7 @@ void *vg_init(unsigned short mode) {
 	v_res = V_RES;
 	bits_per_pixel = BITS_PER_PIXEL;
 
-	video_mem_size = h_res * v_res * bits_per_pixel;
+	video_mem_size = (h_res * v_res * bits_per_pixel)/8;
 
 	struct mem_range memRange;
 	memRange.mr_base = VRAM_PHYS_ADDR;
