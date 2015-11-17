@@ -1,0 +1,10 @@
+A ideia do nosso projecto é fazer um jogo do tipo shooter simples tipo Tiro ao Alvo, em que o jogador está parado (ou poder-se-à mexer num eixo - Esquerda e Direita - com o teclado)
+Alvos irão aparecer (ainda indefinidos, podem ser animais ou pratos, embora animais é provavelmente o melhor, pois podemos dar um score mais alto por acertar na cabeça) e o jogador tem de mexer o rato para cima do alvo e clickar com o rato para disparar.
+
+Este projecto usará:
+Timer para aumentar a dificuldade (com o tempo a velocidade/tempo de aparição dos alvos será maior)
+Rato para jogar
+Teclado para nomes de Highscores - talvez para reload e para movimento (ainda não definido)
+Placa em modo gráfico para representar o jogo
+RTC (talvez) para marcar a data do Highscore
+Porta de Série (talvez) para ter uma opção de multiplayer em que o primeiro a falhar um alvo perde

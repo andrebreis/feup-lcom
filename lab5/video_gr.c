@@ -85,6 +85,4 @@ int vg_draw_square(unsigned short x, unsigned short y, unsigned short size, unsi
 			video_mem[(y+i)*h_res+x+j] = color;
 		}
 	}
-
-
 }
