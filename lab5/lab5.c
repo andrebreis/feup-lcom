@@ -223,7 +223,7 @@ static int proc_args(int argc, char *argv[]) {
 			return 1;
 		if ((hor = parse_ulong(argv[5], 10)) == ULONG_MAX)
 			return 1;
-		if ((delta = parse_ulong(argv[6], 10)) == ULONG_MAX)
+		if ((delta = parse_long(argv[6], 10)) == ULONG_MAX)
 			return 1;
 		if ((time = parse_ulong(argv[7], 10)) == ULONG_MAX)
 			return 1;
