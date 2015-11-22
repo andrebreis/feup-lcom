@@ -105,9 +105,9 @@ int test_line(unsigned short xi, unsigned short yi,
 		}
 	}
 
-	vg_exit();
-
 	unsubscribe_int(&kbHook);
+
+	vg_exit();
 
 }
 
