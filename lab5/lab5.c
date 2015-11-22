@@ -12,7 +12,7 @@ static void print_usage(char *argv[]) {
 					" service run %s -args \"xpm <xi> <yi> <xpm>\" \n"
 					" service run %s -args \"move <xi> <yi> <xpm> <hor> <delta> <time>\" \n"
 					" service run %s -args \"controller\" \n", argv[0], argv[0],
-			argv[0], argv[0], argv[0]);
+			argv[0], argv[0], argv[0], argv[0]);
 }
 
 static unsigned long parse_ulong(char *str, int base) {
@@ -223,7 +223,7 @@ static int proc_args(int argc, char *argv[]) {
 			return 1;
 		if ((hor = parse_ulong(argv[5], 10)) == ULONG_MAX)
 			return 1;
-		if ((delta = parse_long(argv[6], 10)) == ULONG_MAX)
+		if ((delta = parse_long(argv[6], 10)) == LONG_MAX)
 			return 1;
 		if ((time = parse_ulong(argv[7], 10)) == ULONG_MAX)
 			return 1;

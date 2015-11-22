@@ -33,8 +33,8 @@ int vg_exit() {
 
 	reg86.u.b.intno = 0x10; /* BIOS video services */
 
-	reg86.u.b.ah = 0x00; /* Set Video Mode function */
-	reg86.u.b.al = 0x03; /* 80x25 text mode*/
+	reg86.u.b.ah = 0x10; /* Set Video Mode function */
+	reg86.u.b.al = 0x13; /* 80x25 text mode*/
 
 	if (sys_int86(&reg86) != OK) {
 		printf("\tvg_exit(): sys_int86() failed \n");
@@ -76,13 +76,65 @@ void *vg_init(unsigned short mode) {
 
 }
 
+unsigned long getPixelPosition(unsigned short x, unsigned short y){
+	return y*h_res+x;
+}
+
 int vg_draw_square(unsigned short x, unsigned short y, unsigned short size, unsigned long color){
 	int i, j;
 	if(x + size > h_res || y + size > v_res)
 		return -1;
 	for(i = 0; i < size; i++){
 		for(j = 0; j < size; j++){
-			video_mem[(y+i)*h_res+x+j] = color;
+			video_mem[getPixelPosition(x+j, y+i)] = color;
 		}
 	}
+}
+
+int vg_draw_line(unsigned short xi, unsigned short yi, unsigned short xf, unsigned short yf, unsigned long color){
+
+	if(xi < 0 || xf < 0 || yi < 0 || yf < 0)
+		return -1;
+	if(xi > h_res || xf > h_res || yi > v_res || yf > v_res)
+		return -1;
+	/*
+	int i = 0;
+
+	int dx = abs(xf-xi), sx = xi<xf ? 1 : -1;
+	int dy = abs(yf-yi), sy = yi<yf ? 1 : -1;
+	int err = (dx>dy ? dx : -dy)/2, e2;
+
+
+	while(1){
+		i++;
+		video_mem[getPixelPosition(xi, yi)];
+		if (xi==xf && yi==yf) break;
+		e2 = err;
+		if (e2 >-dx) { err -= dy; xi += sx; }
+		if (e2 < dy) { err += dx; yi += sy; }
+	}
+	 */
+/*
+	int dx = xf - xi, dy = yf - yi;
+	int di = 2 * dy - dx;
+	int ds = 2 * dy, dt = 2 * (dy - dx);
+	video_mem[getPixelPosition(xi, yi)] = color;
+	while (xi < xf)
+	{
+		xi++;
+		if (di < 0)
+			di = di + ds;
+		else
+		{
+			yi++;
+			di = di + dt;
+		}
+		video_mem[getPixelPosition(xi, yi)] = color;
+	}*/
+	/*float m = (yf-yi)/(xf-xi);
+	int i;
+	for(i = 0; i <= (xf - xi); i++){
+		video_mem[getPixelPosition(xi+i, yi+m*i)] = color;
+	}*/
+	return 0;
 }
