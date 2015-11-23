@@ -98,39 +98,6 @@ int vg_draw_line(unsigned short xi, unsigned short yi, unsigned short xf, unsign
 	if(xi > h_res || xf > h_res || yi > v_res || yf > v_res)
 		return -1;
 
-	/*if(xf < xi){
-		int tmp = xi;
-		xi = xf;
-		xf = tmp;
-	}
-	if(yf < yi){
-			int tmp = yi;
-			yi = yf;
-			yf = tmp;
-		}
-
-	int dx = xf - xi, dy = yf - yi;
-	int di = 2 * dy - dx;
-	int ds = 2 * dy, dt = 2 * (dy - dx);
-	video_mem[getPixelPosition(xi, yi)] = color;
-	while (xi < xf)
-	{
-		xi++;
-		if (di < 0)
-			di = di + ds;
-		else
-		{
-			yi++;
-			di = di + dt;
-		}
-		video_mem[getPixelPosition(xi, yi)] = color;
-	}
-	/*float m = (yf-yi)/(xf-xi);
-	int i;
-	for(i = 0; i <= (xf - xi); i++){
-		video_mem[getPixelPosition(xi+i, yi+m*i)] = color;
-	}*/
-
 	int steep = abs(yf - yi) > abs(xf - xi);
 
 	if(steep) {
@@ -179,5 +146,19 @@ int vg_draw_line(unsigned short xi, unsigned short yi, unsigned short xf, unsign
 		}
 	}
 
+	return 0;
+}
+
+int vg_draw_xpm(unsigned short xi, unsigned short yi, int width, int height, char* xpm){
+	int i, j;
+
+	if(xi + width > h_res || yi + width > v_res)
+		return -1;
+
+	for(i = 0; i < height; i++){
+		for(j = 0; j < width; j++){
+			video_mem[getPixelPosition(xi + j, yi + i)] = xpm[i * width + j];
+		}
+	}
 	return 0;
 }
