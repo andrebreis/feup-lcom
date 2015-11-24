@@ -51,6 +51,7 @@ int vg_exit() {
 
 void *vg_init(unsigned short mode) {
 	struct reg86u r;
+	vbe_mode_info_t vmi_p;
 	int returnValue;
 	r.u.w.ax = SET_VBE_MODE; // VBE call, function 02 -- set VBE mode - set vi
 	r.u.w.bx = 1 << 14 | mode; // set bit 14: linear framebuffer
@@ -61,16 +62,16 @@ void *vg_init(unsigned short mode) {
 		return 1;
 	}
 
-	// vbe_get_mode_info(); to get resolutions and so
+	 vbe_get_mode_info(mode, &vmi_p);
 
-	h_res = H_RES;
-	v_res = V_RES;
-	bits_per_pixel = BITS_PER_PIXEL;
+	h_res = vmi_p.XResolution;
+	v_res = vmi_p.YResolution;
+	bits_per_pixel = vmi_p.BitsPerPixel;
 
 	video_mem_size = (h_res * v_res * bits_per_pixel) / 8;
 
 	struct mem_range memRange;
-	memRange.mr_base = VRAM_PHYS_ADDR;
+	memRange.mr_base = (phys_bytes)(vmi_p.PhysBasePtr);
 	memRange.mr_limit = memRange.mr_base + video_mem_size;
 
 	if (OK != (returnValue = sys_privctl(SELF, SYS_PRIV_ADD_MEM, &memRange)))
