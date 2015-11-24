@@ -5,6 +5,8 @@
 #include "utilities.h"
 #include "read_xpm.h"
 
+#define GET_VBE_CONTROLLER_INFO 0x4F00
+
 void *test_init(unsigned short mode, unsigned short delay) {
 
 	vg_init(mode);
