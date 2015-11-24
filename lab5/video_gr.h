@@ -33,7 +33,11 @@ int vg_draw_square(unsigned short x, unsigned short y, unsigned short size, unsi
 
 int vg_draw_line(unsigned short xi, unsigned short yi, unsigned short xf, unsigned short yf, unsigned long color);
 
-int vg_draw_xpm(unsigned short xi, unsigned short yi, int width, int height, char* xpm);
+int vg_draw_xpm(unsigned short xi, unsigned short yi, int width, int height, char* xpm[]);
+
+unsigned getHRes();
+
+unsigned getVRes();
 
  /** @} end of video_gr */
  

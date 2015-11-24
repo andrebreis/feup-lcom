@@ -5,6 +5,9 @@
 #include <sys/types.h>
 
 #include "vbe.h"
+#include "sprite.h"
+#include "keyboard.h"
+#include "timer.h"
 
 /* Constants for VBE 0x105 mode */
 
@@ -27,6 +30,9 @@ static char *video_mem; /* Process address to which VRAM is mapped */
 static unsigned h_res; /* Horizontal screen resolution in pixels */
 static unsigned v_res; /* Vertical screen resolution in pixels */
 static unsigned bits_per_pixel; /* Number of VRAM bits per pixel */
+
+static int timerHook = TIMER0_IRQ;
+static int kbHook = KB_IRQ;
 
 int vg_exit() {
 	struct reg86u reg86;
@@ -61,7 +67,7 @@ void *vg_init(unsigned short mode) {
 	v_res = V_RES;
 	bits_per_pixel = BITS_PER_PIXEL;
 
-	video_mem_size = (h_res * v_res * bits_per_pixel)/8;
+	video_mem_size = (h_res * v_res * bits_per_pixel) / 8;
 
 	struct mem_range memRange;
 	memRange.mr_base = VRAM_PHYS_ADDR;
@@ -76,31 +82,41 @@ void *vg_init(unsigned short mode) {
 
 }
 
-unsigned long getPixelPosition(unsigned short x, unsigned short y){
-	return y*h_res+x;
+unsigned long getPixelPosition(unsigned short x, unsigned short y) {
+	return y * h_res + x;
 }
 
-int vg_draw_square(unsigned short x, unsigned short y, unsigned short size, unsigned long color){
+unsigned getHRes() {
+	return h_res;
+}
+
+unsigned getVRes() {
+	return v_res;
+}
+
+int vg_draw_square(unsigned short x, unsigned short y, unsigned short size,
+		unsigned long color) {
 	int i, j;
-	if(x + size > h_res || y + size > v_res)
+	if (x + size > h_res || y + size > v_res)
 		return -1;
-	for(i = 0; i < size; i++){
-		for(j = 0; j < size; j++){
-			video_mem[getPixelPosition(x+j, y+i)] = color;
+	for (i = 0; i < size; i++) {
+		for (j = 0; j < size; j++) {
+			video_mem[getPixelPosition(x + j, y + i)] = color;
 		}
 	}
 }
 
-int vg_draw_line(unsigned short xi, unsigned short yi, unsigned short xf, unsigned short yf, unsigned long color){
+int vg_draw_line(unsigned short xi, unsigned short yi, unsigned short xf,
+		unsigned short yf, unsigned long color) {
 
-	if(xi < 0 || xf < 0 || yi < 0 || yf < 0)
+	if (xi < 0 || xf < 0 || yi < 0 || yf < 0)
 		return -1;
-	if(xi > h_res || xf > h_res || yi > v_res || yf > v_res)
+	if (xi > h_res || xf > h_res || yi > v_res || yf > v_res)
 		return -1;
 
 	int steep = abs(yf - yi) > abs(xf - xi);
 
-	if(steep) {
+	if (steep) {
 		// swap x1 and y1
 		int tmp = xi;
 		xi = yi;
@@ -110,7 +126,7 @@ int vg_draw_line(unsigned short xi, unsigned short yi, unsigned short xf, unsign
 		xf = yf;
 		yf = tmp;
 	}
-	if(xi > xf) {
+	if (xi > xf) {
 		// swap x1 and x2
 		int tmp = xi;
 		xi = xf;
@@ -128,14 +144,14 @@ int vg_draw_line(unsigned short xi, unsigned short yi, unsigned short xf, unsign
 	error = dx / 2;
 	y = yi;
 
-	if(yi < yf)
+	if (yi < yf)
 		ystep = 1;
 	else
 		ystep = -1;
 
 	int x;
 	for (x = xi; x <= xf; x++) {
-		if(steep)
+		if (steep)
 			video_mem[getPixelPosition(y, x)] = color;
 		else
 			video_mem[getPixelPosition(x, y)] = color;
@@ -149,16 +165,64 @@ int vg_draw_line(unsigned short xi, unsigned short yi, unsigned short xf, unsign
 	return 0;
 }
 
-int vg_draw_xpm(unsigned short xi, unsigned short yi, int width, int height, char* xpm){
-	int i, j;
+int vg_draw_xpm(unsigned short xi, unsigned short yi, char* xpm[]) {
+	Sprite *sp = create_sprite(xpm, xi, yi);
+	draw_sprite(sp, video_mem);
+	return 0;
+}
 
-	if(xi + width > h_res || yi + width > v_res)
+int vg_move_xpm(unsigned short xi, unsigned short yi, char *xpm[],
+		unsigned short hor, short delta, unsigned short time) {
+
+	int irq_kbc, irq_timer, counter = 0, returnValue, timeCounter = 0;
+	float deltax, deltay;
+	unsigned char firstByte = 0;
+	int r, ipc_status;
+	message msg;
+
+	irq_timer = subscribe_int(TIMER0_IRQ, IRQ_REENABLE, &timerHook);
+	irq_kbc = subscribe_int(KB_IRQ, IRQ_REENABLE | IRQ_EXCLUSIVE, &kbHook);
+
+	if (irq_timer == -1 || irq_kbc == -1)
 		return -1;
 
-	for(i = 0; i < height; i++){
-		for(j = 0; j < width; j++){
-			video_mem[getPixelPosition(xi + j, yi + i)] = xpm[i * width + j];
+	float pixelsPerTick = (float) delta / (time*60);
+
+
+	Sprite *sp = create_sprite(xpm, xi, yi);
+
+	while (1) {
+		if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
+			printf("driver_receive failed with: %d", r);
+			continue;
+		}
+		if (is_ipc_notify(ipc_status)) { /* received notification */
+			switch (_ENDPOINT_P(msg.m_source)) {
+			case HARDWARE: /* hardware interrupt notification */
+				if (msg.NOTIFY_ARG & irq_kbc) { /* subscribed interrupt */
+					returnValue = kbdReadKey(&firstByte);
+					if (returnValue != 0)
+						return returnValue;
+					if (firstByte == ESC) {
+						unsubscribe_int(&kbHook);
+						unsubscribe_int(&timerHook);
+						return 0;
+					}
+				}
+				if (msg.NOTIFY_ARG & irq_timer) {
+					if (timeCounter < time*60) {
+						deltax = xi + pixelsPerTick * timeCounter * (hor != 0);
+						deltay = yi + pixelsPerTick * timeCounter * (hor == 0);
+						animate_sprite(sp, video_mem, (int)deltax, (int)deltay);
+					}
+					timeCounter++;
+				}
+				break;
+			default:
+				break; /* no other notifications expected: do nothing */
+			}
+		} else {
 		}
 	}
-	return 0;
+
 }
