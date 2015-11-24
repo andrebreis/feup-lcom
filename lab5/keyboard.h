@@ -16,4 +16,6 @@ int sendCommandtoKBC(unsigned long cmd);
 
 int kbdReadKey(unsigned char* resultKey);
 
+int waitFor(unsigned char key);
+
 #endif /* __KEYBOARD_H */

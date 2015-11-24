@@ -1,13 +1,14 @@
 
 
 #include "sprite.h"
+#include "video_gr.h"
 
 /** Creates a new sprite with pixmap "pic", random speeds
  * (not zero) and position (within the screen limits), and
  * draws it in memory whose address is "base";
  * Returns NULL on invalid pixmap.
  */
-Sprite *create_sprite(char *pic[], char *bas) {
+Sprite *create_sprite(char *pic[], char *base) {
 	//allocate space for the "object"
 	Sprite *sp = (Sprite *) malloc ( sizeof(Sprite));
 	if( sp == NULL )
@@ -18,7 +19,11 @@ Sprite *create_sprite(char *pic[], char *bas) {
 		free(sp);
 		return NULL;
 	}
-	...
+	for(i = 0; i < height; i++){
+		for(j = 0; j < width; j++){
+			base[getPixelPosition(xi + j, yi + i)] = xpm[i * width + j];
+		}
+	}
 	return sp;
 }
 

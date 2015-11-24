@@ -27,6 +27,14 @@ void *vg_init(unsigned short mode);
  */
 int vg_exit(void);
 
+unsigned long getPixelPosition(unsigned short x, unsigned short y);
+
+int vg_draw_square(unsigned short x, unsigned short y, unsigned short size, unsigned long color);
+
+int vg_draw_line(unsigned short xi, unsigned short yi, unsigned short xf, unsigned short yf, unsigned long color);
+
+int vg_draw_xpm(unsigned short xi, unsigned short yi, int width, int height, char* xpm);
+
  /** @} end of video_gr */
  
 #endif /* __VIDEO_GR_H */
