@@ -216,6 +216,8 @@ void printConfig(char status[3]) {
 
 int checkVerticalLine(char packet[3], int* xVar, int* yVar, short length,
 		unsigned short tolerance) {
+	printPacket(packet);
+	printf("xvar: %d, yvar: %d, tolerance: %d \n", *xVar, *yVar, tolerance);
 	if ((packet[0] & BIT(1)) == 0)
 		*xVar = *yVar = 0;
 	else {
@@ -237,12 +239,12 @@ int checkVerticalLine(char packet[3], int* xVar, int* yVar, short length,
 			if(packet[1] != 0)
 			*xVar += (packet[1] | (-1 << 8));
 		}
-		if (*xVar >= tolerance) {
+		if (abs(*xVar) >= tolerance) {
 			*xVar = *yVar = 0;
 			return 1;
 		}
 	}
-	if (*yVar >= abs(length))
+	if (abs(*yVar) >= abs(length))
 		return 0;
 	else
 		return 1;

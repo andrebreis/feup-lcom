@@ -93,12 +93,12 @@ static int proc_args(int argc, char *argv[]) {
 		  printf("test4: Wrong number of arguments for test of test_gesture()\n");
 		  return 1;
 	  }
-	  if((length = parse_ulong(argv[2], 10)) == ULONG_MAX)
+	  if((length = parse_long(argv[2], 10)) == LONG_MAX)
 		  return 1;
 	  if((tolerance = parse_ulong(argv[3], 10)) == ULONG_MAX)
 		  return 1;
 	  printf("test4: test_gesture(%d, %d)\n", length, tolerance); /* Actually, it was already invoked */
-	  return test_gesture(length, duration);
+	  return test_gesture(length, tolerance);
   }
   else {
 	  printf("test4: non valid function \"%s\" to test\n", argv[1]);
