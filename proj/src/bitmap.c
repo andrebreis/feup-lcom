@@ -4,6 +4,13 @@
 #include "videoGraphics.h"
 #include "utilities.h"
 
+int rgb(unsigned char r, unsigned char g, unsigned char b) {
+	int red = r * 31 / 255;
+	int green = g * 63 / 255;
+	int blue = b * 31 / 255;
+	return (red << 11) | (green << 5) | blue;
+}
+
 Bitmap* loadBitmap(const char* filename) {
 	// allocating necessary size
 	Bitmap* bmp = (Bitmap*) malloc(sizeof(Bitmap));
@@ -119,6 +126,59 @@ void drawBitmap(Bitmap* bmp, int x, int y, Alignment alignment) {
 		imgStartPos = bmp->bitmapData + xCorrection * 2 + i * width * 2;
 
 		memcpy(bufferStartPos, imgStartPos, drawWidth * 2);
+	}
+}
+
+void drawTransparentBitmap(Bitmap* bmp, int x, int y, Alignment alignment) {
+	if (bmp == NULL)
+		return;
+
+	int width = bmp->bitmapInfoHeader.width;
+	int drawWidth = width;
+	int height = bmp->bitmapInfoHeader.height;
+
+	if (alignment == ALIGN_CENTER)
+		x -= width / 2;
+	else if (alignment == ALIGN_RIGHT)
+		x -= width;
+
+	if (x + width < 0 || x > getHRes() || y + height < 0 || y > getVRes())
+		return;
+
+	int xCorrection = 0;
+	if (x < 0) {
+		xCorrection = -x;
+		drawWidth -= xCorrection;
+		x = 0;
+
+		if (drawWidth > getHRes())
+			drawWidth = getHRes();
+	} else if (x + drawWidth >= getHRes()) {
+		drawWidth = getHRes() - x;
+	}
+
+	char* bufferStartPos;
+	char* imgStartPos;
+
+	int i;
+	for (i = 0; i < height; i++) {
+		int pos = y + height - 1 - i;
+
+		if (pos < 0 || pos >= getVRes())
+			continue;
+
+		bufferStartPos = getBuffer();
+		bufferStartPos += x * 2 + pos * getHRes() * 2;
+
+		imgStartPos = bmp->bitmapData + xCorrection * 2 + i * width * 2;
+
+		//memcpy(bufferStartPos, imgStartPos, drawWidth * 2);
+		int j;
+		for (j = 0; j < drawWidth * 2; j++) {
+			if (imgStartPos[j] != 116 && abs(imgStartPos[j]) != 8 && abs(imgStartPos[j]) != 32 && abs(imgStartPos[j]) != 64 && abs(imgStartPos[j]) != 96 && abs(imgStartPos[j]) != 128)
+				bufferStartPos[j] = imgStartPos[j];
+
+		}
 	}
 }
 
