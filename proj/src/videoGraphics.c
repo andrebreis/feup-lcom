@@ -89,6 +89,14 @@ unsigned getVRes() {
 	return vRes;
 }
 
+unsigned getBytesPerPixel(){
+	return (bitsPerPixel/8);
+}
+
+unsigned int getVideoMemSize(){
+	return videoMemSize;
+}
+
 char* getVideoMem(){
 	return videoMem;
 }

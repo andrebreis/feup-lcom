@@ -175,9 +175,8 @@ void drawTransparentBitmap(Bitmap* bmp, int x, int y, Alignment alignment) {
 		//memcpy(bufferStartPos, imgStartPos, drawWidth * 2);
 		int j;
 		for (j = 0; j < drawWidth * 2; j++) {
-			if (imgStartPos[j] != 116 && abs(imgStartPos[j]) != 8 && abs(imgStartPos[j]) != 32 && abs(imgStartPos[j]) != 64 && abs(imgStartPos[j]) != 96 && abs(imgStartPos[j]) != 128)
+			if (imgStartPos[j] != 116 && imgStartPos[j]!=-89)
 				bufferStartPos[j] = imgStartPos[j];
-
 		}
 	}
 }
