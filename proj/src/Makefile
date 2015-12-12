@@ -5,7 +5,7 @@ COMPILER_TYPE= gnu
 CC=gcc
 
 PROG=	proj
-SRCS=	main.c bitmap.c videoGraphics.c utilities.c vbe.c
+SRCS=	main.c bitmap.c videoGraphics.c utilities.c vbe.c GameInterface.c Mouse.c
 
 CCFLAGS= -Wall -O3
 

@@ -112,3 +112,7 @@ char* getBuffer(){
 void flipBuffer(){
 	memcpy(videoMem, buffer, videoMemSize);
 }
+
+void flipMouseBuffer(){
+	memcpy(videoMem, mouseBuffer, videoMemSize);
+}

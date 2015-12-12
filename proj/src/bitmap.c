@@ -129,7 +129,7 @@ void drawBitmap(Bitmap* bmp, int x, int y, Alignment alignment) {
 	}
 }
 
-void drawTransparentBitmap(Bitmap* bmp, int x, int y, Alignment alignment) {
+void drawTransparentBitmapTargetBuffer(Bitmap* bmp, int x, int y, Alignment alignment, char targetBuffer[]) {
 	if (bmp == NULL)
 		return;
 
@@ -167,7 +167,7 @@ void drawTransparentBitmap(Bitmap* bmp, int x, int y, Alignment alignment) {
 		if (pos < 0 || pos >= getVRes())
 			continue;
 
-		bufferStartPos = getBuffer();
+		bufferStartPos = targetBuffer;
 		bufferStartPos += x * 2 + pos * getHRes() * 2;
 
 		imgStartPos = bmp->bitmapData + xCorrection * 2 + i * width * 2;
@@ -175,7 +175,10 @@ void drawTransparentBitmap(Bitmap* bmp, int x, int y, Alignment alignment) {
 		//memcpy(bufferStartPos, imgStartPos, drawWidth * 2);
 		int j;
 		for (j = 0; j < drawWidth * 2; j++) {
-			if (imgStartPos[j] != 116 && imgStartPos[j]!=-89)
+			if (imgStartPos[j] == 116 && imgStartPos[j+1] == -89){
+				j++;
+				continue;
+			}
 				bufferStartPos[j] = imgStartPos[j];
 		}
 	}

@@ -7,14 +7,13 @@
 
 #define LINEAR_MODEL_BIT 14
 
-mmap_t map;
-
 #define PB2BASE(x) (((x) >> 4) & 0x0F000)
 #define PB2OFF(x) ((x) & 0x0FFFF)
 
 int vbe_get_mode_info(unsigned short mode, vbe_mode_info_t *vmi_p) {
 
 	struct reg86u r;
+	mmap_t map;
 
 	lm_init();
 
@@ -39,6 +38,8 @@ int vbe_get_mode_info(unsigned short mode, vbe_mode_info_t *vmi_p) {
 	}
 
 	*vmi_p = *(vbe_mode_info_t*) map.virtual;
+
+	lm_free(&map);
 
 	return 0;
 }

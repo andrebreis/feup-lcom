@@ -41,6 +41,8 @@ char* getBuffer();
 
 void flipBuffer();
 
+void flipMouseBuffer();
+
  /** @} end of videoGraphics */
  
 #endif /* __VIDEOGRAPHICS_H */

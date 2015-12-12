@@ -1,5 +1,5 @@
-#ifndef __BITMAP2_H
-#define __BITMAP2_H
+#ifndef __BITMAP_H
+#define __BITMAP_H
 
 /** @defgroup Bitmap Bitmap
  * @{
