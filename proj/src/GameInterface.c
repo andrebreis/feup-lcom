@@ -2,6 +2,7 @@
 
 #include "videoGraphics.h"
 #include "GameInterface.h"
+#include "Mouse.h"
 
 Bitmap* drawBackground(){
 	Bitmap* background = loadBitmap(
@@ -10,8 +11,7 @@ Bitmap* drawBackground(){
 	return background;
 }
 
-void drawMouse(int x, int y){
-	Bitmap *mouse = loadBitmap("/home/lcom/lcom1516-t2g02/proj/res/images/cursorpointerx2size.bmp");
+void drawMouse(){
 	memcpy(getMouseBuffer(), getBuffer(), getVideoMemSize());
-	drawTransparentBitmapTargetBuffer(mouse, x, y, ALIGN_LEFT, getMouseBuffer());
+	drawTransparentBitmapTargetBuffer(getMouse()->icon, getMouse()->cornerX, getMouse()->cornerY, ALIGN_LEFT, getMouseBuffer());
 }

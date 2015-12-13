@@ -6,13 +6,26 @@
 
 static int hook = MOUSE_IRQ;
 
-static Mouse* mouse = {0, 0, 21, 21, 2, loadBitmap("/home/lcom/lcom1516-t2g02/proj/res/images/cursorpointerx2size.bmp")};
+static Mouse* mouse = NULL;
 
-int subscribeMouseInt(){
+Mouse* getMouse(){
+	if(!mouse){
+		mouse  = (Mouse*) malloc(sizeof(Mouse));
+		mouse->icon = loadBitmap("/home/lcom/lcom1516-t2g02/proj/res/images/cursorpointerx2size.bmp");
+		mouse->middleX = getHRes()/2;
+		mouse->middleY = getVRes()/2;
+		mouse->cornerX = mouse->middleX - mouse->icon->bitmapInfoHeader.width/2;
+		mouse->cornerY = mouse->middleY - mouse->icon->bitmapInfoHeader.height/2;
+		mouse->middleSize = 2;
+	}
+	return mouse;
+}
+
+int subscribeMouseInt() {
 	return subscribeInt(MOUSE_IRQ, IRQ_REENABLE | IRQ_EXCLUSIVE, &hook);
 }
 
-int unsubscribeMouseInt(){
+int unsubscribeMouseInt() {
 	return unsubscribeInt(&hook);
 }
 
@@ -68,6 +81,7 @@ int writeToMouse(unsigned long cmd) {
 	int returnValue, goodFeedback = 0;
 	unsigned long cmdFeedback;
 
+	Mouse* mouse = getMouse();
 	while (!goodFeedback) {
 
 		returnValue = sendCommandtoKBC(STAT_REG, WRITE_TO_MOUSE);
@@ -87,8 +101,7 @@ int writeToMouse(unsigned long cmd) {
 		else if (cmdFeedback == ERROR) {
 			printf("Error sending command!\n");
 			return -1;
-		}
-		else if(cmdFeedback == NACK)
+		} else if (cmdFeedback == NACK)
 			cmd = RESEND;
 	}
 	return 0;
@@ -124,48 +137,54 @@ int getPacket(char* packet) {
 	return returnValue;
 }
 
-void updateMousePosition(char packet[3], long int* x, long int* y){
+void updateMousePosition(char packet[3]) {
 	/*int xOVF = (packet[0] & BIT(6)), yOVF = (packet[0] & BIT(7));
-	unsigned char maxDelta = -1;
-	if(xOVF) *x += maxDelta;
-	if(yOVF) *y += maxDelta;
-	int deltaX = packet[1], deltaY = packet[2];
+	 unsigned char maxDelta = -1;
+	 if(xOVF) mouse->middleX += maxDelta;
+	 if(yOVF) mouse->middleY += maxDelta;
+	 int deltaX = packet[1], deltaY = packet[2];
 
-	if((packet[0] & BIT(5)) == 0)
-	 *y -= deltaY;
-	else
-	 *y -= (deltaY | (-1 << 8));
+	 if((packet[0] & BIT(5)) == 0)
+	 mouse->middleY -= deltaY;
+	 else
+	 mouse->middleY -= (deltaY | (-1 << 8));
 
-	if((packet[0] & BIT(6)) == 0)
-	 *x += deltaX;
-	else
-	 *x += (deltaX | (-1 << 8));
+	 if((packet[0] & BIT(6)) == 0)
+	 mouse->middleX += deltaX;
+	 else
+	 mouse->middleX += (deltaX | (-1 << 8));
 
-	if(*x >= getHRes()) *x = getHRes();
-	if(*x <= 0) *x = 0;
-	if(*y >= getVRes()) *y = getVRes();
-	if(*y <= 0) *y = 1;*/
+	 if(mouse->middleX >= getHRes()) mouse->middleX = getHRes();
+	 if(mouse->middleX <= 0) mouse->middleX = 0;
+	 if(mouse->middleY >= getVRes()) mouse->middleY = getVRes();
+	 if(mouse->middleY <= 0) mouse->middleY = 1;*/
 
 	int xOVF = (packet[0] & BIT(6)), yOVF = (packet[0] & BIT(7));
 	unsigned char maxDelta = -1;
 	int deltaX = packet[1], deltaY = packet[2];
-	if(xOVF) deltaX += maxDelta;
-	if(yOVF) deltaY += maxDelta;
-	if((packet[0] & BIT(5)) != 0) deltaY = (deltaY | (-1 << 8));
-	if((packet[0] & BIT(6)) != 0) deltaX = (deltaX | (-1 << 8));
+	if (xOVF)
+		deltaX += maxDelta;
+	if (yOVF)
+		deltaY += maxDelta;
+	if ((packet[0] & BIT(5)) != 0)
+		deltaY = (deltaY | (-1 << 8));
+	if ((packet[0] & BIT(6)) != 0)
+		deltaX = (deltaX | (-1 << 8));
 
-	if(*x + deltaX >= getHRes())
-		*x = getHRes();
-	else if(*x + deltaX <= 0)
-		*x = 1;
+	if (mouse->middleX + deltaX >= getHRes())
+		mouse->middleX = getHRes();
+	else if (mouse->middleX + deltaX <= 0)
+		mouse->middleX = 1;
 	else
-		*x += deltaX;
+		mouse->middleX += deltaX;
 
-	if(*y - deltaY >= getVRes())
-		*y = getVRes();
-	else if(*y - deltaY <= 0)
-		*y = 1;
+	if (mouse->middleY - deltaY >= getVRes())
+		mouse->middleY = getVRes();
+	else if (mouse->middleY - deltaY <= 0)
+		mouse->middleY = 1;
 	else
-		*y = *y - deltaY;
+		mouse->middleY = mouse->middleY - deltaY;
 
+	mouse->cornerX = mouse->middleX - mouse->icon->bitmapInfoHeader.width/2;
+	mouse->cornerY = mouse->middleY - mouse->icon->bitmapInfoHeader.height/2;
 }

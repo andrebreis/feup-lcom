@@ -22,7 +22,6 @@ int main() {
 	int returnValue, i = 0, mouseSet;
 	mouseSet = subscribeMouseInt();
 
-	long int mouseX = getHRes()/2, mouseY =  getVRes()/2;
 	if (mouseSet == -1) {
 		return -1;
 	}
@@ -31,9 +30,8 @@ int main() {
 		return returnValue;
 	}
 
-	drawMouse(mouseX, mouseY);
+	drawMouse();
 	flipMouseBuffer();
-	Bitmap* berlaites = loadBitmap("/home/lcom/lcom1516-t2g02/proj/res/images/duck0.bmp");
 	while (1) {
 		if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
 			printf("driver_receive failed with: %d", r);
@@ -53,9 +51,8 @@ int main() {
 						continue;
 					}
 					if ((i % 3) == 2) {
-						updateMousePosition(packet, &mouseX, &mouseY);
-						drawTransparentBitmapTargetBuffer(berlaites, mouseX-40, mouseY-50, ALIGN_LEFT, getBuffer());
-						drawMouse(mouseX, mouseY);
+						updateMousePosition(packet);
+						drawMouse();
 						flipMouseBuffer();
 						if (packet[0] & BIT(1) != 0) {
 							disableStreamMode();

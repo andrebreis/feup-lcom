@@ -7,6 +7,7 @@ GameInterface.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include-fixed/stdio.
 GameInterface.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include/stdarg.h
 GameInterface.o:	GameInterface.c
 GameInterface.o:	GameInterface.h
+GameInterface.o:	Mouse.h
 GameInterface.o:	bitmap.h
 GameInterface.o:	videoGraphics.h
 

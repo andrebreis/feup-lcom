@@ -26,11 +26,13 @@
 #define ENA_DATA_PACKS  0xF4
 
 typedef struct{
-	int cornerX, cornerY;
-	int middleX, middleY;
+	long int cornerX, cornerY;
+	long int middleX, middleY;
 	int middleSize;
 	Bitmap* icon;
 }Mouse;
+
+Mouse* getMouse();
 
 int subscribeMouseInt();
 
@@ -48,6 +50,6 @@ int enableSendingDataPackets();
 
 int getPacket(char* packet);
 
-void updateMousePosition(char packet[3], long int* x, long int* y);
+void updateMousePosition(char packet[3]);
 
 #endif /* __MOUSE_H */
