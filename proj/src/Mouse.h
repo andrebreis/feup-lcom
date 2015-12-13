@@ -1,6 +1,8 @@
 #ifndef __MOUSE_H
 #define __MOUSE_H
 
+#include "bitmap.h"
+
 #define DELAY_US    20000
 
 #define OUT_BUF 	0x60
@@ -22,6 +24,13 @@
 #define SET_STREAM_MODE	0xEA
 #define DIS_STREAM_MODE 0xF5
 #define ENA_DATA_PACKS  0xF4
+
+typedef struct{
+	int cornerX, cornerY;
+	int middleX, middleY;
+	int middleSize;
+	Bitmap* icon;
+}Mouse;
 
 int subscribeMouseInt();
 

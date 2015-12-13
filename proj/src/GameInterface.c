@@ -11,7 +11,7 @@ Bitmap* drawBackground(){
 }
 
 void drawMouse(int x, int y){
-	Bitmap *mouse = loadBitmap("/home/lcom/lcom1516-t2g02/proj/res/images/arrowCursor.bmp");
+	Bitmap *mouse = loadBitmap("/home/lcom/lcom1516-t2g02/proj/res/images/cursorpointerx2size.bmp");
 	memcpy(getMouseBuffer(), getBuffer(), getVideoMemSize());
 	drawTransparentBitmapTargetBuffer(mouse, x, y, ALIGN_LEFT, getMouseBuffer());
 }

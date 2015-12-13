@@ -61,6 +61,7 @@ Mouse.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include-fixed/unistd.h
 Mouse.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include/stdarg.h
 Mouse.o:	Mouse.c
 Mouse.o:	Mouse.h
+Mouse.o:	bitmap.h
 Mouse.o:	utilities.h
 Mouse.o:	videoGraphics.h
 

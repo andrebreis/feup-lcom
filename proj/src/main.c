@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <minix/drivers.h>
 
+#include "bitmap.h"
 #include "videoGraphics.h"
 #include "GameInterface.h"
 #include "Mouse.h"
@@ -21,7 +22,7 @@ int main() {
 	int returnValue, i = 0, mouseSet;
 	mouseSet = subscribeMouseInt();
 
-	long int mouseX = 0, mouseY =  0;
+	long int mouseX = getHRes()/2, mouseY =  getVRes()/2;
 	if (mouseSet == -1) {
 		return -1;
 	}
@@ -32,6 +33,7 @@ int main() {
 
 	drawMouse(mouseX, mouseY);
 	flipMouseBuffer();
+	Bitmap* berlaites = loadBitmap("/home/lcom/lcom1516-t2g02/proj/res/images/duck0.bmp");
 	while (1) {
 		if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
 			printf("driver_receive failed with: %d", r);
@@ -52,6 +54,7 @@ int main() {
 					}
 					if ((i % 3) == 2) {
 						updateMousePosition(packet, &mouseX, &mouseY);
+						drawTransparentBitmapTargetBuffer(berlaites, mouseX-40, mouseY-50, ALIGN_LEFT, getBuffer());
 						drawMouse(mouseX, mouseY);
 						flipMouseBuffer();
 						if (packet[0] & BIT(1) != 0) {
@@ -75,14 +78,16 @@ int main() {
 	 drawTransparentBitmap(duck, 50, 50, ALIGN_LEFT);
 	 flipBuffer();*/
 
-	/*FILE * logfd;
+	/*Bitmap* cursor = loadBitmap("/home/lcom/lcom1516-t2g02/proj/res/images/cursorpointerx2size.bmp");
+
+	FILE * logfd;
 
 	 logfd = fopen("/home/lcom/lcom1516-t2g02/proj/log.txt", "w");
 
 	 char* video_mem = getVideoMem();
 	 int i;
 	 for(i=0; i < duck->bitmapInfoHeader.imageSize; i++){
-	 char test = (char) duck->bitmapData[i];
+	 char test = (char) cursor->bitmapData[i];
 	 fprintf(logfd, "%d\n", test);
 	 }
 

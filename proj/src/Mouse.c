@@ -6,6 +6,8 @@
 
 static int hook = MOUSE_IRQ;
 
+static Mouse* mouse = {0, 0, 21, 21, 2, loadBitmap("/home/lcom/lcom1516-t2g02/proj/res/images/cursorpointerx2size.bmp")};
+
 int subscribeMouseInt(){
 	return subscribeInt(MOUSE_IRQ, IRQ_REENABLE | IRQ_EXCLUSIVE, &hook);
 }

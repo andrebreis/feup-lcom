@@ -55,6 +55,8 @@ Bitmap* loadBitmap(const char* filename);
  */
 void drawBitmap(Bitmap* bitmap, int x, int y, Alignment alignment);
 
+void drawTransparentBitmapTargetBuffer(Bitmap* bitmap, int x, int y, Alignment alignment, char targetBuffer[]);
+
 /**
  * @brief Destroys the given bitmap, freeing all resources used by it.
  *
