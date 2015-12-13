@@ -5,6 +5,7 @@
 #include "videoGraphics.h"
 #include "GameInterface.h"
 #include "Mouse.h"
+#include "Timer.h"
 #include "utilities.h"
 
 int main() {
@@ -13,14 +14,25 @@ int main() {
 	videoGraphicsInit(0x117);
 
 	Bitmap* background = loadBitmap(
-			"/home/lcom/lcom1516-t2g02/proj/res/images/background-117.bmp");
+			"/home/lcom/lcom1516-t2g02/proj/res/images/bluebackground.bmp");
 	drawBitmap(background, 0, 0, ALIGN_LEFT);
+	Bitmap* frontground = loadBitmap(
+			"/home/lcom/lcom1516-t2g02/proj/res/images/frontbackground.bmp");
+	drawTransparentBitmapTargetBuffer(frontground, 0, 234, ALIGN_LEFT,
+			getBuffer());
+
+	Bitmap* duckSprite[4] = {loadBitmap(
+			"/home/lcom/lcom1516-t2g02/proj/res/images/duck186x80.bmp"), loadBitmap(
+					"/home/lcom/lcom1516-t2g02/proj/res/images/duck286x80.bmp"), loadBitmap(
+							"/home/lcom/lcom1516-t2g02/proj/res/images/duck386x80.bmp"), loadBitmap("/home/lcom/lcom1516-t2g02/proj/res/images/duck286x80.bmp")};
+	drawTransparentBitmapTargetBuffer(duckSprite[0], 0, getVRes(), ALIGN_LEFT, getBuffer());
 
 	message msg;
 	int r, ipc_status;
 	char packet[3];
-	int returnValue, i = 0, mouseSet;
-	mouseSet = subscribeMouseInt();
+	int returnValue, i = 0, timeCounter = 0, j = 1, k=0;
+	int mouseSet = subscribeMouseInt();
+	int timerSet = subscribeTimerInt();
 
 	if (mouseSet == -1) {
 		return -1;
@@ -57,11 +69,23 @@ int main() {
 						if (packet[0] & BIT(1) != 0) {
 							disableStreamMode();
 							unsubscribeMouseInt();
+							unsubscribeTimerInt();
 							videoGraphicsExit();
 							return 0;
 						}
 					}
 					i++;
+				}
+				if(msg.NOTIFY_ARG & timerSet){
+					if(timeCounter % 3 == 0)
+						k++;
+					drawBitmap(background, 0, 0, ALIGN_LEFT);
+					drawTransparentBitmapTargetBuffer(duckSprite[k%4], 0+j*2, getVRes()-j*2, ALIGN_LEFT, getBuffer());
+					drawTransparentBitmapTargetBuffer(frontground, 0, 234, ALIGN_LEFT, getBuffer());
+					j++;
+					drawMouse();
+					flipMouseBuffer();
+					timeCounter++;
 				}
 				break;
 			default:
@@ -77,7 +101,7 @@ int main() {
 
 	/*Bitmap* cursor = loadBitmap("/home/lcom/lcom1516-t2g02/proj/res/images/cursorpointerx2size.bmp");
 
-	FILE * logfd;
+	 FILE * logfd;
 
 	 logfd = fopen("/home/lcom/lcom1516-t2g02/proj/log.txt", "w");
 
@@ -92,5 +116,4 @@ int main() {
 
 	//sleep(5);
 	//videoGraphicsExit();
-
 }
