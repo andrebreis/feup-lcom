@@ -137,6 +137,34 @@ int getPacket(char* packet) {
 	return returnValue;
 }
 
+void printPacket(char packet[3]) {
+	char LB, MB, RB, XOV, YOV, xSign, ySign;
+	int X, Y;
+
+	printf("B1=0x%02X  B2=0x%02X  B3=0x%02X  ", (unsigned char) packet[0],
+			(unsigned char) packet[1], (unsigned char) packet[2]);
+
+	LB = (packet[0] & BIT(0)) != 0;
+	RB = (packet[0] & BIT(1)) != 0;
+	MB = (packet[0] & BIT(2)) != 0;
+	XOV = (packet[0] & BIT(6)) != 0;
+	YOV = (packet[0] & BIT(7)) != 0;
+	xSign = (packet[0] & BIT(4)) != 0;
+	ySign = (packet[0] & BIT(5)) != 0;
+
+	X = packet[1];
+	if (xSign) {
+		X |= (-1 << 8);
+	}
+	Y = packet[2];
+	if (ySign) {
+		Y |= (-1 << 8);
+	}
+
+	printf("LB=%d  MB=%d  RB=%d  XOV=%d  YOV=%d  X=%d  Y=%d\n", LB, MB, RB, XOV,
+			YOV, X, Y);
+}
+
 void updateMousePosition(char packet[3]) {
 	/*int xOVF = (packet[0] & BIT(6)), yOVF = (packet[0] & BIT(7));
 	 unsigned char maxDelta = -1;
@@ -161,30 +189,34 @@ void updateMousePosition(char packet[3]) {
 
 	int xOVF = (packet[0] & BIT(6)), yOVF = (packet[0] & BIT(7));
 	unsigned char maxDelta = -1;
-	int deltaX = packet[1], deltaY = packet[2];
-	if (xOVF)
+	int deltaX = (unsigned char) packet[1], deltaY = (unsigned char) packet[2];
+	/*if (xOVF)
 		deltaX += maxDelta;
 	if (yOVF)
-		deltaY += maxDelta;
+		deltaY += maxDelta;*/
 	if ((packet[0] & BIT(5)) != 0)
 		deltaY = (deltaY | (-1 << 8));
-	if ((packet[0] & BIT(6)) != 0)
+	if ((packet[0] & BIT(4)) != 0)
 		deltaX = (deltaX | (-1 << 8));
 
 	if (mouse->middleX + deltaX >= getHRes())
 		mouse->middleX = getHRes();
-	else if (mouse->middleX + deltaX <= 0)
-		mouse->middleX = 1;
 	else
 		mouse->middleX += deltaX;
 
 	if (mouse->middleY - deltaY >= getVRes())
 		mouse->middleY = getVRes();
-	else if (mouse->middleY - deltaY <= 0)
-		mouse->middleY = 1;
 	else
 		mouse->middleY = mouse->middleY - deltaY;
 
 	mouse->cornerX = mouse->middleX - mouse->icon->bitmapInfoHeader.width/2;
 	mouse->cornerY = mouse->middleY - mouse->icon->bitmapInfoHeader.height/2;
+	if(mouse->cornerX < 0){
+		mouse->cornerX = 0;
+		mouse->middleX = mouse->icon->bitmapInfoHeader.width/2;
+	}
+	if(mouse->cornerY < 0){
+		mouse->cornerY = 0;
+		mouse->middleY = mouse->icon->bitmapInfoHeader.height/2;
+	}
 }

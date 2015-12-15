@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <time.h>
 #include <minix/drivers.h>
 
 #include "bitmap.h"
@@ -7,9 +8,11 @@
 #include "Mouse.h"
 #include "Timer.h"
 #include "utilities.h"
+#include "Duck.h"
 
 int main() {
 	sef_startup();
+	srand(time(NULL));
 
 	videoGraphicsInit(0x117);
 
@@ -21,16 +24,24 @@ int main() {
 	drawTransparentBitmapTargetBuffer(frontground, 0, 234, ALIGN_LEFT,
 			getBuffer());
 
-	Bitmap* duckSprite[4] = {loadBitmap(
-			"/home/lcom/lcom1516-t2g02/proj/res/images/duck186x80.bmp"), loadBitmap(
-					"/home/lcom/lcom1516-t2g02/proj/res/images/duck286x80.bmp"), loadBitmap(
-							"/home/lcom/lcom1516-t2g02/proj/res/images/duck386x80.bmp"), loadBitmap("/home/lcom/lcom1516-t2g02/proj/res/images/duck286x80.bmp")};
-	drawTransparentBitmapTargetBuffer(duckSprite[0], 0, getVRes(), ALIGN_LEFT, getBuffer());
+	Bitmap* duckSprite[4] =
+	{ loadBitmap(
+			"/home/lcom/lcom1516-t2g02/proj/res/images/duck186x80.bmp"),
+			loadBitmap(
+					"/home/lcom/lcom1516-t2g02/proj/res/images/duck286x80.bmp"),
+					loadBitmap(
+							"/home/lcom/lcom1516-t2g02/proj/res/images/duck386x80.bmp"),
+							loadBitmap(
+									"/home/lcom/lcom1516-t2g02/proj/res/images/duck286x80.bmp") };
 
+	AnimSprite* duck = createAnimSprite(duckSprite);
+	duck->x = 0;
+	duck->y = getVRes();
 	message msg;
 	int r, ipc_status;
 	char packet[3];
-	int returnValue, i = 0, timeCounter = 0, j = 1, k=0;
+	int returnValue, i = 0;
+	int leftButtonFlag = 0, failCount = 0, duckSide = 0, waitTime = 0;
 	int mouseSet = subscribeMouseInt();
 	int timerSet = subscribeTimerInt();
 
@@ -44,7 +55,7 @@ int main() {
 
 	drawMouse();
 	flipMouseBuffer();
-	while (1) {
+	while (failCount < 3) {
 		if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
 			printf("driver_receive failed with: %d", r);
 			continue;
@@ -66,7 +77,23 @@ int main() {
 						updateMousePosition(packet);
 						drawMouse();
 						flipMouseBuffer();
-						if (packet[0] & BIT(1) != 0) {
+						if ((packet[0] & BIT(0)) != 0 && leftButtonFlag == 0) {
+							leftButtonFlag = 1;
+							if (isHit(duck)) {
+								drawBitmap(background, 0, 0, ALIGN_LEFT);
+								drawTransparentBitmapTargetBuffer(frontground,
+										0, 234, ALIGN_LEFT, getBuffer());
+								duckSide = (duckSide + 1) % 2;
+								if (duckSide)
+									duck->x = getHRes();
+								else
+									duck->x = 0;
+								duck->y = getVRes();
+							}
+						}
+						if ((packet[0] & BIT(0)) == 0)
+							leftButtonFlag = 0;
+						if ((packet[0] & BIT(1)) != 0) {
 							disableStreamMode();
 							unsubscribeMouseInt();
 							unsubscribeTimerInt();
@@ -76,16 +103,35 @@ int main() {
 					}
 					i++;
 				}
-				if(msg.NOTIFY_ARG & timerSet){
-					if(timeCounter % 3 == 0)
-						k++;
-					drawBitmap(background, 0, 0, ALIGN_LEFT);
-					drawTransparentBitmapTargetBuffer(duckSprite[k%4], 0+j*2, getVRes()-j*2, ALIGN_LEFT, getBuffer());
-					drawTransparentBitmapTargetBuffer(frontground, 0, 234, ALIGN_LEFT, getBuffer());
-					j++;
-					drawMouse();
-					flipMouseBuffer();
-					timeCounter++;
+				if (msg.NOTIFY_ARG & timerSet) {
+					if (duck->y > 0) {
+						drawBitmap(background, 0, 0, ALIGN_LEFT);
+						if (duckSide == 0) {
+							drawAnimSprite(duck);
+							duck->x += 4;
+							duck->y -= 4;
+						} else {
+							drawInvertedAnimSprite(duck);
+							duck->x -= 4;
+							duck->y -= 4;
+						}
+						drawTransparentBitmapTargetBuffer(frontground, 0, 234,
+								ALIGN_LEFT, getBuffer());
+						drawMouse();
+						flipMouseBuffer();
+					} else {
+						drawBitmap(background, 0, 0, ALIGN_LEFT);
+						drawTransparentBitmapTargetBuffer(frontground, 0, 234,
+								ALIGN_LEFT, getBuffer());
+						duck->x = 0;
+						duck->y = getVRes();
+						duckSide = (duckSide + 1) % 2;
+						if (duckSide)
+							duck->x = getHRes();
+						else
+							duck->x = 0;
+						failCount++;
+					}
 				}
 				break;
 			default:
@@ -94,6 +140,11 @@ int main() {
 		} else {
 		}
 	}
+	disableStreamMode();
+	unsubscribeMouseInt();
+	unsubscribeTimerInt();
+	videoGraphicsExit();
+	return 0;
 
 	/*Bitmap* duck = loadBitmap("/home/lcom/lcom1516-t2g02/proj/res/images/newduck.bmp");
 	 drawTransparentBitmap(duck, 50, 50, ALIGN_LEFT);

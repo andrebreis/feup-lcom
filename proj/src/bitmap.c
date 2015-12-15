@@ -184,6 +184,63 @@ void drawTransparentBitmapTargetBuffer(Bitmap* bmp, int x, int y, Alignment alig
 	}
 }
 
+// TODO : REMOVE AND ADD THIS FUNCTIONALITY TO drawTransparentBitmapTargetBuffer
+void drawTransparentBitmapInverted(Bitmap* bmp, int x, int y, Alignment alignment, char targetBuffer[]) {
+	if (bmp == NULL)
+		return;
+
+	int width = bmp->bitmapInfoHeader.width;
+	int drawWidth = width;
+	int height = bmp->bitmapInfoHeader.height;
+
+	if (alignment == ALIGN_CENTER)
+		x -= width / 2;
+	else if (alignment == ALIGN_RIGHT)
+		x -= width;
+
+	if (x + width < 0 || x > getHRes() || y + height < 0 || y > getVRes())
+		return;
+
+	int xCorrection = 0;
+	if (x < 0) {
+		xCorrection = -x;
+		drawWidth -= xCorrection;
+		x = 0;
+
+		if (drawWidth > getHRes())
+			drawWidth = getHRes();
+	} else if (x + drawWidth >= getHRes()) {
+		drawWidth = getHRes() - x;
+	}
+
+	char* bufferStartPos;
+	char* imgStartPos;
+
+	int i;
+	for (i = 0; i < height; i++) {
+		int pos = y + height - 1 - i;
+
+		if (pos < 0 || pos >= getVRes())
+			continue;
+
+		bufferStartPos = targetBuffer;
+		bufferStartPos += x * 2 + pos * getHRes() * 2;
+
+		imgStartPos = bmp->bitmapData + xCorrection * 2 + i * width * 2;
+
+		//memcpy(bufferStartPos, imgStartPos, drawWidth * 2);
+		int j, k;
+		for (k = drawWidth * 2, j = 0; j < drawWidth * 2; j++, k--) {
+			if (imgStartPos[j] == 116 && imgStartPos[j+1] == -89){
+				j++;
+				k--;
+				continue;
+			}
+				bufferStartPos[k] = imgStartPos[j];
+		}
+	}
+}
+
 void deleteBitmap(Bitmap* bmp) {
 	if (bmp == NULL)
 		return;
