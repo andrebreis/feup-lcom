@@ -17,6 +17,19 @@ AnimSprite* createAnimSprite(Bitmap* maps[4]) {
 	return asp;
 }
 
+AnimSprite* createBigAnimSprite(Bitmap* maps[18]) {
+	AnimSprite* asp = (AnimSprite*) malloc(sizeof(AnimSprite));
+	int i;
+	for (i = 0; i < 18; i++) {
+		asp->maps[i] = maps[i];
+	}
+	asp->num_fig = 18;
+	asp->cur_fig = 0;
+	asp->aspeed = 2;
+	asp->cur_aspeed = asp->aspeed;
+	return asp;
+}
+
 void drawAnimSprite(AnimSprite* asp) {
 	drawTransparentBitmapTargetBuffer(asp->maps[asp->cur_fig], asp->x, asp->y,
 			ALIGN_LEFT, getBuffer());

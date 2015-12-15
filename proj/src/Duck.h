@@ -15,6 +15,8 @@ typedef struct {
 
 AnimSprite* createAnimSprite(Bitmap* maps[4]);
 
+AnimSprite* createBigAnimSprite(Bitmap* maps[18]);
+
 void drawAnimSprite(AnimSprite* asp);
 
 int isHit(AnimSprite* asp);

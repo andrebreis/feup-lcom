@@ -9,12 +9,59 @@
 #include "Timer.h"
 #include "utilities.h"
 #include "Duck.h"
+#include "Keyboard.h"
 
 int main() {
 	sef_startup();
 	srand(time(NULL));
 
+	unsigned char konamiCode[10] = { UP, UP, DOWN, DOWN, LEFT, RIGHT, LEFT,
+	RIGHT, B, A };
+	unsigned char userKonami[10];
+
 	videoGraphicsInit(0x117);
+
+	Bitmap* konamiImages[] =
+			{ loadBitmap(
+					"/home/lcom/lcom1516-t2g02/proj/res/images/KONAMI0.bmp"),
+					loadBitmap(
+							"/home/lcom/lcom1516-t2g02/proj/res/images/KONAMI.bmp"),
+					loadBitmap(
+							"/home/lcom/lcom1516-t2g02/proj/res/images/KONAMI1.bmp"),
+					loadBitmap(
+							"/home/lcom/lcom1516-t2g02/proj/res/images/KONAMI2.bmp"),
+					loadBitmap(
+							"/home/lcom/lcom1516-t2g02/proj/res/images/KONAMI3.bmp"),
+					loadBitmap(
+							"/home/lcom/lcom1516-t2g02/proj/res/images/KONAMI4.bmp"),
+					loadBitmap(
+							"/home/lcom/lcom1516-t2g02/proj/res/images/KONAMI5.bmp"),
+					loadBitmap(
+							"/home/lcom/lcom1516-t2g02/proj/res/images/KONAMI6.bmp"),
+					loadBitmap(
+							"/home/lcom/lcom1516-t2g02/proj/res/images/KONAMI7.bmp"),
+					loadBitmap(
+							"/home/lcom/lcom1516-t2g02/proj/res/images/KONAMI8.bmp"),
+					loadBitmap(
+							"/home/lcom/lcom1516-t2g02/proj/res/images/KONAMI9.bmp"),
+					loadBitmap(
+							"/home/lcom/lcom1516-t2g02/proj/res/images/KONAMI10.bmp"),
+					loadBitmap(
+							"/home/lcom/lcom1516-t2g02/proj/res/images/KONAMI11.bmp"),
+					loadBitmap(
+							"/home/lcom/lcom1516-t2g02/proj/res/images/KONAMI12.bmp"),
+					loadBitmap(
+							"/home/lcom/lcom1516-t2g02/proj/res/images/KONAMI13.bmp"),
+					loadBitmap(
+							"/home/lcom/lcom1516-t2g02/proj/res/images/KONAMI14.bmp"),
+					loadBitmap(
+							"/home/lcom/lcom1516-t2g02/proj/res/images/KONAMI15.bmp"),
+					loadBitmap(
+							"/home/lcom/lcom1516-t2g02/proj/res/images/KONAMI16.bmp") };
+
+	AnimSprite* konami = createBigAnimSprite(konamiImages);
+	konami->x = getHRes() / 2 - 70;
+	konami->y = getVRes() / 2 - 70;
 
 	Bitmap* background = loadBitmap(
 			"/home/lcom/lcom1516-t2g02/proj/res/images/bluebackground.bmp");
@@ -25,14 +72,14 @@ int main() {
 			getBuffer());
 
 	Bitmap* duckSprite[4] =
-	{ loadBitmap(
-			"/home/lcom/lcom1516-t2g02/proj/res/images/duck186x80.bmp"),
-			loadBitmap(
-					"/home/lcom/lcom1516-t2g02/proj/res/images/duck286x80.bmp"),
+			{ loadBitmap(
+					"/home/lcom/lcom1516-t2g02/proj/res/images/duck186x80.bmp"),
+					loadBitmap(
+							"/home/lcom/lcom1516-t2g02/proj/res/images/duck286x80.bmp"),
 					loadBitmap(
 							"/home/lcom/lcom1516-t2g02/proj/res/images/duck386x80.bmp"),
-							loadBitmap(
-									"/home/lcom/lcom1516-t2g02/proj/res/images/duck286x80.bmp") };
+					loadBitmap(
+							"/home/lcom/lcom1516-t2g02/proj/res/images/duck286x80.bmp") };
 
 	AnimSprite* duck = createAnimSprite(duckSprite);
 	duck->x = 0;
@@ -41,9 +88,12 @@ int main() {
 	int r, ipc_status;
 	char packet[3];
 	int returnValue, i = 0;
-	int leftButtonFlag = 0, failCount = 0, duckSide = 0, waitTime = 0;
+	int leftButtonFlag = 0, failCount = 0, duckSide = 0, konamiComplete = 0;
 	int mouseSet = subscribeMouseInt();
 	int timerSet = subscribeTimerInt();
+	int keyboardSet = subscribeKeyboardInt();
+	int konamiIndex = 0;
+	unsigned char key;
 
 	if (mouseSet == -1) {
 		return -1;
@@ -79,16 +129,19 @@ int main() {
 						flipMouseBuffer();
 						if ((packet[0] & BIT(0)) != 0 && leftButtonFlag == 0) {
 							leftButtonFlag = 1;
-							if (isHit(duck)) {
-								drawBitmap(background, 0, 0, ALIGN_LEFT);
-								drawTransparentBitmapTargetBuffer(frontground,
-										0, 234, ALIGN_LEFT, getBuffer());
-								duckSide = (duckSide + 1) % 2;
-								if (duckSide)
-									duck->x = getHRes();
-								else
-									duck->x = 0;
-								duck->y = getVRes();
+							if (konamiComplete == 0) {
+								if (isHit(duck)) {
+									drawBitmap(background, 0, 0, ALIGN_LEFT);
+									drawTransparentBitmapTargetBuffer(
+											frontground, 0, 234, ALIGN_LEFT,
+											getBuffer());
+									duckSide = (duckSide + 1) % 2;
+									if (duckSide)
+										duck->x = getHRes();
+									else
+										duck->x = 0;
+									duck->y = getVRes();
+								}
 							}
 						}
 						if ((packet[0] & BIT(0)) == 0)
@@ -97,6 +150,7 @@ int main() {
 							disableStreamMode();
 							unsubscribeMouseInt();
 							unsubscribeTimerInt();
+							unsubscribeKeyboardInt();
 							videoGraphicsExit();
 							return 0;
 						}
@@ -104,33 +158,61 @@ int main() {
 					i++;
 				}
 				if (msg.NOTIFY_ARG & timerSet) {
-					if (duck->y > 0) {
-						drawBitmap(background, 0, 0, ALIGN_LEFT);
-						if (duckSide == 0) {
-							drawAnimSprite(duck);
-							duck->x += 4;
-							duck->y -= 4;
+					if (konamiComplete == 0) {
+						if (duck->y > 0) {
+							drawBitmap(background, 0, 0, ALIGN_LEFT);
+							if (duckSide == 0) {
+								drawAnimSprite(duck);
+								duck->x += 2;
+								duck->y -= 2;
+							} else {
+								drawInvertedAnimSprite(duck);
+								duck->x -= 2;
+								duck->y -= 2;
+							}
+							drawTransparentBitmapTargetBuffer(frontground, 0,
+									234, ALIGN_LEFT, getBuffer());
+							drawMouse();
+							flipMouseBuffer();
 						} else {
-							drawInvertedAnimSprite(duck);
-							duck->x -= 4;
-							duck->y -= 4;
+							drawBitmap(background, 0, 0, ALIGN_LEFT);
+							drawTransparentBitmapTargetBuffer(frontground, 0,
+									234, ALIGN_LEFT, getBuffer());
+							duck->y = getVRes();
+							duckSide = (duckSide + 1) % 2;
+							if (duckSide)
+								duck->x = getHRes();
+							else
+								duck->x = 0;
+							failCount++;
 						}
-						drawTransparentBitmapTargetBuffer(frontground, 0, 234,
-								ALIGN_LEFT, getBuffer());
-						drawMouse();
-						flipMouseBuffer();
 					} else {
 						drawBitmap(background, 0, 0, ALIGN_LEFT);
-						drawTransparentBitmapTargetBuffer(frontground, 0, 234,
-								ALIGN_LEFT, getBuffer());
-						duck->x = 0;
-						duck->y = getVRes();
-						duckSide = (duckSide + 1) % 2;
-						if (duckSide)
-							duck->x = getHRes();
-						else
-							duck->x = 0;
-						failCount++;
+						drawAnimSprite(konami);
+						drawMouse();
+						flipMouseBuffer();
+						konamiComplete--;
+					}
+				}
+				if (msg.NOTIFY_ARG & keyboardSet) {
+					kbdReadKey(&key);
+					if (key == 0xE0)
+						kbdReadKey(&key);
+					else if (key == konamiCode[konamiIndex]) {
+						userKonami[konamiIndex] = key;
+						konamiIndex++;
+						if (konamiIndex == 10) {
+							konamiIndex = 0;
+							konamiComplete = 720;
+							//drawBitmap(background, 0, 0, ALIGN_LEFT);
+							//flipBuffer();
+							duck->y = getVRes();
+							duckSide = (duckSide + 1) % 2;
+							if (duckSide)
+								duck->x = getHRes();
+							else
+								duck->x = 0;
+						}
 					}
 				}
 				break;
@@ -143,6 +225,7 @@ int main() {
 	disableStreamMode();
 	unsubscribeMouseInt();
 	unsubscribeTimerInt();
+	unsubscribeKeyboardInt();
 	videoGraphicsExit();
 	return 0;
 
