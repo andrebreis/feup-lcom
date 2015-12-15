@@ -11,6 +11,9 @@
 #include "Duck.h"
 #include "Keyboard.h"
 
+#define DUCK_VEL_X 3
+#define DUCK_VEL_Y 3
+
 int main() {
 	sef_startup();
 	srand(time(NULL));
@@ -59,9 +62,9 @@ int main() {
 					loadBitmap(
 							"/home/lcom/lcom1516-t2g02/proj/res/images/KONAMI16.bmp") };
 
-	AnimSprite* konami = createBigAnimSprite(konamiImages);
+	/*AnimSprite* konami = createBigAnimSprite(konamiImages);
 	konami->x = getHRes() / 2 - 70;
-	konami->y = getVRes() / 2 - 70;
+	konami->y = getVRes() / 2 - 70;*/
 
 	Bitmap* background = loadBitmap(
 			"/home/lcom/lcom1516-t2g02/proj/res/images/bluebackground.bmp");
@@ -93,6 +96,7 @@ int main() {
 	int timerSet = subscribeTimerInt();
 	int keyboardSet = subscribeKeyboardInt();
 	int konamiIndex = 0;
+	int j = 0;
 	unsigned char key;
 
 	if (mouseSet == -1) {
@@ -163,12 +167,12 @@ int main() {
 							drawBitmap(background, 0, 0, ALIGN_LEFT);
 							if (duckSide == 0) {
 								drawAnimSprite(duck);
-								duck->x += 2;
-								duck->y -= 2;
+								duck->x += DUCK_VEL_X;
+								duck->y -= DUCK_VEL_Y;
 							} else {
 								drawInvertedAnimSprite(duck);
-								duck->x -= 2;
-								duck->y -= 2;
+								duck->x -= DUCK_VEL_X;
+								duck->y -= DUCK_VEL_Y;
 							}
 							drawTransparentBitmapTargetBuffer(frontground, 0,
 									234, ALIGN_LEFT, getBuffer());
@@ -188,9 +192,10 @@ int main() {
 						}
 					} else {
 						drawBitmap(background, 0, 0, ALIGN_LEFT);
-						drawAnimSprite(konami);
+						drawTransparentBitmapTargetBuffer(konamiImages[(j/3)%18], getHRes()/2-70, getVRes()/2-70, ALIGN_LEFT, getBuffer());
 						drawMouse();
 						flipMouseBuffer();
+						j++;
 						konamiComplete--;
 					}
 				}
@@ -202,10 +207,9 @@ int main() {
 						userKonami[konamiIndex] = key;
 						konamiIndex++;
 						if (konamiIndex == 10) {
+							j = 0;
 							konamiIndex = 0;
 							konamiComplete = 720;
-							//drawBitmap(background, 0, 0, ALIGN_LEFT);
-							//flipBuffer();
 							duck->y = getVRes();
 							duckSide = (duckSide + 1) % 2;
 							if (duckSide)

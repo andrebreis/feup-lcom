@@ -35,7 +35,7 @@ void drawAnimSprite(AnimSprite* asp) {
 			ALIGN_LEFT, getBuffer());
 	asp->cur_aspeed--;
 	if (asp->cur_aspeed == 0) {
-		asp->cur_fig = (asp->cur_fig + 1) % 4;
+		asp->cur_fig = (asp->cur_fig + 1) % asp->num_fig;
 		asp->cur_aspeed = asp->aspeed;
 	}
 
@@ -46,7 +46,7 @@ void drawInvertedAnimSprite(AnimSprite* asp) {
 			ALIGN_LEFT, getBuffer());
 	asp->cur_aspeed--;
 	if (asp->cur_aspeed == 0) {
-		asp->cur_fig = (asp->cur_fig + 1) % 4;
+		asp->cur_fig = (asp->cur_fig + 1) % asp->num_fig;
 		asp->cur_aspeed = asp->aspeed;
 	}
 }

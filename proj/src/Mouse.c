@@ -137,34 +137,6 @@ int getPacket(char* packet) {
 	return returnValue;
 }
 
-void printPacket(char packet[3]) {
-	char LB, MB, RB, XOV, YOV, xSign, ySign;
-	int X, Y;
-
-	printf("B1=0x%02X  B2=0x%02X  B3=0x%02X  ", (unsigned char) packet[0],
-			(unsigned char) packet[1], (unsigned char) packet[2]);
-
-	LB = (packet[0] & BIT(0)) != 0;
-	RB = (packet[0] & BIT(1)) != 0;
-	MB = (packet[0] & BIT(2)) != 0;
-	XOV = (packet[0] & BIT(6)) != 0;
-	YOV = (packet[0] & BIT(7)) != 0;
-	xSign = (packet[0] & BIT(4)) != 0;
-	ySign = (packet[0] & BIT(5)) != 0;
-
-	X = packet[1];
-	if (xSign) {
-		X |= (-1 << 8);
-	}
-	Y = packet[2];
-	if (ySign) {
-		Y |= (-1 << 8);
-	}
-
-	printf("LB=%d  MB=%d  RB=%d  XOV=%d  YOV=%d  X=%d  Y=%d\n", LB, MB, RB, XOV,
-			YOV, X, Y);
-}
-
 void updateMousePosition(char packet[3]) {
 	/*int xOVF = (packet[0] & BIT(6)), yOVF = (packet[0] & BIT(7));
 	 unsigned char maxDelta = -1;

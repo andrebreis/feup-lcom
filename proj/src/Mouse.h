@@ -48,6 +48,4 @@ int getPacket(char* packet);
 
 void updateMousePosition(char packet[3]);
 
-void printPacket(char packet[3]);
-
 #endif /* __MOUSE_H */
