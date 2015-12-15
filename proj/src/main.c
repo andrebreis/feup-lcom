@@ -63,8 +63,8 @@ int main() {
 							"/home/lcom/lcom1516-t2g02/proj/res/images/KONAMI16.bmp") };
 
 	/*AnimSprite* konami = createBigAnimSprite(konamiImages);
-	konami->x = getHRes() / 2 - 70;
-	konami->y = getVRes() / 2 - 70;*/
+	 konami->x = getHRes() / 2 - 70;
+	 konami->y = getVRes() / 2 - 70;*/
 
 	Bitmap* background = loadBitmap(
 			"/home/lcom/lcom1516-t2g02/proj/res/images/bluebackground.bmp");
@@ -192,7 +192,15 @@ int main() {
 						}
 					} else {
 						drawBitmap(background, 0, 0, ALIGN_LEFT);
-						drawTransparentBitmapTargetBuffer(konamiImages[(j/3)%18], getHRes()/2-70, getVRes()/2-70, ALIGN_LEFT, getBuffer());
+						if (konamiComplete <= 30)
+							drawTransparentBitmapTargetBuffer(konamiImages[0],
+									getHRes() / 2 - 70, getVRes() / 2 - 70,
+									ALIGN_LEFT, getBuffer());
+						else
+							drawTransparentBitmapTargetBuffer(
+									konamiImages[(j / 3) % 18],
+									getHRes() / 2 - 70, getVRes() / 2 - 70,
+									ALIGN_LEFT, getBuffer());
 						drawMouse();
 						flipMouseBuffer();
 						j++;
@@ -209,7 +217,7 @@ int main() {
 						if (konamiIndex == 10) {
 							j = 0;
 							konamiIndex = 0;
-							konamiComplete = 720;
+							konamiComplete = 350;
 							duck->y = getVRes();
 							duckSide = (duckSide + 1) % 2;
 							if (duckSide)
