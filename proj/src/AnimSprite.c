@@ -31,22 +31,12 @@ void updateAnimSprite(AnimSprite* asp) {
 	}
 }
 
-void drawAnimSprite(AnimSprite* asp) {
-	drawTransparentBitmapTargetBuffer(asp->maps[asp->cur_fig], asp->x, asp->y,
-			ALIGN_LEFT, getBuffer());
+void drawAnimSprite(AnimSprite asp, int x, int y, int inverted) {
+	drawTransparentBitmap(asp.maps[asp.cur_fig], x, y,
+			ALIGN_LEFT, inverted);
 }
 
-void drawInvertedAnimSprite(AnimSprite* asp) {
-	drawTransparentBitmapInverted(asp->maps[asp->cur_fig], asp->x, asp->y,
-			ALIGN_LEFT, getBuffer());
-	asp->cur_aspeed--;
-	if (asp->cur_aspeed == 0) {
-		asp->cur_fig = (asp->cur_fig + 1) % asp->num_fig;
-		asp->cur_aspeed = asp->aspeed;
-	}
-}
-
-int isHit(AnimSprite* asp) {
+/*int isHit(AnimSprite* asp) {
 	Mouse* mouse = getMouse();
 	Bitmap* currentBitmap = asp->maps[asp->cur_fig];
 	int width = currentBitmap->bitmapInfoHeader.width, height =
@@ -65,4 +55,4 @@ int isHit(AnimSprite* asp) {
 
 	}
 	return 0;
-}
+}*/

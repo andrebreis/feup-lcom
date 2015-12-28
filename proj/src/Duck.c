@@ -2,59 +2,110 @@
 #include "videoGraphics.h"
 #include "Mouse.h"
 
-#define IMG_PATH "/home/lcom/lcom1516-t2g02/proj/res/images/"
+#define BOTTOM_OF_SCREEN getVRes() - 210
 
-AnimSprite* createAnimSprite(char* imgName, int noImages) {
-	AnimSprite* asp = (AnimSprite*) malloc(sizeof(AnimSprite));
+void initializeDuck(Duck* duck) {
+	int width = duck->duckSprites[0].maps[0]->bitmapInfoHeader.width;
+	duck->mode = rand() % 4;
+	switch (duck->mode) {
+	case 0:
+		duck->x = rand() % ((getHRes() + 3 * width) / 2) - width + 1;
+		duck->y = BOTTOM_OF_SCREEN
+		;
+		duck->xVel = 1;
+		duck->yVel = -1;
+		duck->state = UP;
+		break;
+	case 1:
+		duck->x = getHRes() - rand() % ((getHRes() + 3 * width) / 2) - width
+				+ 1;
+		duck->y = BOTTOM_OF_SCREEN
+		;
+		duck->xVel = -1;
+		duck->yVel = -1;
+		duck->state = UP;
+		break;
+	case 2:
+		duck->x = 0;
+		duck->y = rand() % BOTTOM_OF_SCREEN
+		;
+		duck->xVel = 1;
+		duck->yVel = rand() % 2 * 2 - 1;
+		duck->state = (duck->yVel == -1) ? UP : DOWN;
+		break;
+	case 3:
+		duck->x = getHRes() + width - 1;
+		duck->y = rand() % BOTTOM_OF_SCREEN
+		;
+		duck->xVel = -1;
+		duck->yVel = rand() % 2 * 2 - 1;
+		duck->state = (duck->yVel == -1) ? UP : DOWN;
+		break;
+	}
+}
+
+void createDuck(Duck* duck, AnimSprite duckSprites[3]) {
 	int i;
-	asp->maps = (Bitmap**) malloc(sizeof(Bitmap*) * noImages);
-	for (i = 0; i < noImages; i++) {
-		char path[1024];
-		strcpy(path, IMG_PATH);
-		strcat(path, imgName);
-		strcat(path, itoa(i));
-		strcat(path, ".bmp");
-		asp->maps[i] = loadBitmap(path);
+	for(i = 0; i < 3; i++) duck->duckSprites[i] = duckSprites[i];
+	initializeDuck(duck);
+}
+
+void keepDuckOnScreen(Duck* duck) {
+	int width = duck->duckSprites[0].maps[0]->bitmapInfoHeader.width;
+	int height = duck->duckSprites[0].maps[0]->bitmapInfoHeader.height;
+
+	if (duck->x <= -width) {
+		duck->x = -width + 1;
+		duck->xVel = -duck->xVel;
+	} else if (duck->x >= getHRes() + width) {
+		duck->x = getHRes() + width - 1;
+		duck->xVel = -duck->xVel;
 	}
-	asp->num_fig = noImages;
-	asp->cur_fig = 0;
-	asp->aspeed = 3;
-	asp->cur_aspeed = asp->aspeed;
-	return asp;
-}
 
-void updateAnimSprite(AnimSprite* asp) {
-	asp->cur_aspeed--;
-	if (asp->cur_aspeed == 0) {
-		asp->cur_fig = (asp->cur_fig + 1) % asp->num_fig;
-		asp->cur_aspeed = asp->aspeed;
-	}
-}
-
-void drawAnimSprite(AnimSprite* asp) {
-	drawTransparentBitmapTargetBuffer(asp->maps[asp->cur_fig], asp->x, asp->y,
-			ALIGN_LEFT, getBuffer());
-}
-
-void drawInvertedAnimSprite(AnimSprite* asp) {
-	drawTransparentBitmapInverted(asp->maps[asp->cur_fig], asp->x, asp->y,
-			ALIGN_LEFT, getBuffer());
-	asp->cur_aspeed--;
-	if (asp->cur_aspeed == 0) {
-		asp->cur_fig = (asp->cur_fig + 1) % asp->num_fig;
-		asp->cur_aspeed = asp->aspeed;
+	if (duck->y <= -height) {
+		duck->y = -height + 1;
+		duck->yVel = -duck->yVel;
+	} else if (duck->y >= BOTTOM_OF_SCREEN)
+	{
+		duck->y = BOTTOM_OF_SCREEN - 1;
+		duck->yVel = -duck->yVel;
 	}
 }
 
-int isHit(AnimSprite* asp) {
+void updateDuckPosition(Duck* duck) {
+	if (duck->state == DEAD)
+		return;
+	duck->x += duck->xVel;
+	duck->y += duck->yVel;
+	updateAnimSprite(&duck->duckSprites[duck->state]);
+	keepDuckOnScreen(duck);
+}
+
+void setXVel(Duck* duck, int vel){
+	duck->xVel = duck->xVel*vel;
+}
+
+void setYVel(Duck* duck, int vel){
+	duck->yVel = duck->yVel*vel;
+}
+
+void drawDuck(Duck duck){
+	int inverted = (duck.xVel < 0);
+	drawAnimSprite(duck.duckSprites[duck.state], duck.x, duck.y, inverted);
+}
+
+int isHit(const Duck duck) {
+	if(duck.state != UP && duck.state != DOWN)
+		return 0;
 	Mouse* mouse = getMouse();
-	Bitmap* currentBitmap = asp->maps[asp->cur_fig];
+	AnimSprite asp = duck.duckSprites[duck.state];
+	Bitmap* currentBitmap = asp.maps[asp.cur_fig];
 	int width = currentBitmap->bitmapInfoHeader.width, height =
 			currentBitmap->bitmapInfoHeader.height;
-	if (mouse->middleX >= asp->x && mouse->middleX <= asp->x + width
-			&& mouse->middleY >= asp->y && mouse->middleY <= asp->y + height) {
-		int firstPixelPosition = (mouse->middleY - asp->y) * width * 2
-				+ (mouse->middleX - asp->x) * 2; //2 -> bytesperpixel
+	if (mouse->middleX >= duck.x && mouse->middleX <= duck.x + width
+			&& mouse->middleY >= duck.y && mouse->middleY <= duck.y + height) {
+		int firstPixelPosition = (mouse->middleY - duck.y) * width * 2
+				+ (mouse->middleX - duck.x) * 2; //2 -> bytesperpixel
 		if (currentBitmap->bitmapData[firstPixelPosition] != 116
 				|| currentBitmap->bitmapData[firstPixelPosition + 2] != 116
 				|| currentBitmap->bitmapData[firstPixelPosition + width * 2]

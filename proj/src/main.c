@@ -8,6 +8,7 @@
 #include "Mouse.h"
 #include "Timer.h"
 #include "utilities.h"
+#include "AnimSprite.h"
 #include "Duck.h"
 #include "Keyboard.h"
 
@@ -18,38 +19,43 @@ int main() {
 	sef_startup();
 	srand(time(NULL));
 
-	unsigned char konamiCode[10] = { UP, UP, DOWN, DOWN, LEFT, RIGHT, LEFT,
-	RIGHT, B, A };
-	unsigned char userKonami[10];
+	/*unsigned char konamiCode[10] = { UP, UP, DOWN, DOWN, LEFT, RIGHT, LEFT,
+	 RIGHT, B, A };
+	 unsigned char userKonami[10];*/
 
 	videoGraphicsInit(0x117);
 
-	 AnimSprite* konami = createAnimSprite("KONAMI", 18);
+	/*AnimSprite* konami = createAnimSprite("KONAMI", 18);
 	 konami->x = getHRes() / 2 - 70;
-	 konami->y = getVRes() / 2 - 70;
+	 konami->y = getVRes() / 2 - 70;*/
 
 	Bitmap* background = loadBitmap(
 			"/home/lcom/lcom1516-t2g02/proj/res/images/bluebackground.bmp");
 	drawBitmap(background, 0, 0, ALIGN_LEFT);
 	Bitmap* frontground = loadBitmap(
 			"/home/lcom/lcom1516-t2g02/proj/res/images/frontbackground.bmp");
-	drawTransparentBitmapTargetBuffer(frontground, 0, 234, ALIGN_LEFT,
-			getBuffer());
+	drawTransparentBitmap(frontground, 0, 234, ALIGN_LEFT, 0);
+	flipBuffer();
 
-	AnimSprite* duck = createAnimSprite("duck", 4);
-	duck->x = 0;
-	duck->y = getVRes();
+	AnimSprite* duckSprite = createAnimSprite("duck", 4);
+	AnimSprite duckSprites[3] = {*duckSprites, *duckSprites, *duckSprites};
+	Duck duck;
+	createDuck(&duck, duckSprites);
+
+	/*duck->x = 0;
+	 duck->y = getVRes();*/
 	message msg;
 	int r, ipc_status;
 
 	char packet[3];
 	int returnValue, i = 0, j = 0;
-	int leftButtonFlag = 0, failCount = 0, duckSide = 0, exit = 0;
-	int konamiIndex = 0, konamiComplete = 0;
+	int leftButtonFlag = 0, failCount = 0, exit = 0;
+	int duckLifeTime = 5 * 60;
+	//int konamiIndex = 0, konamiComplete = 0;
 
 	int mouseSet = subscribeMouseInt();
 	int timerSet = subscribeTimerInt();
-	int keyboardSet = subscribeKeyboardInt();
+	//int keyboardSet = subscribeKeyboardInt();
 	if (mouseSet == -1) {
 		return -1;
 	}
@@ -70,7 +76,8 @@ int main() {
 			case HARDWARE: /* hardware interrupt notification */
 				if (msg.NOTIFY_ARG & mouseSet) { /* subscribed interrupt */
 					returnValue = getPacket(&packet[i % 3]);
-					if (returnValue == -1 || ((i % 3 == 0) && (packet[i % 3] & BIT(3) == 0)))
+					if (returnValue == -1
+							|| ((i % 3 == 0) && (packet[i % 3] & BIT(3) == 0)))
 						continue;
 					if (returnValue != 0) {
 						return returnValue;
@@ -81,20 +88,14 @@ int main() {
 						flipMouseBuffer();
 						if ((packet[0] & BIT(0)) != 0 && leftButtonFlag == 0) {
 							leftButtonFlag = 1;
-							if (konamiComplete == 0) {
-								if (isHit(duck)) {
-									drawBitmap(background, 0, 0, ALIGN_LEFT);
-									drawTransparentBitmapTargetBuffer(
-											frontground, 0, 234, ALIGN_LEFT,
-											getBuffer());
-									duckSide = (duckSide + 1) % 2;
-									if (duckSide)
-										duck->x = getHRes();
-									else
-										duck->x = 0;
-									duck->y = getVRes();
-								}
+							//if (konamiComplete == 0) {
+							if (isHit(duck)) {
+								drawBitmap(background, 0, 0, ALIGN_LEFT);
+								drawTransparentBitmap(frontground,
+										0, 234, ALIGN_LEFT, 0);
+								initializeDuck(&duck);
 							}
+							//}
 						}
 						if ((packet[0] & BIT(0)) == 0)
 							leftButtonFlag = 0;
@@ -106,72 +107,59 @@ int main() {
 					i++;
 				}
 				if (msg.NOTIFY_ARG & timerSet) {
-					if (konamiComplete == 0) {
-						if (duck->y >= -86 && duck->x >= -86) {
-							drawBitmap(background, 0, 0, ALIGN_LEFT);
-							if (duckSide == 0) {
-								updateAnimSprite(duck);
-								drawAnimSprite(duck);
-								duck->x += DUCK_VEL_X;
-								duck->y -= DUCK_VEL_Y;
-							} else {
-								updateAnimSprite(duck);
-								drawAnimSprite(duck);
-								duck->x -= DUCK_VEL_X;
-								duck->y -= DUCK_VEL_Y;
-							}
-							drawTransparentBitmapTargetBuffer(frontground, 0,
-									234, ALIGN_LEFT, getBuffer());
-							drawMouse();
-							flipMouseBuffer();
-						} else {
-							drawBitmap(background, 0, 0, ALIGN_LEFT);
-							drawTransparentBitmapTargetBuffer(frontground, 0,
-									234, ALIGN_LEFT, getBuffer());
-							duck->y = getVRes();
-							duckSide = (duckSide + 1) % 2;
-							if (duckSide)
-								duck->x = getHRes();
-							else
-								duck->x = 0;
-							failCount++;
-						}
+					//if (konamiComplete == 0) {
+					if (duckLifeTime != 0) {
+						drawBitmap(background, 0, 0, ALIGN_LEFT);
+						duckLifeTime--;
+						drawDuck(duck);
+						updateDuckPosition(&duck);
+						drawTransparentBitmap(frontground, 0, 234,
+								ALIGN_LEFT, 0);
 					} else {
 						drawBitmap(background, 0, 0, ALIGN_LEFT);
-						if (konamiComplete <= 30)
-							drawAnimSprite(konami);
-
-						else{
-							drawAnimSprite(konami);
-							updateAnimSprite(konami);
-						}
-						drawMouse();
-						flipMouseBuffer();
-						j++;
-						konamiComplete--;
+						drawTransparentBitmap(frontground, 0, 234,
+								ALIGN_LEFT, 0);
+						initializeDuck(&duck);
+						failCount++;
 					}
+					drawMouse();
+					flipMouseBuffer();
+					//} else {
+					/*drawBitmap(background, 0, 0, ALIGN_LEFT);
+					 if (konamiComplete <= 30)
+					 drawAnimSprite(konami);
+
+					 else{
+					 drawAnimSprite(konami);
+					 updateAnimSprite(konami);
+					 }
+					 drawMouse();
+					 flipMouseBuffer();
+					 j++;
+					 konamiComplete--;
+					 }*/
 				}
-				if (msg.NOTIFY_ARG & keyboardSet) {
+				/*if (msg.NOTIFY_ARG & keyboardSet) {
 					unsigned char key;
 					kbdReadKey(&key);
 					if (key == 0xE0)
 						kbdReadKey(&key);
-					else if (key == konamiCode[konamiIndex]) {
-						userKonami[konamiIndex] = key;
-						konamiIndex++;
-						if (konamiIndex == 10) {
-							j = 0;
-							konamiIndex = 0;
-							konamiComplete = 350;
-							duck->y = getVRes();
-							duckSide = (duckSide + 1) % 2;
-							if (duckSide)
-								duck->x = getHRes();
-							else
-								duck->x = 0;
-						}
-					}
-				}
+					/*else if (key == konamiCode[konamiIndex]) {
+					 userKonami[konamiIndex] = key;
+					 konamiIndex++;
+					 if (konamiIndex == 10) {
+					 j = 0;
+					 konamiIndex = 0;
+					 konamiComplete = 350;
+					 duck->y = getVRes();
+					 duckSide = (duckSide + 1) % 2;
+					 if (duckSide)
+					 duck->x = getHRes();
+					 else
+					 duck->x = 0;
+					 }
+					 }
+				}*/
 				break;
 			default:
 				break; /* no other notifications expected: do nothing */

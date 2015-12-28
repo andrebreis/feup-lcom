@@ -120,5 +120,5 @@ void flipMouseBuffer(){
 
 void drawMouse(){
 	memcpy(getMouseBuffer(), getBuffer(), getVideoMemSize());
-	drawTransparentBitmapTargetBuffer(getMouse()->icon, getMouse()->cornerX, getMouse()->cornerY, ALIGN_LEFT, getMouseBuffer());
+	drawMouseBitmap(getMouse()->icon, getMouse()->cornerX, getMouse()->cornerY, ALIGN_LEFT);
 }
