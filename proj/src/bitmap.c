@@ -147,12 +147,16 @@ void drawTransparentBitmapTargetBuffer(Bitmap* bmp, int x, int y, Alignment alig
 
 	int xCorrection = 0;
 	if (x < 0) {
+		/*
 		xCorrection = -x;
 		drawWidth -= xCorrection;
 		x = 0;
 
 		if (drawWidth > getHRes())
-			drawWidth = getHRes();
+			drawWidth = getHRes();*/
+		drawWidth = 36;
+		x = 1;
+		xCorrection = 50;
 	} else if (x + drawWidth >= getHRes()) {
 		drawWidth = getHRes() - x;
 	}

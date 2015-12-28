@@ -1,4 +1,4 @@
-#include "Duck.h"
+#include "AnimSprite.h"
 #include "videoGraphics.h"
 #include "Mouse.h"
 

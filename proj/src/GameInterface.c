@@ -10,8 +10,3 @@ Bitmap* drawBackground(){
 	drawBitmap(background, 0, 0, ALIGN_LEFT);
 	return background;
 }
-
-void drawMouse(){
-	memcpy(getMouseBuffer(), getBuffer(), getVideoMemSize());
-	drawTransparentBitmapTargetBuffer(getMouse()->icon, getMouse()->cornerX, getMouse()->cornerY, ALIGN_LEFT, getMouseBuffer());
-}

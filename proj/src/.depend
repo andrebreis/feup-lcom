@@ -412,5 +412,7 @@ videoGraphics.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include-fixed/string
 videoGraphics.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include-fixed/syslimits.h
 videoGraphics.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include-fixed/unistd.h
 videoGraphics.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include/stdarg.h
+videoGraphics.o:	Mouse.h
+videoGraphics.o:	bitmap.h
 videoGraphics.o:	vbe.h
 videoGraphics.o:	videoGraphics.c

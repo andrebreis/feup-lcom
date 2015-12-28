@@ -1,25 +1,34 @@
 #ifndef __DUCK_H
 #define __DUCK_H
 
-#include "bitmap.h"
+enum duckState {
+	UP = 0, DOWN = 1, DEAD = 2
+};
 
+/*
+ * mode:
+ * 0 - from bottom left to top right:
+ * xi e [-86, getHRes()/2]
+ * yi = getVRes()
+ *
+ * 1 - from bottom right to top left:
+ * xi e [getHRes()/2, getHRes()+86]
+ * yi = getVRes()
+ *
+ * 2 - from left to right
+ * xi = -86
+ * yi e [230, 1024]
+ *
+ * 3 - from right to left
+ * xi = getHRes()+86
+ * yi e [230, 1024]
+ */
 
-typedef struct {
-	int x, y;
-	int aspeed;     // no. frames per pixmap
-	int cur_aspeed; // no. frames left to next change
-	int num_fig;    // number of bitmaps
-	int cur_fig;    // current bitmap
-	Bitmap** maps;     // array of pointers to pixmaps
-} AnimSprite;
-
-AnimSprite* createAnimSprite(Bitmap* maps[4]);
-
-AnimSprite* createBigAnimSprite(Bitmap* maps[18]);
-
-void drawAnimSprite(AnimSprite* asp);
-
-int isHit(AnimSprite* asp);
-
+struct Duck {
+	AnimSprite* duckSprites[3];
+	duckState state;
+	int mode;
+	int x, y, xVel, yVel;
+}
 
 #endif /* __DUCK_H */

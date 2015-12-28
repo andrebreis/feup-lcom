@@ -6,6 +6,4 @@
 
 Bitmap* drawBackground();
 
-void drawMouse();
-
 #endif /* __GAMEINTERFACE_H */

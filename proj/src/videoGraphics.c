@@ -5,6 +5,7 @@
 #include <sys/types.h>
 
 #include "vbe.h"
+#include "Mouse.h"
 
 /* Constants for VBE 0x105 mode */
 
@@ -115,4 +116,9 @@ void flipBuffer(){
 
 void flipMouseBuffer(){
 	memcpy(videoMem, mouseBuffer, videoMemSize);
+}
+
+void drawMouse(){
+	memcpy(getMouseBuffer(), getBuffer(), getVideoMemSize());
+	drawTransparentBitmapTargetBuffer(getMouse()->icon, getMouse()->cornerX, getMouse()->cornerY, ALIGN_LEFT, getMouseBuffer());
 }

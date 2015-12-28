@@ -43,6 +43,8 @@ void flipBuffer();
 
 void flipMouseBuffer();
 
+void drawMouse();
+
  /** @} end of videoGraphics */
  
 #endif /* __VIDEOGRAPHICS_H */
