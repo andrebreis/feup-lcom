@@ -5,7 +5,7 @@
 #define BOTTOM_OF_SCREEN getVRes() - 210
 
 void initializeDuck(Duck* duck) {
-	int width = duck->duckSprites[0].maps[0]->bitmapInfoHeader.width;
+	int width = 86; //duck->duckSprites[0].maps[0]->bitmapInfoHeader.width; -- TODO FIND WHY NOT WORKING
 	duck->mode = rand() % 4;
 	switch (duck->mode) {
 	case 0:
@@ -44,15 +44,15 @@ void initializeDuck(Duck* duck) {
 	}
 }
 
-void createDuck(Duck* duck, AnimSprite duckSprites[3]) {
+void createDuck(Duck* duck, AnimSprite* duckSprites[3]) {
 	int i;
 	for(i = 0; i < 3; i++) duck->duckSprites[i] = duckSprites[i];
 	initializeDuck(duck);
 }
 
 void keepDuckOnScreen(Duck* duck) {
-	int width = duck->duckSprites[0].maps[0]->bitmapInfoHeader.width;
-	int height = duck->duckSprites[0].maps[0]->bitmapInfoHeader.height;
+	int width = 86; //duck->duckSprites[0]->maps[0]->bitmapInfoHeader.width;
+	int height = 80; //duck->duckSprites[0]->maps[0]->bitmapInfoHeader.height;
 
 	if (duck->x <= -width) {
 		duck->x = -width + 1;
@@ -77,7 +77,7 @@ void updateDuckPosition(Duck* duck) {
 		return;
 	duck->x += duck->xVel;
 	duck->y += duck->yVel;
-	updateAnimSprite(&duck->duckSprites[duck->state]);
+	updateAnimSprite(duck->duckSprites[duck->state]);
 	keepDuckOnScreen(duck);
 }
 
@@ -98,8 +98,8 @@ int isHit(const Duck duck) {
 	if(duck.state != UP && duck.state != DOWN)
 		return 0;
 	Mouse* mouse = getMouse();
-	AnimSprite asp = duck.duckSprites[duck.state];
-	Bitmap* currentBitmap = asp.maps[asp.cur_fig];
+	AnimSprite* asp = duck.duckSprites[duck.state];
+	Bitmap* currentBitmap = asp->maps[asp->cur_fig];
 	int width = currentBitmap->bitmapInfoHeader.width, height =
 			currentBitmap->bitmapInfoHeader.height;
 	if (mouse->middleX >= duck.x && mouse->middleX <= duck.x + width

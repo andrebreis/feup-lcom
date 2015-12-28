@@ -15,7 +15,7 @@ AnimSprite* createAnimSprite(char* imgName, int noImages);
 
 void updateAnimSprite(AnimSprite* asp);
 
-void drawAnimSprite(AnimSprite asp, int x, int y, int inverted);
+void drawAnimSprite(AnimSprite* asp, int x, int y, int inverted);
 
 //int isHit(AnimSprite* asp);
 

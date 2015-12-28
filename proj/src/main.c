@@ -12,12 +12,13 @@
 #include "Duck.h"
 #include "Keyboard.h"
 
-#define DUCK_VEL_X 3
-#define DUCK_VEL_Y 3
-
 int main() {
 	sef_startup();
 	srand(time(NULL));
+
+	 FILE * logfd;
+
+	 logfd = fopen("/home/lcom/lcom1516-t2g02/proj/log.txt", "w");
 
 	/*unsigned char konamiCode[10] = { UP, UP, DOWN, DOWN, LEFT, RIGHT, LEFT,
 	 RIGHT, B, A };
@@ -35,12 +36,17 @@ int main() {
 	Bitmap* frontground = loadBitmap(
 			"/home/lcom/lcom1516-t2g02/proj/res/images/frontbackground.bmp");
 	drawTransparentBitmap(frontground, 0, 234, ALIGN_LEFT, 0);
-	flipBuffer();
 
 	AnimSprite* duckSprite = createAnimSprite("duck", 4);
-	AnimSprite duckSprites[3] = {*duckSprites, *duckSprites, *duckSprites};
-	Duck duck;
-	createDuck(&duck, duckSprites);
+	AnimSprite* duckSprites[3];
+	duckSprites[0] = duckSprite;
+	duckSprites[1] = duckSprite;
+	duckSprites[2] = duckSprite;
+	Duck* duck = (Duck*) malloc(sizeof(Duck));
+	createDuck(duck, duckSprites);
+	initializeDuck(duck);
+	setXVel(duck, 3);
+	setYVel(duck, 3);
 
 	/*duck->x = 0;
 	 duck->y = getVRes();*/
@@ -89,11 +95,14 @@ int main() {
 						if ((packet[0] & BIT(0)) != 0 && leftButtonFlag == 0) {
 							leftButtonFlag = 1;
 							//if (konamiComplete == 0) {
-							if (isHit(duck)) {
+							if (isHit(*duck)) {
 								drawBitmap(background, 0, 0, ALIGN_LEFT);
 								drawTransparentBitmap(frontground,
 										0, 234, ALIGN_LEFT, 0);
-								initializeDuck(&duck);
+								initializeDuck(duck);
+								setXVel(duck, 3);
+								setYVel(duck, 3);
+								duckLifeTime = 300;
 							}
 							//}
 						}
@@ -109,18 +118,21 @@ int main() {
 				if (msg.NOTIFY_ARG & timerSet) {
 					//if (konamiComplete == 0) {
 					if (duckLifeTime != 0) {
-						drawBitmap(background, 0, 0, ALIGN_LEFT);
 						duckLifeTime--;
-						drawDuck(duck);
-						updateDuckPosition(&duck);
+						drawBitmap(background, 0, 0, ALIGN_LEFT);
+						drawDuck(*duck);
+						updateDuckPosition(duck);
 						drawTransparentBitmap(frontground, 0, 234,
 								ALIGN_LEFT, 0);
 					} else {
 						drawBitmap(background, 0, 0, ALIGN_LEFT);
 						drawTransparentBitmap(frontground, 0, 234,
 								ALIGN_LEFT, 0);
-						initializeDuck(&duck);
+						initializeDuck(duck);
+						setXVel(duck, 3);
+						setYVel(duck, 3);
 						failCount++;
+						duckLifeTime = 300;
 					}
 					drawMouse();
 					flipMouseBuffer();
@@ -170,7 +182,7 @@ int main() {
 	disableStreamMode();
 	unsubscribeMouseInt();
 	unsubscribeTimerInt();
-	unsubscribeKeyboardInt();
+	//unsubscribeKeyboardInt();
 	videoGraphicsExit();
 	return 0;
 
