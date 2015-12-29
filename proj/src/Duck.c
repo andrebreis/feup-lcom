@@ -90,17 +90,17 @@ void updateDuckPosition(Duck* duck) {
 	updateAnimSprite(duck->duckSprites[duck->state]);
 }
 
-void setXVel(Duck* duck, int vel) {
+void setXVel(Duck* duck, float vel) {
 	duck->xVel = duck->xVel * vel;
 }
 
-void setYVel(Duck* duck, int vel) {
+void setYVel(Duck* duck, float vel) {
 	duck->yVel = duck->yVel * vel;
 }
 
 void drawDuck(Duck duck) {
 	int inverted = (duck.xVel < 0);
-	drawAnimSprite(duck.duckSprites[duck.state], duck.x, duck.y, inverted);
+	drawAnimSprite(duck.duckSprites[duck.state], (int) duck.x, (int) duck.y, inverted);
 }
 
 int isHit(const Duck duck) {
@@ -124,5 +124,23 @@ int isHit(const Duck duck) {
 			return 1;
 
 	}
+	return 0;
+}
+
+int getHit(Duck* duck){
+	duck->state = DYING;
+	duck->xVel = 0;
+	duck->yVel = 2;
+	duck->duckSprites[duck->state]->aspeed = 10000;
+	duck->duckSprites[duck->state]->cur_aspeed = 30;
+}
+
+int isDead(Duck* duck){
+	if(duck->state == DYING && duck->y <= BOTTOM_OF_SCREEN){
+		duck->state == DEAD;
+		return 1;
+	}
+	if(duck->state == DEAD)
+		return 1;
 	return 0;
 }

@@ -30,7 +30,7 @@ typedef struct {
 	int mode;
 	duckState state;
 	AnimSprite* duckSprites[3];
-	int x, y, xVel, yVel;
+	float x, y, xVel, yVel;
 } Duck;
 
 void createDuck(Duck* duck, AnimSprite* duckSprites[3]);
@@ -41,12 +41,16 @@ void keepDuckOnScreen(Duck* duck);
 
 void updateDuckPosition(Duck* duck);
 
-void setXVel(Duck* duck, int vel);
+void setXVel(Duck* duck, float vel);
 
-void setYVel(Duck* duck, int vel);
+void setYVel(Duck* duck, float vel);
 
 void drawDuck(Duck duck);
 
 int isHit(Duck duck);
+
+int getHit(Duck* duck);
+
+int isDead(Duck* duck);
 
 #endif /* __DUCK_H */

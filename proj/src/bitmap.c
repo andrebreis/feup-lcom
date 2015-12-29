@@ -155,7 +155,12 @@ void drawTransparentBitmap(Bitmap* bmp, int x, int y, Alignment alignment,
 		if (drawWidth > getHRes())
 			drawWidth = getHRes();
 	} else if (x + drawWidth >= getHRes()) {
-		drawWidth = getHRes() - x;
+		if(inverted){
+			xCorrection = x + width - getHRes();
+			drawWidth -= xCorrection;
+		}
+		else
+			drawWidth = getHRes() - x;
 	}
 
 	char* bufferStartPos;
@@ -170,6 +175,7 @@ void drawTransparentBitmap(Bitmap* bmp, int x, int y, Alignment alignment,
 
 		bufferStartPos = getBuffer();
 		bufferStartPos += x * 2 + pos * getHRes() * 2;
+
 
 		imgStartPos = bmp->bitmapData + xCorrection * 2 + i * width * 2;
 

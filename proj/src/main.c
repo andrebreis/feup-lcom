@@ -12,13 +12,18 @@
 #include "Duck.h"
 #include "Keyboard.h"
 
+#define VELX 2.5
+#define VELY 2.5
+#define DUCKLIFETIME 420
+#define DEATHTIMER 60
+
 int main() {
 	sef_startup();
 	srand(time(NULL));
 
-	 FILE * logfd;
+	FILE * logfd;
 
-	 logfd = fopen("/home/lcom/lcom1516-t2g02/proj/log.txt", "w");
+	logfd = fopen("/home/lcom/lcom1516-t2g02/proj/log.txt", "w");
 
 	/*unsigned char konamiCode[10] = { UP, UP, DOWN, DOWN, LEFT, RIGHT, LEFT,
 	 RIGHT, B, A };
@@ -39,29 +44,29 @@ int main() {
 
 	AnimSprite* downDuck = createAnimSprite("upduck", 4);
 	AnimSprite* upDuck = createAnimSprite("downduck", 4);
+	AnimSprite* deadDuck = createAnimSprite("deadduck", 2);
 	AnimSprite* duckSprites[3];
 	duckSprites[0] = downDuck;
 	duckSprites[1] = upDuck;
-	duckSprites[2] = downDuck;
+	duckSprites[2] = deadDuck;
 	Duck* duck = (Duck*) malloc(sizeof(Duck));
 	createDuck(duck, duckSprites);
 	initializeDuck(duck);
-	setXVel(duck, 3);
-	setYVel(duck, 3);
+	setXVel(duck, VELX);
+	setYVel(duck, VELY);
 
-	/*duck->x = 0;
-	 duck->y = getVRes();*/
 	message msg;
 	int r, ipc_status;
 
 	char packet[3];
 	int returnValue, i = 0, j = 0;
 	int leftButtonFlag = 0, failCount = 0, exit = 0;
-	int duckLifeTime = 420;
+	int duckLifeTime = DUCKLIFETIME, deathTimer = DEATHTIMER;
 	//int konamiIndex = 0, konamiComplete = 0;
 
 	int mouseSet = subscribeMouseInt();
 	int timerSet = subscribeTimerInt();
+
 	//int keyboardSet = subscribeKeyboardInt();
 	if (mouseSet == -1) {
 		return -1;
@@ -96,13 +101,16 @@ int main() {
 						if ((packet[0] & BIT(0)) != 0 && leftButtonFlag == 0) {
 							leftButtonFlag = 1;
 							//if (konamiComplete == 0) {
-							if (isHit(*duck)) {
+							if (isHit(*duck) && duck->state != DYING
+									&& duck->state != DEAD) {
 								drawBitmap(background, 0, 0, ALIGN_LEFT);
-								drawTransparentBitmap(frontground, 0, 234, ALIGN_LEFT, 0);
-								initializeDuck(duck);
-								setXVel(duck, 3);
-								setYVel(duck, 3);
-								duckLifeTime = 420;
+								drawTransparentBitmap(frontground, 0, 234,
+										ALIGN_LEFT, 0);
+								/*initializeDuck(duck);
+								 setXVel(duck, VELX);
+								 setYVel(duck, VELY);
+								 duckLifeTime = 420;*/
+								getHit(duck);
 							}
 							//}
 						}
@@ -116,21 +124,32 @@ int main() {
 					i++;
 				}
 				if (msg.NOTIFY_ARG & timerSet) {
-					//if (konamiComplete == 0) {
-					if (duckLifeTime != 0) {
+					if (deathTimer == 0) {
+						initializeDuck(duck);
+						setXVel(duck, VELX);
+						setYVel(duck, VELY);
+						duckLifeTime = DUCKLIFETIME;
+					}
+					if (duck->state == DEAD) {
+						deathTimer--;
+						continue;
+					}
+					if (duck->state == DYING || (duckLifeTime != 0)) {
 						duckLifeTime--;
 						drawBitmap(background, 0, 0, ALIGN_LEFT);
 						drawDuck(*duck);
 						updateDuckPosition(duck);
-						drawTransparentBitmap(frontground, 0, 234, ALIGN_LEFT, 0);
+						drawTransparentBitmap(frontground, 0, 234, ALIGN_LEFT,
+								0);
+						if (isDead(duck))
+							deathTimer = DEATHTIMER;
 					} else {
 						drawBitmap(background, 0, 0, ALIGN_LEFT);
-						drawTransparentBitmap(frontground, 0, 234, ALIGN_LEFT, 0);
-						initializeDuck(duck);
-						setXVel(duck, 3);
-						setYVel(duck, 3);
+						drawTransparentBitmap(frontground, 0, 234, ALIGN_LEFT,
+								0);
+						duck->state = DEAD;
+
 						failCount++;
-						duckLifeTime = 420;
 					}
 					drawMouse();
 					flipMouseBuffer();
@@ -150,26 +169,26 @@ int main() {
 					 }*/
 				}
 				/*if (msg.NOTIFY_ARG & keyboardSet) {
-					unsigned char key;
-					kbdReadKey(&key);
-					if (key == 0xE0)
-						kbdReadKey(&key);
-					/*else if (key == konamiCode[konamiIndex]) {
-					 userKonami[konamiIndex] = key;
-					 konamiIndex++;
-					 if (konamiIndex == 10) {
-					 j = 0;
-					 konamiIndex = 0;
-					 konamiComplete = 350;
-					 duck->y = getVRes();
-					 duckSide = (duckSide + 1) % 2;
-					 if (duckSide)
-					 duck->x = getHRes();
-					 else
-					 duck->x = 0;
-					 }
-					 }
-				}*/
+				 unsigned char key;
+				 kbdReadKey(&key);
+				 if (key == 0xE0)
+				 kbdReadKey(&key);
+				 /*else if (key == konamiCode[konamiIndex]) {
+				 userKonami[konamiIndex] = key;
+				 konamiIndex++;
+				 if (konamiIndex == 10) {
+				 j = 0;
+				 konamiIndex = 0;
+				 konamiComplete = 350;
+				 duck->y = getVRes();
+				 duckSide = (duckSide + 1) % 2;
+				 if (duckSide)
+				 duck->x = getHRes();
+				 else
+				 duck->x = 0;
+				 }
+				 }
+				 }*/
 				break;
 			default:
 				break; /* no other notifications expected: do nothing */
