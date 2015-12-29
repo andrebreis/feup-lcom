@@ -35,13 +35,14 @@ int main() {
 	drawBitmap(background, 0, 0, ALIGN_LEFT);
 	Bitmap* frontground = loadBitmap(
 			"/home/lcom/lcom1516-t2g02/proj/res/images/frontbackground.bmp");
-	drawTransparentBitmap(frontground, 0, 234, ALIGN_LEFT, 0);
+	//drawTransparentBitmap(frontground, 0, 234, ALIGN_LEFT, 0);
 
-	AnimSprite* duckSprite = createAnimSprite("duck", 4);
+	AnimSprite* downDuck = createAnimSprite("upduck", 4);
+	AnimSprite* upDuck = createAnimSprite("downduck", 4);
 	AnimSprite* duckSprites[3];
-	duckSprites[0] = duckSprite;
-	duckSprites[1] = duckSprite;
-	duckSprites[2] = duckSprite;
+	duckSprites[0] = downDuck;
+	duckSprites[1] = upDuck;
+	duckSprites[2] = downDuck;
 	Duck* duck = (Duck*) malloc(sizeof(Duck));
 	createDuck(duck, duckSprites);
 	initializeDuck(duck);
@@ -56,7 +57,7 @@ int main() {
 	char packet[3];
 	int returnValue, i = 0, j = 0;
 	int leftButtonFlag = 0, failCount = 0, exit = 0;
-	int duckLifeTime = 5 * 60;
+	int duckLifeTime = 420;
 	//int konamiIndex = 0, konamiComplete = 0;
 
 	int mouseSet = subscribeMouseInt();
@@ -97,12 +98,11 @@ int main() {
 							//if (konamiComplete == 0) {
 							if (isHit(*duck)) {
 								drawBitmap(background, 0, 0, ALIGN_LEFT);
-								drawTransparentBitmap(frontground,
-										0, 234, ALIGN_LEFT, 0);
+								drawTransparentBitmap(frontground, 0, 234, ALIGN_LEFT, 0);
 								initializeDuck(duck);
 								setXVel(duck, 3);
 								setYVel(duck, 3);
-								duckLifeTime = 300;
+								duckLifeTime = 420;
 							}
 							//}
 						}
@@ -122,17 +122,15 @@ int main() {
 						drawBitmap(background, 0, 0, ALIGN_LEFT);
 						drawDuck(*duck);
 						updateDuckPosition(duck);
-						drawTransparentBitmap(frontground, 0, 234,
-								ALIGN_LEFT, 0);
+						drawTransparentBitmap(frontground, 0, 234, ALIGN_LEFT, 0);
 					} else {
 						drawBitmap(background, 0, 0, ALIGN_LEFT);
-						drawTransparentBitmap(frontground, 0, 234,
-								ALIGN_LEFT, 0);
+						drawTransparentBitmap(frontground, 0, 234, ALIGN_LEFT, 0);
 						initializeDuck(duck);
 						setXVel(duck, 3);
 						setYVel(duck, 3);
 						failCount++;
-						duckLifeTime = 300;
+						duckLifeTime = 420;
 					}
 					drawMouse();
 					flipMouseBuffer();

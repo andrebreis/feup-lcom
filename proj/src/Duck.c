@@ -6,37 +6,34 @@
 
 void initializeDuck(Duck* duck) {
 	int width = 86; //duck->duckSprites[0].maps[0]->bitmapInfoHeader.width; -- TODO FIND WHY NOT WORKING
-	duck->mode = rand() % 4;
+	duck->mode = rand() % 3;
 	switch (duck->mode) {
 	case 0:
-		duck->x = rand() % ((getHRes() + 3 * width) / 2) - width + 1;
-		duck->y = BOTTOM_OF_SCREEN
-		;
-		duck->xVel = 1;
+		//duck->x = rand() % ((getHRes() + 3 * width) / 2) - width + 1;
+		duck->x = rand() % getHRes() - width / 2;
+		duck->y = BOTTOM_OF_SCREEN;
+		duck->xVel = rand() % 2 * 2 - 1;
 		duck->yVel = -1;
 		duck->state = UP;
 		break;
+		/*case 1:
+		 //duck->x = getHRes() - rand() % ((getHRes() + 3 * width) / 2) - width + 1;
+		 duck->x = getHRes() - rand() % (getHRes()/ 2) - width;
+		 duck->y = BOTTOM_OF_SCREEN;
+		 duck->xVel = -1;
+		 duck->yVel = -1;
+		 duck->state = UP;
+		 break;*/
 	case 1:
-		duck->x = getHRes() - rand() % ((getHRes() + 3 * width) / 2) - width
-				+ 1;
-		duck->y = BOTTOM_OF_SCREEN
-		;
-		duck->xVel = -1;
-		duck->yVel = -1;
-		duck->state = UP;
-		break;
-	case 2:
 		duck->x = 0;
-		duck->y = rand() % BOTTOM_OF_SCREEN
-		;
+		duck->y = rand() % BOTTOM_OF_SCREEN;
 		duck->xVel = 1;
 		duck->yVel = rand() % 2 * 2 - 1;
 		duck->state = (duck->yVel == -1) ? UP : DOWN;
 		break;
-	case 3:
+	case 2:
 		duck->x = getHRes() + width - 1;
-		duck->y = rand() % BOTTOM_OF_SCREEN
-		;
+		duck->y = rand() % BOTTOM_OF_SCREEN;
 		duck->xVel = -1;
 		duck->yVel = rand() % 2 * 2 - 1;
 		duck->state = (duck->yVel == -1) ? UP : DOWN;
@@ -46,29 +43,40 @@ void initializeDuck(Duck* duck) {
 
 void createDuck(Duck* duck, AnimSprite* duckSprites[3]) {
 	int i;
-	for(i = 0; i < 3; i++) duck->duckSprites[i] = duckSprites[i];
+	for (i = 0; i < 3; i++)
+		duck->duckSprites[i] = duckSprites[i];
 	initializeDuck(duck);
 }
 
 void keepDuckOnScreen(Duck* duck) {
 	int width = 86; //duck->duckSprites[0]->maps[0]->bitmapInfoHeader.width;
 	int height = 80; //duck->duckSprites[0]->maps[0]->bitmapInfoHeader.height;
-
-	if (duck->x <= -width) {
-		duck->x = -width + 1;
-		duck->xVel = -duck->xVel;
-	} else if (duck->x >= getHRes() + width) {
-		duck->x = getHRes() + width - 1;
-		duck->xVel = -duck->xVel;
+	/*if (duck->x <= -width) {
+	 duck->x = -width + 1;*/
+	if (duck->x < 0) {
+		duck->x = 0;
+		duck->xVel = duck->xVel * (-1);
+	} /*else if (duck->x >= getHRes() + width) {
+	 duck->x = getHRes() + width - 1;
+	 duck->xVel = -duck->xVel;
+	 }*/
+	else if (duck->x + width/2 > getHRes()) {
+		duck->x = getHRes() - width/2;
+		duck->xVel = duck->xVel * (-1);
 	}
 
-	if (duck->y <= -height) {
-		duck->y = -height + 1;
-		duck->yVel = -duck->yVel;
-	} else if (duck->y >= BOTTOM_OF_SCREEN)
-	{
+	/*if (duck->y <= -height) {
+	 duck->y = -height + 1;
+	 duck->yVel = -duck->yVel;
+	 }*/
+	if (duck->y <= 0) {
+		duck->y = 0;
+		duck->yVel = duck->yVel * (-1);
+		duck->state = DOWN;
+	} else if (duck->y > BOTTOM_OF_SCREEN) {
 		duck->y = BOTTOM_OF_SCREEN - 1;
-		duck->yVel = -duck->yVel;
+		duck->yVel = duck->yVel * (-1);
+		duck->state = UP;
 	}
 }
 
@@ -77,25 +85,26 @@ void updateDuckPosition(Duck* duck) {
 		return;
 	duck->x += duck->xVel;
 	duck->y += duck->yVel;
-	updateAnimSprite(duck->duckSprites[duck->state]);
 	keepDuckOnScreen(duck);
+	if(duck->xVel)
+	updateAnimSprite(duck->duckSprites[duck->state]);
 }
 
-void setXVel(Duck* duck, int vel){
-	duck->xVel = duck->xVel*vel;
+void setXVel(Duck* duck, int vel) {
+	duck->xVel = duck->xVel * vel;
 }
 
-void setYVel(Duck* duck, int vel){
-	duck->yVel = duck->yVel*vel;
+void setYVel(Duck* duck, int vel) {
+	duck->yVel = duck->yVel * vel;
 }
 
-void drawDuck(Duck duck){
+void drawDuck(Duck duck) {
 	int inverted = (duck.xVel < 0);
 	drawAnimSprite(duck.duckSprites[duck.state], duck.x, duck.y, inverted);
 }
 
 int isHit(const Duck duck) {
-	if(duck.state != UP && duck.state != DOWN)
+	if (duck.state != UP && duck.state != DOWN)
 		return 0;
 	Mouse* mouse = getMouse();
 	AnimSprite* asp = duck.duckSprites[duck.state];
