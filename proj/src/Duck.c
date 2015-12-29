@@ -86,7 +86,7 @@ void updateDuckPosition(Duck* duck) {
 	duck->x += duck->xVel;
 	duck->y += duck->yVel;
 	keepDuckOnScreen(duck);
-	if(duck->xVel)
+	//if(duck->xVel)
 	updateAnimSprite(duck->duckSprites[duck->state]);
 }
 
@@ -130,14 +130,15 @@ int isHit(const Duck duck) {
 int getHit(Duck* duck){
 	duck->state = DYING;
 	duck->xVel = 0;
-	duck->yVel = 2;
+	duck->yVel = 0;
+	duck->duckSprites[duck->state]->cur_fig = 0;
 	duck->duckSprites[duck->state]->aspeed = 10000;
 	duck->duckSprites[duck->state]->cur_aspeed = 30;
 }
 
 int isDead(Duck* duck){
-	if(duck->state == DYING && duck->y <= BOTTOM_OF_SCREEN){
-		duck->state == DEAD;
+	if(duck->state == DYING && duck->y >= BOTTOM_OF_SCREEN - 10){
+		duck->state = DEAD;
 		return 1;
 	}
 	if(duck->state == DEAD)

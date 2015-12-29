@@ -15,7 +15,7 @@
 #define VELX 2.5
 #define VELY 2.5
 #define DUCKLIFETIME 420
-#define DEATHTIMER 60
+#define DEATHTIMER 120
 
 int main() {
 	sef_startup();
@@ -124,21 +124,24 @@ int main() {
 					i++;
 				}
 				if (msg.NOTIFY_ARG & timerSet) {
-					if (deathTimer == 0) {
-						initializeDuck(duck);
-						setXVel(duck, VELX);
-						setYVel(duck, VELY);
-						duckLifeTime = DUCKLIFETIME;
-					}
 					if (duck->state == DEAD) {
 						deathTimer--;
-						continue;
+						if (deathTimer == 0) {
+							initializeDuck(duck);
+							setXVel(duck, VELX);
+							setYVel(duck, VELY);
+							duckLifeTime = DUCKLIFETIME;
+						} else
+							continue;
 					}
 					if (duck->state == DYING || (duckLifeTime != 0)) {
 						duckLifeTime--;
 						drawBitmap(background, 0, 0, ALIGN_LEFT);
 						drawDuck(*duck);
 						updateDuckPosition(duck);
+						if (duck->state == DYING
+								&& duck->duckSprites[duck->state]->cur_fig == 1)
+							duck->yVel = 2;
 						drawTransparentBitmap(frontground, 0, 234, ALIGN_LEFT,
 								0);
 						if (isDead(duck))
@@ -148,7 +151,7 @@ int main() {
 						drawTransparentBitmap(frontground, 0, 234, ALIGN_LEFT,
 								0);
 						duck->state = DEAD;
-
+						deathTimer = DEATHTIMER;
 						failCount++;
 					}
 					drawMouse();
