@@ -4,7 +4,7 @@
 #include "AnimSprite.h"
 
 typedef enum {
-	UP = 0, DOWN = 1, DYING = 2, DEAD = 3
+	UP = 0, DOWN = 1, DYING = 2, FLYING_AWAY = 3, DEAD = 4
 } duckState;
 
 /*
@@ -29,7 +29,7 @@ typedef enum {
 typedef struct {
 	int mode;
 	duckState state;
-	AnimSprite* duckSprites[3];
+	AnimSprite* duckSprites[4];
 	float x, y, xVel, yVel;
 } Duck;
 

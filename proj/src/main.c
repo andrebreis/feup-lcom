@@ -17,6 +17,19 @@
 #define DUCKLIFETIME 420
 #define DEATHTIMER 120
 
+void prepareDuck(Duck* duck){
+	initializeDuck(duck);
+	setXVel(duck, VELX);
+	setYVel(duck, VELY);
+}
+
+void drawScreen(Bitmap* background, Bitmap* foreground, Duck* duck, int numDucks){
+	drawBitmap(background, 0, 0, ALIGN_LEFT);
+	if(numDucks)
+		drawDuck(*duck);
+	drawTransparentBitmap(foreground, 0, 234, ALIGN_LEFT, 0);
+}
+
 int main() {
 	sef_startup();
 	srand(time(NULL));
@@ -31,29 +44,24 @@ int main() {
 
 	videoGraphicsInit(0x117);
 
-	/*AnimSprite* konami = createAnimSprite("KONAMI", 18);
-	 konami->x = getHRes() / 2 - 70;
-	 konami->y = getVRes() / 2 - 70;*/
-
 	Bitmap* background = loadBitmap(
 			"/home/lcom/lcom1516-t2g02/proj/res/images/bluebackground.bmp");
-	drawBitmap(background, 0, 0, ALIGN_LEFT);
-	Bitmap* frontground = loadBitmap(
+	Bitmap* foreground = loadBitmap(
 			"/home/lcom/lcom1516-t2g02/proj/res/images/frontbackground.bmp");
-	//drawTransparentBitmap(frontground, 0, 234, ALIGN_LEFT, 0);
 
 	AnimSprite* downDuck = createAnimSprite("upduck", 4);
 	AnimSprite* upDuck = createAnimSprite("downduck", 4);
 	AnimSprite* deadDuck = createAnimSprite("deadduck", 2);
+	AnimSprite* flyingAwayDuck = createAnimSprite("awayduck", 1);
 	AnimSprite* duckSprites[3];
 	duckSprites[0] = downDuck;
 	duckSprites[1] = upDuck;
 	duckSprites[2] = deadDuck;
+	duckSprites[3] = flyingAwayDuck;
+
 	Duck* duck = (Duck*) malloc(sizeof(Duck));
 	createDuck(duck, duckSprites);
-	initializeDuck(duck);
-	setXVel(duck, VELX);
-	setYVel(duck, VELY);
+	prepareDuck(duck);
 
 	message msg;
 	int r, ipc_status;
@@ -62,7 +70,6 @@ int main() {
 	int returnValue, i = 0, j = 0;
 	int leftButtonFlag = 0, failCount = 0, exit = 0;
 	int duckLifeTime = DUCKLIFETIME, deathTimer = DEATHTIMER;
-	//int konamiIndex = 0, konamiComplete = 0;
 
 	int mouseSet = subscribeMouseInt();
 	int timerSet = subscribeTimerInt();
@@ -102,15 +109,9 @@ int main() {
 							leftButtonFlag = 1;
 							//if (konamiComplete == 0) {
 							if (isHit(*duck) && duck->state != DYING
-									&& duck->state != DEAD) {
-								drawBitmap(background, 0, 0, ALIGN_LEFT);
-								drawTransparentBitmap(frontground, 0, 234,
-										ALIGN_LEFT, 0);
-								/*initializeDuck(duck);
-								 setXVel(duck, VELX);
-								 setYVel(duck, VELY);
-								 duckLifeTime = 420;*/
+									&& duck->state != DEAD && duck->state != FLYING_AWAY) {
 								getHit(duck);
+								drawScreen(background, foreground, duck, 1);
 							}
 							//}
 						}
@@ -124,34 +125,40 @@ int main() {
 					i++;
 				}
 				if (msg.NOTIFY_ARG & timerSet) {
+					//TODO SWITCH CASE
+					if(duck->state == FLYING_AWAY){
+						if(duck->y > 0){
+						drawScreen(background, foreground, duck, 1);
+						updateDuckPosition(duck);
+						}
+						else{
+							duck->state == DEAD;
+							deathTimer == DEATHTIMER;
+						}
+					}
 					if (duck->state == DEAD) {
 						deathTimer--;
 						if (deathTimer == 0) {
-							initializeDuck(duck);
-							setXVel(duck, VELX);
-							setYVel(duck, VELY);
+							prepareDuck(duck);
 							duckLifeTime = DUCKLIFETIME;
 						} else
 							continue;
 					}
 					if (duck->state == DYING || (duckLifeTime != 0)) {
 						duckLifeTime--;
-						drawBitmap(background, 0, 0, ALIGN_LEFT);
-						drawDuck(*duck);
+						drawScreen(background, foreground, duck, 1);
 						updateDuckPosition(duck);
 						if (duck->state == DYING
 								&& duck->duckSprites[duck->state]->cur_fig == 1)
 							duck->yVel = 2;
-						drawTransparentBitmap(frontground, 0, 234, ALIGN_LEFT,
-								0);
 						if (isDead(duck))
 							deathTimer = DEATHTIMER;
-					} else {
-						drawBitmap(background, 0, 0, ALIGN_LEFT);
-						drawTransparentBitmap(frontground, 0, 234, ALIGN_LEFT,
-								0);
-						duck->state = DEAD;
-						deathTimer = DEATHTIMER;
+					} else if(duckLifeTime == 0 && duck->state != FLYING_AWAY) {
+						duck->state = FLYING_AWAY;
+						duck->xVel = 0;
+						duck->yVel = -2.5;
+						drawScreen(background, foreground, duck, 1);
+						updateDuckPosition(duck);
 						failCount++;
 					}
 					drawMouse();

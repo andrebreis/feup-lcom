@@ -41,9 +41,9 @@ void initializeDuck(Duck* duck) {
 	}
 }
 
-void createDuck(Duck* duck, AnimSprite* duckSprites[3]) {
+void createDuck(Duck* duck, AnimSprite* duckSprites[4]) {
 	int i;
-	for (i = 0; i < 3; i++)
+	for (i = 0; i < 4; i++)
 		duck->duckSprites[i] = duckSprites[i];
 	initializeDuck(duck);
 }
