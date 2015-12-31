@@ -17,15 +17,16 @@
 #define DUCKLIFETIME 420
 #define DEATHTIMER 120
 
-void prepareDuck(Duck* duck){
+void prepareDuck(Duck* duck) {
 	initializeDuck(duck);
 	setXVel(duck, VELX);
 	setYVel(duck, VELY);
 }
 
-void drawScreen(Bitmap* background, Bitmap* foreground, Duck* duck, int numDucks){
+void drawScreen(Bitmap* background, Bitmap* foreground, Duck* duck,
+		int numDucks) {
 	drawBitmap(background, 0, 0, ALIGN_LEFT);
-	if(numDucks)
+	if (numDucks && duck->state != DEAD)
 		drawDuck(*duck);
 	drawTransparentBitmap(foreground, 0, 234, ALIGN_LEFT, 0);
 }
@@ -48,11 +49,13 @@ int main() {
 			"/home/lcom/lcom1516-t2g02/proj/res/images/bluebackground.bmp");
 	Bitmap* foreground = loadBitmap(
 			"/home/lcom/lcom1516-t2g02/proj/res/images/frontbackground.bmp");
+	Bitmap* fail = loadBitmap("/home/lcom/lcom1516-t2g02/proj/res/images/flyaway.bmp");
+	Bitmap* score = loadBitmap("/home/lcom/lcom1516-t2g02/proj/res/images/score.bmp");
 
 	AnimSprite* downDuck = createAnimSprite("upduck", 4);
 	AnimSprite* upDuck = createAnimSprite("downduck", 4);
 	AnimSprite* deadDuck = createAnimSprite("deadduck", 2);
-	AnimSprite* flyingAwayDuck = createAnimSprite("awayduck", 1);
+	AnimSprite* flyingAwayDuck = createAnimSprite("awayduck", 4);
 	AnimSprite* duckSprites[3];
 	duckSprites[0] = downDuck;
 	duckSprites[1] = upDuck;
@@ -68,7 +71,7 @@ int main() {
 
 	char packet[3];
 	int returnValue, i = 0, j = 0;
-	int leftButtonFlag = 0, failCount = 0, exit = 0;
+	int leftButtonFlag = 0, failCount = 0, exit = 0, forceExit = 0;
 	int duckLifeTime = DUCKLIFETIME, deathTimer = DEATHTIMER;
 
 	int mouseSet = subscribeMouseInt();
@@ -85,7 +88,7 @@ int main() {
 
 	drawMouse();
 	flipMouseBuffer();
-	while (failCount < 3 && exit == 0) {
+	while ((failCount < 3 || exit != 1) && forceExit == 0) {
 		if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
 			printf("driver_receive failed with: %d", r);
 			continue;
@@ -109,7 +112,8 @@ int main() {
 							leftButtonFlag = 1;
 							//if (konamiComplete == 0) {
 							if (isHit(*duck) && duck->state != DYING
-									&& duck->state != DEAD && duck->state != FLYING_AWAY) {
+									&& duck->state != DEAD
+									&& duck->state != FLYING_AWAY) {
 								getHit(duck);
 								drawScreen(background, foreground, duck, 1);
 							}
@@ -118,65 +122,55 @@ int main() {
 						if ((packet[0] & BIT(0)) == 0)
 							leftButtonFlag = 0;
 						if ((packet[0] & BIT(1)) != 0) {
-							exit = 1;
+							forceExit = 1;
 							break;
 						}
 					}
 					i++;
 				}
 				if (msg.NOTIFY_ARG & timerSet) {
-					//TODO SWITCH CASE
-					if(duck->state == FLYING_AWAY){
-						if(duck->y > 0){
-						drawScreen(background, foreground, duck, 1);
-						updateDuckPosition(duck);
-						}
-						else{
-							duck->state == DEAD;
-							deathTimer == DEATHTIMER;
-						}
-					}
-					if (duck->state == DEAD) {
-						deathTimer--;
-						if (deathTimer == 0) {
-							prepareDuck(duck);
+					switch (duck->state) {
+					case 0:
+					case 1:
+						if (duckLifeTime > 0) {
+							duckLifeTime--;
+						} else {
+							duck->state = FLYING_AWAY;
+							duck->xVel = 0;
+							duck->yVel = -3;
 							duckLifeTime = DUCKLIFETIME;
-						} else
-							continue;
-					}
-					if (duck->state == DYING || (duckLifeTime != 0)) {
-						duckLifeTime--;
-						drawScreen(background, foreground, duck, 1);
-						updateDuckPosition(duck);
-						if (duck->state == DYING
-								&& duck->duckSprites[duck->state]->cur_fig == 1)
-							duck->yVel = 2;
+							failCount++;
+						}
+						break;
+					case 2:
+						if (duck->duckSprites[duck->state]->cur_fig == 1)
+							duck->yVel = 3;
 						if (isDead(duck))
 							deathTimer = DEATHTIMER;
-					} else if(duckLifeTime == 0 && duck->state != FLYING_AWAY) {
-						duck->state = FLYING_AWAY;
-						duck->xVel = 0;
-						duck->yVel = -2.5;
-						drawScreen(background, foreground, duck, 1);
-						updateDuckPosition(duck);
-						failCount++;
+						break;
+					case 3:
+						if ((int)duck->y <= 2) {
+							duck->state = DEAD;
+							deathTimer = DEATHTIMER;
+							if(failCount > 2) exit = 1;
+						}
+						break;
+					case 4:
+						if (deathTimer == 0){
+							duckLifeTime = DUCKLIFETIME;
+							prepareDuck(duck);
+						}
+						else
+							deathTimer--;
+						break;
 					}
+					drawScreen(background, foreground, duck, 1);
+					drawTransparentBitmap(score, getHRes()/4*3, 700, ALIGN_CENTER, 0);
+					if(duck->state == FLYING_AWAY)
+						drawTransparentBitmap(fail, getHRes()/2, 50, ALIGN_CENTER, 0);
+					updateDuckPosition(duck);
 					drawMouse();
 					flipMouseBuffer();
-					//} else {
-					/*drawBitmap(background, 0, 0, ALIGN_LEFT);
-					 if (konamiComplete <= 30)
-					 drawAnimSprite(konami);
-
-					 else{
-					 drawAnimSprite(konami);
-					 updateAnimSprite(konami);
-					 }
-					 drawMouse();
-					 flipMouseBuffer();
-					 j++;
-					 konamiComplete--;
-					 }*/
 				}
 				/*if (msg.NOTIFY_ARG & keyboardSet) {
 				 unsigned char key;
