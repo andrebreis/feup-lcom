@@ -23,6 +23,20 @@ AnimSprite* createAnimSprite(char* imgName, int noImages) {
 	return asp;
 }
 
+void drawNumber(unsigned int number, int x, int y, int distance){
+	int i, digit;
+	for(i = number; i != 0; i = i/10){
+		char path[1024];
+		strcpy(path, IMG_PATH);
+		digit = i % 10;
+		strcat(path, itoa(digit));
+		strcat(path, ".bmp");
+		Bitmap* temp = loadBitmap(path);
+		drawTransparentBitmap(temp, x, y, ALIGN_RIGHT, 0);
+		x -= distance;
+	}
+}
+
 void updateAnimSprite(AnimSprite* asp) {
 	asp->cur_aspeed--;
 	if (asp->cur_aspeed == 0) {
@@ -35,24 +49,3 @@ void drawAnimSprite(AnimSprite* asp, int x, int y, int inverted) {
 	drawTransparentBitmap(asp->maps[asp->cur_fig], x, y,
 			ALIGN_LEFT, inverted);
 }
-
-/*int isHit(AnimSprite* asp) {
-	Mouse* mouse = getMouse();
-	Bitmap* currentBitmap = asp->maps[asp->cur_fig];
-	int width = currentBitmap->bitmapInfoHeader.width, height =
-			currentBitmap->bitmapInfoHeader.height;
-	if (mouse->middleX >= asp->x && mouse->middleX <= asp->x + width
-			&& mouse->middleY >= asp->y && mouse->middleY <= asp->y + height) {
-		int firstPixelPosition = (mouse->middleY - asp->y) * width * 2
-				+ (mouse->middleX - asp->x) * 2; //2 -> bytesperpixel
-		if (currentBitmap->bitmapData[firstPixelPosition] != 116
-				|| currentBitmap->bitmapData[firstPixelPosition + 2] != 116
-				|| currentBitmap->bitmapData[firstPixelPosition + width * 2]
-						!= 116
-				|| currentBitmap->bitmapData[firstPixelPosition + width * 2 + 2]
-						!= 116)
-			return 1;
-
-	}
-	return 0;
-}*/

@@ -90,6 +90,12 @@ void updateDuckPosition(Duck* duck) {
 	updateAnimSprite(duck->duckSprites[duck->state]);
 }
 
+void setVelocity(Duck* duck, unsigned int timeCounter){
+	float totalVelocity = 4 + (float) timeCounter/(60*20);
+	setXVel(duck, 1 + rand() % (int)(totalVelocity -1));
+	setYVel(duck, totalVelocity - abs(duck->xVel));
+}
+
 void setXVel(Duck* duck, float vel) {
 	duck->xVel = duck->xVel * vel;
 }
@@ -144,4 +150,9 @@ int isDead(Duck* duck){
 	if(duck->state == DEAD)
 		return 1;
 	return 0;
+}
+
+void prepareDuck(Duck* duck, unsigned int timeCounter) {
+	initializeDuck(duck);
+	setVelocity(duck, timeCounter);
 }
