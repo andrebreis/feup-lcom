@@ -6,6 +6,7 @@
 
 void initializeDuck(Duck* duck) {
 	int width = 86; //duck->duckSprites[0].maps[0]->bitmapInfoHeader.width; -- TODO FIND WHY NOT WORKING
+	duck->color = rand() % 3;
 	duck->mode = rand() % 3;
 	switch (duck->mode) {
 	case 0:
@@ -33,9 +34,9 @@ void initializeDuck(Duck* duck) {
 	}
 }
 
-void createDuck(Duck* duck, AnimSprite* duckSprites[4]) {
+void createDuck(Duck* duck, AnimSprite* duckSprites[12]) {
 	int i;
-	for (i = 0; i < 4; i++)
+	for (i = 0; i < 12; i++)
 		duck->duckSprites[i] = duckSprites[i];
 	initializeDuck(duck);
 }
@@ -47,14 +48,16 @@ void keepDuckOnScreen(Duck* duck) {
 	 duck->x = -width + 1;*/
 	if (duck->x < 0) {
 		duck->x = 0;
-		duck->xVel = duck->xVel * (-1);
+		if(duck->state < 2)
+			duck->xVel = duck->xVel * (-1);
 	} /*else if (duck->x >= getHRes() + width) {
 	 duck->x = getHRes() + width - 1;
 	 duck->xVel = -duck->xVel;
 	 }*/
 	else if (duck->x + width/2 > getHRes()) {
 		duck->x = getHRes() - width/2;
-		duck->xVel = duck->xVel * (-1);
+		if(duck->state < 2)
+			duck->xVel = duck->xVel * (-1);
 	}
 
 	/*if (duck->y <= -height) {
@@ -63,12 +66,16 @@ void keepDuckOnScreen(Duck* duck) {
 	 }*/
 	if (duck->y <= 0) {
 		duck->y = 0;
-		duck->yVel = duck->yVel * (-1);
-		duck->state = DOWN;
+		if(duck->state < 2){
+			duck->yVel = duck->yVel * (-1);
+			duck->state = DOWN;
+		}
 	} else if (duck->y > BOTTOM_OF_SCREEN) {
 		duck->y = BOTTOM_OF_SCREEN - 1;
-		duck->yVel = duck->yVel * (-1);
-		duck->state = UP;
+		if(duck->state < 2){
+			duck->yVel = duck->yVel * (-1);
+			duck->state = UP;
+		}
 	}
 }
 
@@ -79,7 +86,7 @@ void updateDuckPosition(Duck* duck) {
 	duck->y += duck->yVel;
 	keepDuckOnScreen(duck);
 	//if(duck->xVel)
-	updateAnimSprite(duck->duckSprites[duck->state]);
+	updateAnimSprite(duck->duckSprites[duck->state+4*duck->color]);
 }
 
 void setXVel(Duck* duck, float vel) {
@@ -98,14 +105,14 @@ void setVelocity(Duck* duck, unsigned int timeCounter){
 
 void drawDuck(Duck duck) {
 	int inverted = (duck.xVel < 0);
-	drawAnimSprite(duck.duckSprites[duck.state], (int) duck.x, (int) duck.y, inverted);
+	drawAnimSprite(duck.duckSprites[duck.state+4*duck.color], (int) duck.x, (int) duck.y, inverted);
 }
 
 int isHit(const Duck duck) {
 	if (duck.state != UP && duck.state != DOWN)
 		return 0;
 	Mouse* mouse = getMouse();
-	AnimSprite* asp = duck.duckSprites[duck.state];
+	AnimSprite* asp = duck.duckSprites[duck.state+4*duck.color];
 	Bitmap* currentBitmap = asp->maps[asp->cur_fig];
 	int width = currentBitmap->bitmapInfoHeader.width, height =
 			currentBitmap->bitmapInfoHeader.height;
@@ -116,9 +123,9 @@ int isHit(const Duck duck) {
 		if (currentBitmap->bitmapData[firstPixelPosition] != 116
 				|| currentBitmap->bitmapData[firstPixelPosition + 2] != 116
 				|| currentBitmap->bitmapData[firstPixelPosition + width * 2]
-						!= 116
-				|| currentBitmap->bitmapData[firstPixelPosition + width * 2 + 2]
-						!= 116)
+											 != 116
+											 || currentBitmap->bitmapData[firstPixelPosition + width * 2 + 2]
+																		  != 116)
 			return 1;
 
 	}
@@ -129,9 +136,9 @@ int getHit(Duck* duck){
 	duck->state = DYING;
 	duck->xVel = 0;
 	duck->yVel = 0;
-	duck->duckSprites[duck->state]->cur_fig = 0;
-	duck->duckSprites[duck->state]->aspeed = 10000;
-	duck->duckSprites[duck->state]->cur_aspeed = 30;
+	duck->duckSprites[duck->state+4*duck->color]->cur_fig = 0;
+	duck->duckSprites[duck->state+4*duck->color]->aspeed = 10000;
+	duck->duckSprites[duck->state+4*duck->color]->cur_aspeed = 30;
 }
 
 int isDead(Duck* duck){

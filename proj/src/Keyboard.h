@@ -4,12 +4,12 @@
 #define KEYBOARD_IRQ 	1
 #define DELAY_US    	20000
 
-#define UP 				0xC8
-#define DOWN 			0xD0
-#define LEFT			0xCB
-#define RIGHT			0xCD
-#define A				0x9E
-#define B				0xB0
+#define UP_KEY			0xC8
+#define DOWN_KEY		0xD0
+#define LEFT_KEY		0xCB
+#define RIGHT_KEY		0xCD
+#define A_KEY			0x9E
+#define B_KEY			0xB0
 
 int subscribeKeyboardInt();
 

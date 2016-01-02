@@ -2,10 +2,11 @@
 
 #include "utilities.h"
 #include "Mouse.h"
+#include "Keyboard.h"
 
 int initializeGame(InterruptVariables* iv) {
 	iv->timerSet = subscribeTimerInt();
-	//iv->keyboardSet = subscribeKeyboardInt();
+	iv->keyboardSet = subscribeKeyboardInt();
 	iv->mouseSet = subscribeMouseInt();
 
 	/*int returnValue = enableSendingDataPackets();
@@ -46,7 +47,8 @@ int menu(InterruptVariables* iv) {
 	drawBitmap(menubackground, 0, 0, ALIGN_LEFT);
 
 	Mouse* mouse = getMouse();
-	mouse->icon = loadBitmap("/home/lcom/lcom1516-t2g02/proj/res/images/arrowCursor.bmp");
+	mouse->icon = loadBitmap(
+			"/home/lcom/lcom1516-t2g02/proj/res/images/arrowCursor.bmp");
 
 	drawMouse();
 	flipMouseBuffer();
@@ -55,6 +57,7 @@ int menu(InterruptVariables* iv) {
 	char packet[3];
 
 	enableSendingDataPackets();
+	sendCommandtoKBC(0x64, 0xF5);
 	while (1) {
 		if ((iv->r = driver_receive(ANY, &iv->msg, &iv->ipcStatus)) != 0) {
 			printf("driver_receive failed with: %d", iv->r);
@@ -105,7 +108,7 @@ int menu(InterruptVariables* iv) {
 						kbdReadKey(&key);
 					unsigned long stat;
 					sys_inb(STAT_REG, &stat);
-					while (stat & OBF){
+					while (stat & OBF) {
 						kbdReadKey(&key);
 						sys_inb(STAT_REG, &stat);
 					}
@@ -135,15 +138,14 @@ unsigned int playGame(InterruptVariables* iv) {
 			loadBitmap(
 					"/home/lcom/lcom1516-t2g02/proj/res/images/cursorpointerx2size.bmp");
 
-	AnimSprite* downDuck = createAnimSprite("upduck", 4);
-	AnimSprite* upDuck = createAnimSprite("downduck", 4);
-	AnimSprite* deadDuck = createAnimSprite("deadduck", 2);
-	AnimSprite* flyingAwayDuck = createAnimSprite("awayduck", 4);
-	AnimSprite* duckSprites[3];
-	duckSprites[0] = downDuck;
-	duckSprites[1] = upDuck;
-	duckSprites[2] = deadDuck;
-	duckSprites[3] = flyingAwayDuck;
+	AnimSprite* duckSprites[12];
+	int m;
+	for (m = 0; m <= 8; m += 4) {
+		duckSprites[m] = createAnimSprite("upduck", m, 4);
+		duckSprites[m+1] = createAnimSprite("downduck", m, 4);
+		duckSprites[m+2] = createAnimSprite("deadduck", m/2, 2);
+		duckSprites[m+3] = createAnimSprite("awayduck", m, 4);
+	}
 
 	char packet[3];
 	int returnValue, i = 0, j = 0;
@@ -160,7 +162,7 @@ unsigned int playGame(InterruptVariables* iv) {
 	drawMouse();
 	flipMouseBuffer();
 	enableSendingDataPackets();
-	sendCommandtoKBC(0x64, 0xF5);
+	sendCommandtoKBC(0x64, 0xF4);
 	while ((failCount < 3 || exit != 1) && forceExit == 0) {
 		if ((iv->r = driver_receive(ANY, &iv->msg, &iv->ipcStatus)) != 0) {
 			printf("driver_receive failed with: %d", iv->r);
@@ -218,14 +220,14 @@ unsigned int playGame(InterruptVariables* iv) {
 						}
 						break;
 					case 2:
-						if (duck->duckSprites[duck->state]->cur_fig == 1)
+						if (duck->duckSprites[duck->state+4*duck->color]->cur_fig == 1 && duck->yVel == 0)
 							duck->yVel = 3;
-						duck->yVel = duck->yVel * 1.5;
+						duck->yVel = duck->yVel * 1.05;
 						if (isDead(duck))
 							deathTimer = DEATHTIMER;
 						break;
 					case 3:
-						if ((int) duck->y <= 4) {
+						if ((int) duck->y <= 1) {
 							duck->state = DEAD;
 							deathTimer = DEATHTIMER;
 							if (failCount > 2)
@@ -257,7 +259,7 @@ unsigned int playGame(InterruptVariables* iv) {
 						kbdReadKey(&key);
 					unsigned long stat;
 					sys_inb(STAT_REG, &stat);
-					while (stat & OBF){
+					while (stat & OBF) {
 						kbdReadKey(&key);
 						sys_inb(STAT_REG, &stat);
 					}
@@ -292,28 +294,28 @@ void exitGame() {
 	videoGraphicsExit();
 	disableStreamMode();
 	unsubscribeMouseInt();
-	/*unsigned long stat;
+	unsigned long stat;
 	char key;
 	sys_inb(STAT_REG, &stat);
-	while (stat & OBF){
+	while (stat & OBF) {
 		kbdReadKey(&key);
 		sys_inb(STAT_REG, &stat);
-	}*/
-		//unsubscribeKeyboardInt();
-		unsubscribeTimerInt();
 	}
+	unsubscribeKeyboardInt();
+	unsubscribeTimerInt();
+}
 
-	//logfd = fopen("/home/lcom/lcom1516-t2g02/proj/log.txt", "w");
+//logfd = fopen("/home/lcom/lcom1516-t2g02/proj/log.txt", "w");
 
-	/*unsigned char konamiCode[10] = { UP, UP, DOWN, DOWN, LEFT, RIGHT, LEFT,
+/*unsigned char konamiCode[10] = { UP, UP, DOWN, DOWN, LEFT, RIGHT, LEFT,
  RIGHT, B, A };
  unsigned char userKonami[10];*/
 
-	/*Bitmap* duck = loadBitmap("/home/lcom/lcom1516-t2g02/proj/res/images/newduck.bmp");
+/*Bitmap* duck = loadBitmap("/home/lcom/lcom1516-t2g02/proj/res/images/newduck.bmp");
  drawTransparentBitmap(duck, 50, 50, ALIGN_LEFT);
  flipBuffer();*/
 
-	/*Bitmap* cursor = loadBitmap("/home/lcom/lcom1516-t2g02/proj/res/images/cursorpointerx2size.bmp");
+/*Bitmap* cursor = loadBitmap("/home/lcom/lcom1516-t2g02/proj/res/images/cursorpointerx2size.bmp");
 
  FILE * logfd;
 
@@ -329,5 +331,5 @@ void exitGame() {
 
  fclose(logfd);*/
 
-	//sleep(5);
-	//videoGraphicsExit();
+//sleep(5);
+//videoGraphicsExit();

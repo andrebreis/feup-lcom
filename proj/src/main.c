@@ -2,11 +2,11 @@
 #include <time.h>
 
 #include "DuckHunt.h"
+#include "utilities.h"
 
 int main() {
 	sef_startup();
 	srand(time(NULL));
-
 
 	InterruptVariables* iv = (InterruptVariables*) malloc(sizeof(InterruptVariables));
 
@@ -17,14 +17,14 @@ int main() {
 	videoGraphicsInit(0x117);
 
 	int menuChoice = 0;
-	//playGame(iv);
+	playGame(iv);
 	do{
-	menuChoice = menu(iv);
-	switch(menuChoice){
-	case 0:
-		playGame(iv);
-		break;
-	}
+		menuChoice = menu(iv);
+		switch(menuChoice){
+		case 0:
+			playGame(iv);
+			break;
+		}
 	}while(menuChoice != 2);
 
 	exitGame();

@@ -11,7 +11,7 @@ typedef struct {
 	Bitmap** maps;     // array of pointers to pixmaps
 } AnimSprite;
 
-AnimSprite* createAnimSprite(char* imgName, int noImages);
+AnimSprite* createAnimSprite(char* imgName, int startingImage , int noImages);
 
 void updateAnimSprite(AnimSprite* asp);
 

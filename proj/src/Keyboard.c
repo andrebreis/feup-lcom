@@ -37,3 +37,17 @@ int kbdReadKey(unsigned char* resultKey){
 		i++;
 	}
 }
+char codeToChar(unsigned long breakCode){
+	char line0[10] = "qwertyuiop";
+	char line1[9] = "asdfghjkl";
+	char line2[7] = "zxcvbnm";
+	if(breakCode >= 0x90 && breakCode <= 0x99){
+		int diff = breakCode-0x90;
+		return line0[(breakCode-0x90)];
+	}
+	else if(breakCode >= 0x9E && breakCode <= 0xA6)
+		return line1[(breakCode-0x9E)];
+
+	else if(breakCode >=0xAC && breakCode <= 0xB2)
+		return line2[(breakCode-0xAC)];
+}

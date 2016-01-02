@@ -27,13 +27,13 @@ typedef enum {
  */
 
 typedef struct {
-	int mode;
+	int mode, color;
 	duckState state;
-	AnimSprite* duckSprites[4];
+	AnimSprite* duckSprites[12];
 	float x, y, xVel, yVel;
 } Duck;
 
-void createDuck(Duck* duck, AnimSprite* duckSprites[3]);
+void createDuck(Duck* duck, AnimSprite* duckSprites[12]);
 
 void initializeDuck(Duck* duck);
 

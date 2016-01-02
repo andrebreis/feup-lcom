@@ -65,6 +65,7 @@ DuckHunt.o:	AnimSprite.h
 DuckHunt.o:	Duck.h
 DuckHunt.o:	DuckHunt.c
 DuckHunt.o:	DuckHunt.h
+DuckHunt.o:	Keyboard.h
 DuckHunt.o:	Mouse.h
 DuckHunt.o:	bitmap.h
 DuckHunt.o:	utilities.h
@@ -296,6 +297,7 @@ main.o:	Duck.h
 main.o:	DuckHunt.h
 main.o:	bitmap.h
 main.o:	main.c
+main.o:	utilities.h
 
 utilities.o:	/usr/include/errno.h
 utilities.o:	/usr/include/limits.h
