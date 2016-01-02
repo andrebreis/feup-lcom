@@ -45,6 +45,8 @@ void setXVel(Duck* duck, float vel);
 
 void setYVel(Duck* duck, float vel);
 
+void setVelocity(Duck* duck, unsigned int timeCounter);
+
 void drawDuck(Duck duck);
 
 int isHit(Duck duck);
@@ -52,5 +54,7 @@ int isHit(Duck duck);
 int getHit(Duck* duck);
 
 int isDead(Duck* duck);
+
+void prepareDuck(Duck* duck, unsigned int timeCounter);
 
 #endif /* __DUCK_H */

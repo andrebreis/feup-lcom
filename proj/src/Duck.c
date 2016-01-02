@@ -16,14 +16,6 @@ void initializeDuck(Duck* duck) {
 		duck->yVel = -1;
 		duck->state = UP;
 		break;
-		/*case 1:
-		 //duck->x = getHRes() - rand() % ((getHRes() + 3 * width) / 2) - width + 1;
-		 duck->x = getHRes() - rand() % (getHRes()/ 2) - width;
-		 duck->y = BOTTOM_OF_SCREEN;
-		 duck->xVel = -1;
-		 duck->yVel = -1;
-		 duck->state = UP;
-		 break;*/
 	case 1:
 		duck->x = 0;
 		duck->y = rand() % BOTTOM_OF_SCREEN;
@@ -90,18 +82,18 @@ void updateDuckPosition(Duck* duck) {
 	updateAnimSprite(duck->duckSprites[duck->state]);
 }
 
-void setVelocity(Duck* duck, unsigned int timeCounter){
-	float totalVelocity = 4 + (float) timeCounter/(60*20);
-	setXVel(duck, 1 + rand() % (int)(totalVelocity -1));
-	setYVel(duck, totalVelocity - abs(duck->xVel));
-}
-
 void setXVel(Duck* duck, float vel) {
 	duck->xVel = duck->xVel * vel;
 }
 
 void setYVel(Duck* duck, float vel) {
 	duck->yVel = duck->yVel * vel;
+}
+
+void setVelocity(Duck* duck, unsigned int timeCounter){
+	float totalVelocity = 4 + (float) timeCounter/(60*20);
+	setXVel(duck, 1 + rand() % (int)(totalVelocity -1));
+	setYVel(duck, totalVelocity - abs(duck->xVel));
 }
 
 void drawDuck(Duck duck) {

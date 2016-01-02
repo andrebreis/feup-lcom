@@ -11,7 +11,7 @@ static Mouse* mouse = NULL;
 Mouse* getMouse(){
 	if(!mouse){
 		mouse  = (Mouse*) malloc(sizeof(Mouse));
-		mouse->icon = loadBitmap("/home/lcom/lcom1516-t2g02/proj/res/images/cursorpointerx2size.bmp");
+		mouse->icon = loadBitmap("/home/lcom/lcom1516-t2g02/proj/res/images/arrowCursor.bmp");
 		mouse->middleX = getHRes()/2;
 		mouse->middleY = getVRes()/2;
 		mouse->cornerX = mouse->middleX - mouse->icon->bitmapInfoHeader.width/2;
@@ -162,10 +162,7 @@ void updateMousePosition(char packet[3]) {
 	int xOVF = (packet[0] & BIT(6)), yOVF = (packet[0] & BIT(7));
 	unsigned char maxDelta = -1;
 	int deltaX = (unsigned char) packet[1], deltaY = (unsigned char) packet[2];
-	/*if (xOVF)
-		deltaX += maxDelta;
-	if (yOVF)
-		deltaY += maxDelta;*/
+
 	if ((packet[0] & BIT(5)) != 0)
 		deltaY = (deltaY | (-1 << 8));
 	if ((packet[0] & BIT(4)) != 0)
