@@ -17,12 +17,11 @@ int main() {
 	videoGraphicsInit(0x117);
 
 	int menuChoice = 0;
-	playGame(iv);
 	do{
 		menuChoice = menu(iv);
 		switch(menuChoice){
 		case 0:
-			playGame(iv);
+			score = playGame(iv);
 			break;
 		}
 	}while(menuChoice != 2);
