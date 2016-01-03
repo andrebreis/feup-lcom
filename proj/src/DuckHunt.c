@@ -3,6 +3,7 @@
 #include "utilities.h"
 #include "Mouse.h"
 #include "Keyboard.h"
+#include "Font.h"
 
 int initializeGame(InterruptVariables* iv) {
 	iv->timerSet = subscribeTimerInt();

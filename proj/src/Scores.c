@@ -1,4 +1,5 @@
 #include "Scores.h"
+#include "RTC.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -80,10 +81,13 @@ void insertScore(char name[5], int score, int line){
 		strcpy(highscores[i], highscores[i-1]);
 	}
 
+	Date scoreDate = getDate();
 	char new_score[BUFFER_SIZE];
 	strcpy(new_score, name);
 	strcat(new_score, " ");
 	strcat(new_score, itoa(score));
+	strcat(new_score, " ");
+	strcat(new_score, dateToStr(scoreDate));
 	strcat(new_score, "\n");
 	strcpy(highscores[line], new_score);
 

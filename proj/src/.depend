@@ -229,6 +229,7 @@ RTC.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include-fixed/unistd.h
 RTC.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include/stdarg.h
 RTC.o:	RTC.c
 RTC.o:	RTC.h
+RTC.o:	utilities.h
 
 Scores.o:	/usr/include/limits.h
 Scores.o:	/usr/include/minix/dir.h
@@ -245,8 +246,10 @@ Scores.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include-fixed/stdlib.h
 Scores.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include-fixed/string.h
 Scores.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include-fixed/syslimits.h
 Scores.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include/stdarg.h
+Scores.o:	RTC.h
 Scores.o:	Scores.c
 Scores.o:	Scores.h
+Scores.o:	utilities.h
 
 Timer.o:	/usr/include/errno.h
 Timer.o:	/usr/include/limits.h

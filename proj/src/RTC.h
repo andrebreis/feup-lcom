@@ -12,7 +12,9 @@
 #define MONTH_REG	8
 #define YEAR_REG	9
 #define REG_A		10
+#define REG_B		11
 #define UIP			BIT(7)
+#define DATA_MODE	BIT(2)
 
 typedef struct{
 	unsigned long year, month, day, hour, minute;
@@ -21,5 +23,7 @@ typedef struct{
 void readRegister(int reg, unsigned long *value);
 
 Date getDate();
+
+char* dateToStr(Date date);
 
 #endif /*__RTC_H_*/
