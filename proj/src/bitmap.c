@@ -4,12 +4,12 @@
 #include "videoGraphics.h"
 #include "utilities.h"
 
-int rgb(unsigned char r, unsigned char g, unsigned char b) {
+/*int rgb(unsigned char r, unsigned char g, unsigned char b) {
 	int red = r * 31 / 255;
 	int green = g * 63 / 255;
 	int blue = b * 31 / 255;
 	return (red << 11) | (green << 5) | blue;
-}
+}*/
 
 Bitmap* loadBitmap(const char* filename) {
 	// allocating necessary size

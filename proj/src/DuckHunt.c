@@ -6,7 +6,7 @@
 
 int initializeGame(InterruptVariables* iv) {
 	iv->timerSet = subscribeTimerInt();
-	iv->keyboardSet = subscribeKeyboardInt();
+	//iv->keyboardSet = subscribeKeyboardInt();
 	iv->mouseSet = subscribeMouseInt();
 
 	/*int returnValue = enableSendingDataPackets();
@@ -16,8 +16,8 @@ int initializeGame(InterruptVariables* iv) {
 
 	if (iv->mouseSet == -1)
 		return -1;
-	//if (iv->keyboardSet == -1)
-	//	return -1;
+	if (iv->keyboardSet == -1)
+		return -1;
 	if (iv->timerSet == -1)
 		return -1;
 
@@ -57,7 +57,7 @@ int menu(InterruptVariables* iv) {
 	char packet[3];
 
 	enableSendingDataPackets();
-	sendCommandtoKBC(0x64, 0xF5);
+	//sendCommandtoKBC(0x64, 0xF5);
 	while (1) {
 		if ((iv->r = driver_receive(ANY, &iv->msg, &iv->ipcStatus)) != 0) {
 			printf("driver_receive failed with: %d", iv->r);
@@ -162,7 +162,7 @@ unsigned int playGame(InterruptVariables* iv) {
 	drawMouse();
 	flipMouseBuffer();
 	enableSendingDataPackets();
-	sendCommandtoKBC(0x64, 0xF4);
+	//sendCommandtoKBC(0x64, 0xF4);
 	while ((failCount < 3 || exit != 1) && forceExit == 0) {
 		if ((iv->r = driver_receive(ANY, &iv->msg, &iv->ipcStatus)) != 0) {
 			printf("driver_receive failed with: %d", iv->r);
@@ -252,7 +252,7 @@ unsigned int playGame(InterruptVariables* iv) {
 					flipMouseBuffer();
 					timeCounter++;
 				}
-				if (iv->msg.NOTIFY_ARG & iv->keyboardSet) {
+				/*if (iv->msg.NOTIFY_ARG & iv->keyboardSet) {
 					unsigned char key;
 					kbdReadKey(&key);
 					if (key == 0xE0)
@@ -263,7 +263,7 @@ unsigned int playGame(InterruptVariables* iv) {
 						kbdReadKey(&key);
 						sys_inb(STAT_REG, &stat);
 					}
-				}
+				}*/
 				/*else if (key == konamiCode[konamiIndex]) {
 				 userKonami[konamiIndex] = key;
 				 konamiIndex++;
@@ -294,14 +294,14 @@ void exitGame() {
 	videoGraphicsExit();
 	disableStreamMode();
 	unsubscribeMouseInt();
-	unsigned long stat;
+	/*unsigned long stat;
 	char key;
 	sys_inb(STAT_REG, &stat);
 	while (stat & OBF) {
 		kbdReadKey(&key);
 		sys_inb(STAT_REG, &stat);
 	}
-	unsubscribeKeyboardInt();
+	unsubscribeKeyboardInt();*/
 	unsubscribeTimerInt();
 }
 

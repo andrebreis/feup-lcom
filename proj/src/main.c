@@ -2,6 +2,7 @@
 #include <time.h>
 
 #include "DuckHunt.h"
+#include "Scores.h"
 #include "utilities.h"
 
 int main() {
@@ -16,15 +17,21 @@ int main() {
 
 	videoGraphicsInit(0x117);
 
+	playGame(iv);
+	/*int score = 0;
+	int playerPlace;
 	int menuChoice = 0;
 	do{
 		menuChoice = menu(iv);
 		switch(menuChoice){
 		case 0:
-			score = playGame(iv);
-			break;
+			score = playGame(iv);*/
+			int playerPlace = scorePlace(50);
+			if(playerPlace != -1)
+				insertScore("ANDRE", 50, playerPlace);
+		/*	break;
 		}
-	}while(menuChoice != 2);
+	}while(menuChoice != 2);*/
 
 	exitGame();
 	videoGraphicsExit();

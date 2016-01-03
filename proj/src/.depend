@@ -178,6 +178,24 @@ Mouse.o:	bitmap.h
 Mouse.o:	utilities.h
 Mouse.o:	videoGraphics.h
 
+Scores.o:	/usr/include/limits.h
+Scores.o:	/usr/include/minix/dir.h
+Scores.o:	/usr/include/minix/limits.h
+Scores.o:	/usr/include/minix/sys_config.h
+Scores.o:	/usr/include/minix/types.h
+Scores.o:	/usr/include/stdint.h
+Scores.o:	/usr/include/sys/cdefs.h
+Scores.o:	/usr/include/sys/null.h
+Scores.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include-fixed/ansi.h
+Scores.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include-fixed/limits.h
+Scores.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include-fixed/stdio.h
+Scores.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include-fixed/stdlib.h
+Scores.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include-fixed/string.h
+Scores.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include-fixed/syslimits.h
+Scores.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include/stdarg.h
+Scores.o:	Scores.c
+Scores.o:	Scores.h
+
 Timer.o:	/usr/include/errno.h
 Timer.o:	/usr/include/limits.h
 Timer.o:	/usr/include/machine/bios.h
@@ -295,6 +313,7 @@ main.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include/stdarg.h
 main.o:	AnimSprite.h
 main.o:	Duck.h
 main.o:	DuckHunt.h
+main.o:	Scores.h
 main.o:	bitmap.h
 main.o:	main.c
 main.o:	utilities.h
