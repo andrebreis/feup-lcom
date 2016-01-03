@@ -1,6 +1,8 @@
 #ifndef __RTC_H_
 #define __RTC_H_
 
+#include "utilities.h"
+
 #define RTC_IRQ		8
 #define RTC_ADDR 	0x70
 #define RTC_DATA 	0x71
