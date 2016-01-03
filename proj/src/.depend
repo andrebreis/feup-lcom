@@ -65,10 +65,27 @@ DuckHunt.o:	AnimSprite.h
 DuckHunt.o:	Duck.h
 DuckHunt.o:	DuckHunt.c
 DuckHunt.o:	DuckHunt.h
+DuckHunt.o:	Font.h
 DuckHunt.o:	Keyboard.h
 DuckHunt.o:	Mouse.h
 DuckHunt.o:	bitmap.h
 DuckHunt.o:	utilities.h
+
+Font.o:	/usr/include/limits.h
+Font.o:	/usr/include/minix/dir.h
+Font.o:	/usr/include/minix/limits.h
+Font.o:	/usr/include/minix/sys_config.h
+Font.o:	/usr/include/minix/types.h
+Font.o:	/usr/include/stdint.h
+Font.o:	/usr/include/sys/cdefs.h
+Font.o:	/usr/include/sys/null.h
+Font.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include-fixed/ansi.h
+Font.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include-fixed/limits.h
+Font.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include-fixed/string.h
+Font.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include-fixed/syslimits.h
+Font.o:	Font.c
+Font.o:	Font.h
+Font.o:	bitmap.h
 
 Keyboard.o:	/usr/include/errno.h
 Keyboard.o:	/usr/include/limits.h

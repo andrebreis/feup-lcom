@@ -3,6 +3,6 @@
 
 void drawNumber(unsigned int number, int x, int y, int distance);
 
-void drawString(char* string, int x, int y);
+void drawString(char* string, int x, int y, int distance);
 
 #endif /* __FONT_H_ */

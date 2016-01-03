@@ -25,6 +25,8 @@ int initializeGame(InterruptVariables* iv);
 
 unsigned int playGame(InterruptVariables* iv);
 
+char* showGameOver(InterruptVariables* iv, int score);
+
 void exitGame();
 
 #endif /*__DUCKHUNT_H_*/

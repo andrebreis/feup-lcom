@@ -7,7 +7,7 @@
 
 int initializeGame(InterruptVariables* iv) {
 	iv->timerSet = subscribeTimerInt();
-	//iv->keyboardSet = subscribeKeyboardInt();
+	iv->keyboardSet = subscribeKeyboardInt();
 	iv->mouseSet = subscribeMouseInt();
 
 	/*int returnValue = enableSendingDataPackets();
@@ -58,7 +58,7 @@ int menu(InterruptVariables* iv) {
 	char packet[3];
 
 	enableSendingDataPackets();
-	//sendCommandtoKBC(0x64, 0xF5);
+	sendCommandtoKBC(0x64, 0xF5);
 	while (1) {
 		if ((iv->r = driver_receive(ANY, &iv->msg, &iv->ipcStatus)) != 0) {
 			printf("driver_receive failed with: %d", iv->r);
@@ -143,9 +143,9 @@ unsigned int playGame(InterruptVariables* iv) {
 	int m;
 	for (m = 0; m <= 8; m += 4) {
 		duckSprites[m] = createAnimSprite("upduck", m, 4);
-		duckSprites[m+1] = createAnimSprite("downduck", m, 4);
-		duckSprites[m+2] = createAnimSprite("deadduck", m/2, 2);
-		duckSprites[m+3] = createAnimSprite("awayduck", m, 4);
+		duckSprites[m + 1] = createAnimSprite("downduck", m, 4);
+		duckSprites[m + 2] = createAnimSprite("deadduck", m / 2, 2);
+		duckSprites[m + 3] = createAnimSprite("awayduck", m, 4);
 	}
 
 	char packet[3];
@@ -163,7 +163,7 @@ unsigned int playGame(InterruptVariables* iv) {
 	drawMouse();
 	flipMouseBuffer();
 	enableSendingDataPackets();
-	//sendCommandtoKBC(0x64, 0xF4);
+	sendCommandtoKBC(0x64, 0xF4);
 	while ((failCount < 3 || exit != 1) && forceExit == 0) {
 		if ((iv->r = driver_receive(ANY, &iv->msg, &iv->ipcStatus)) != 0) {
 			printf("driver_receive failed with: %d", iv->r);
@@ -216,12 +216,12 @@ unsigned int playGame(InterruptVariables* iv) {
 							duck->state = FLYING_AWAY;
 							duck->xVel = 0;
 							duck->yVel = -3.5;
-							duckLifeTime = DUCKLIFETIME;
 							failCount++;
 						}
 						break;
 					case 2:
-						if (duck->duckSprites[duck->state+4*duck->color]->cur_fig == 1 && duck->yVel == 0)
+						if (duck->duckSprites[duck->state + 4 * duck->color]->cur_fig
+								== 1 && duck->yVel == 0)
 							duck->yVel = 3;
 						duck->yVel = duck->yVel * 1.05;
 						if (isDead(duck))
@@ -253,18 +253,20 @@ unsigned int playGame(InterruptVariables* iv) {
 					flipMouseBuffer();
 					timeCounter++;
 				}
-				/*if (iv->msg.NOTIFY_ARG & iv->keyboardSet) {
+				if (iv->msg.NOTIFY_ARG & iv->keyboardSet) {
 					unsigned char key;
 					kbdReadKey(&key);
 					if (key == 0xE0)
 						kbdReadKey(&key);
+					if(key == A_KEY)
+						score += 50;
 					unsigned long stat;
 					sys_inb(STAT_REG, &stat);
 					while (stat & OBF) {
 						kbdReadKey(&key);
 						sys_inb(STAT_REG, &stat);
 					}
-				}*/
+				}
 				/*else if (key == konamiCode[konamiIndex]) {
 				 userKonami[konamiIndex] = key;
 				 konamiIndex++;
@@ -291,18 +293,112 @@ unsigned int playGame(InterruptVariables* iv) {
 	return score;
 }
 
+char* showGameOver(InterruptVariables* iv, int score) {
+	Bitmap* gameOver = loadBitmap(
+			"/home/lcom/lcom1516-t2g02/proj/res/images/gameover.bmp");
+	drawBitmap(gameOver, 0, 0, ALIGN_LEFT);
+
+	flipBuffer();
+
+	Mouse* mouse = getMouse();
+	mouse->icon = loadBitmap(
+			"/home/lcom/lcom1516-t2g02/proj/res/images/arrowCursor.bmp");
+	int letterCursorX = 69, letterCursorY = 559, cursorTimer = 60, cursorFlag =
+			1;
+	Bitmap* letterCursor = loadBitmap(
+			"/home/lcom/lcom1516-t2g02/proj/res/images/letterCursor.bmp");
+
+	drawString("SCORE", 100, 300, 5);
+
+	drawMouse();
+	flipBuffer();
+
+	unsigned char key = 0;
+	char* name = calloc(6, sizeof(char)), packet[3];
+	int i = 0, j = 0;
+	unsigned long stat;
+	sys_inb(STAT_REG, &stat);
+	while (stat & OBF) {
+		kbdReadKey(&key);
+		sys_inb(STAT_REG, &stat);
+	}
+	while (key != ENTER_KEY) {
+		if ((iv->r = driver_receive(ANY, &iv->msg, &iv->ipcStatus)) != 0) {
+			printf("driver_receive failed with: %d", iv->r);
+			continue;
+		}
+		if (is_ipc_notify(iv->ipcStatus)) {
+			switch (_ENDPOINT_P(iv->msg.m_source)) {
+			case HARDWARE:
+				if (iv->msg.NOTIFY_ARG & iv->mouseSet) {
+					int returnValue = getPacket(&packet[i % 3]);
+					if (returnValue == -1
+							|| ((i % 3 == 0) && (packet[i % 3] & BIT(3) == 0)))
+						continue;
+					if ((i % 3) == 2) {
+						updateMousePosition(packet);
+						drawMouse();
+						flipMouseBuffer();
+					}
+				}
+				if (iv->msg.NOTIFY_ARG & iv->timerSet) {
+					if (cursorTimer == 0) {
+						cursorFlag = (cursorFlag + 1) % 2;
+						cursorTimer = 60;
+					}
+					if (cursorFlag == 1)
+						drawTransparentBitmap(letterCursor, letterCursorX,
+								letterCursorY, ALIGN_LEFT, 0);
+					cursorTimer--;
+					if(name[0] != "\0")
+						drawString(name, 69, 559, 3);
+					drawMouse();
+					flipMouseBuffer();
+				}
+				if (iv->msg.NOTIFY_ARG & iv->keyboardSet) {
+					kbdReadKey(&key);
+					char letter = codeToChar(key);
+					if (key == 0xE0)
+						kbdReadKey(&key);
+					if (key == LEFT_KEY && j != 0) {
+						j--;
+						letterCursorX -= 53;
+					}
+					if (key == RIGHT_KEY && j != 4) {
+						j++;
+						letterCursorX += 53;
+					} else if (letter >= 'A' && letter <= 'Z') {
+						name[j] = letter;
+						if (j != 4) {
+							j++;
+							letterCursorX += 53;
+						}
+					}
+					/*unsigned long stat;
+					sys_inb(STAT_REG, &stat);
+					while (stat & OBF) {
+						kbdReadKey(&key);
+						sys_inb(STAT_REG, &stat);
+					}*/
+				}
+			}
+		}
+	}
+	return name;
+}
+
 void exitGame() {
 	videoGraphicsExit();
 	disableStreamMode();
 	unsubscribeMouseInt();
-	/*unsigned long stat;
+	unsigned long stat;
 	char key;
 	sys_inb(STAT_REG, &stat);
 	while (stat & OBF) {
 		kbdReadKey(&key);
 		sys_inb(STAT_REG, &stat);
 	}
-	unsubscribeKeyboardInt();*/
+	unsubscribeKeyboardInt();
 	unsubscribeTimerInt();
 }
 

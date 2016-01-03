@@ -10,6 +10,7 @@
 #define RIGHT_KEY		0xCD
 #define A_KEY			0x9E
 #define B_KEY			0xB0
+#define ENTER_KEY		0x9C
 
 int subscribeKeyboardInt();
 
