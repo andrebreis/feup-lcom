@@ -433,7 +433,6 @@ char* showGameOver(InterruptVariables* iv, int score) {
 }
 
 void exitGame() {
-	videoGraphicsExit();
 	disableStreamMode();
 	unsubscribeMouseInt();
 	unsigned long stat;
