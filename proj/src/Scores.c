@@ -1,5 +1,6 @@
 #include "Scores.h"
 #include "RTC.h"
+#include "Keyboard.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -108,24 +109,34 @@ void printHighScores(InterruptVariables* iv) {
 			"/home/lcom/lcom1516-t2g02/proj/res/images/highscores.bmp");
 	drawBitmap(highscoresBackground, 0, 0, ALIGN_LEFT);
 
+	FILE *fhighscores;
+	fhighscores = fopen(SCORES_FILE_PATH, "r");
+
+	char buffer[BUFFER_SIZE];
+
 	char **highscores = (char **) malloc(sizeof(char*) * 10);
 	for (i = 0; i < 10; i++) {
 		highscores[i] = (char *) calloc(BUFFER_SIZE, sizeof(char));
 	}
 
+	i = 0;
 	while (fgets(buffer, sizeof(buffer), fhighscores) != NULL) {
 		strcpy(highscores[i], buffer);
 		i++;
 	}
 
-	for (i = 1; i <= 10; i++) {
-		if (highscores[i][0] == '\0')
-			break;
-		drawNumber(i, 25, 50 + i * 50);
-		drawString(highscores[i - 1]);
-	}
-	flipBuffer();
+	drawString("NR NAME SCORE HOUR DATE", 5, 150);
 
+	for (i = 0; i < 10; i++) {
+		if (highscores[i][0] == '\0')
+			continue;
+		drawNumber(i+1, 25, 215 + i * 50);
+		drawString(highscores[i], 75, 200 + i*50);
+	}
+
+	flipBuffer();
+	unsigned char key = 0;
+	char packet[3];
 	while (key != ESC_KEY) {
 		if ((iv->r = driver_receive(ANY, &iv->msg, &iv->ipcStatus)) != 0) {
 			printf("driver_receive failed with: %d", iv->r);
@@ -151,4 +162,9 @@ void printHighScores(InterruptVariables* iv) {
 			}
 		}
 	}
+	fclose(fhighscores);
+	for (i = 0; i < 10; i++) {
+		free(highscores[i]);
+	}
+	free(highscores);
 }

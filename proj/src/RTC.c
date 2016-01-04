@@ -62,6 +62,6 @@ Date getDate(){
 
 char* dateToStr(Date date){
 	char returnDate[256];
-	sprintf(returnDate, "%02dh%02dm %02d/%02d/%d", date.hour, date.minute, date.day, date.month, date.year);
+	sprintf(returnDate, "%02d:%02d %02d/%02d/%d", date.hour, date.minute, date.day, date.month, date.year);
 	return returnDate;
 }

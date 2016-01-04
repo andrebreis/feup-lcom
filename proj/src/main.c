@@ -39,7 +39,7 @@ int main(){
 				insertScore(playerName, score, playerPlace);
 			break;
 		case 1:
-			printHighscores(iv);
+			printHighScores(iv);
 		}
 	}while(menuChoice != 2);
 
@@ -47,8 +47,8 @@ int main(){
 	//playGame(iv);
 	//showGameOver(iv, 50);
 	exitGame();
-	flipBuffer();
-	sleep(5);
+
+
 	videoGraphicsExit();
 	return 0;
 }

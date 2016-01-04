@@ -106,19 +106,19 @@ int menu(InterruptVariables* iv) {
 						flipMouseBuffer();
 
 						if ((packet[0] & BIT(0)) != 0) {
-							if (mouse->cornerX >= 250 && mouse->cornerX <= 778
-									&& mouse->cornerY >= 428
-									&& mouse->cornerY <= 508)
+							if (mouse->cornerX >= 200 && mouse->cornerX <= 816
+									&& mouse->cornerY >= 402
+									&& mouse->cornerY <= 524)
 								return 0;
 
-							if (mouse->cornerX >= 284 && mouse->cornerX <= 738
-									&& mouse->cornerY >= 548
-									&& mouse->cornerY <= 604)
+							if (mouse->cornerX >= 200 && mouse->cornerX <= 816
+									&& mouse->cornerY >= 516
+									&& mouse->cornerY <= 618)
 								return 1;
 
-							if (mouse->cornerX >= 468 && mouse->cornerX <= 560
-									&& mouse->cornerY >= 650
-									&& mouse->cornerY <= 686)
+							if (mouse->cornerX >= 200 && mouse->cornerX <= 816
+									&& mouse->cornerY >= 626
+									&& mouse->cornerY <= 708)
 								return 2;
 						}
 					}
