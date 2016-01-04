@@ -1,7 +1,0 @@
-<map id="drawDuck" name="drawDuck">
-<area shape="rect" id="node2" href="$_anim_sprite_8c.html#a9922cba46ba2daa473155b310635aafd" title="draws an animsprite on the given position, and if inverted is != 0, draws it inverted on the x axis ..." alt="" coords="132,56,245,83"/>
-<area shape="rect" id="node3" href="$group___bitmap.html#gacc100d73045fb94c41b9f746d364df93" title="draws a Bitmap at the given position filtering a defined color. if inverted is != 0..." alt="" coords="293,56,452,83"/>
-<area shape="rect" id="node4" href="$group__video_graphics.html#gaa55320d571dc2cb8179422a9d8114de0" title="returns the video mode horizontal resolution " alt="" coords="501,5,573,32"/>
-<area shape="rect" id="node5" href="$group__video_graphics.html#ga36218c155eade74951ce7ffd60711a9e" title="returns the video mode vertical resolution " alt="" coords="501,56,573,83"/>
-<area shape="rect" id="node6" href="$group__video_graphics.html#ga1cd7727ad0fc3fe3ffbbb98cd9115c1c" title="returns a pointer to the graphics buffer " alt="" coords="500,107,573,133"/>
-</map>

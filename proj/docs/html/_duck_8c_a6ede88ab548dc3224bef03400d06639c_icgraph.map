@@ -1,5 +1,0 @@
-<map id="drawDuck" name="drawDuck">
-<area shape="rect" id="node2" href="$_duck_hunt_8h.html#a1ebb5104729bc6e99d81d7cfa2d7016d" title="draws the screen during a normal game cycle " alt="" coords="132,5,223,32"/>
-<area shape="rect" id="node3" href="$_duck_hunt_8h.html#adf35d2ff72d3ea5294bcf5865e5667b3" title="makes the game playable for the user and returns the score when the user loses " alt="" coords="271,5,352,32"/>
-<area shape="rect" id="node4" href="$main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="main" alt="" coords="400,5,451,32"/>
-</map>

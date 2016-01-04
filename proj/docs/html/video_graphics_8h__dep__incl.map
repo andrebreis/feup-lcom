@@ -1,6 +1,0 @@
-<map id="videoGraphics.h" name="videoGraphics.h">
-<area shape="rect" id="node2" href="$_anim_sprite_8c.html" title="AnimSprite.c" alt="" coords="5,80,103,107"/>
-<area shape="rect" id="node3" href="$bitmap_8c.html" title="bitmap.c" alt="" coords="127,80,199,107"/>
-<area shape="rect" id="node4" href="$_duck_8c.html" title="Duck.c" alt="" coords="224,80,287,107"/>
-<area shape="rect" id="node5" href="$_mouse_8c.html" title="Mouse.c" alt="" coords="311,80,383,107"/>
-</map>

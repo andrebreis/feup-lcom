@@ -1,7 +1,0 @@
-<map id="unsubscribeInt" name="unsubscribeInt">
-<area shape="rect" id="node2" href="$_keyboard_8h.html#a894093a9d4c0ebe2550571169988eb5a" title="unsubscribeKeyboardInt" alt="" coords="160,5,321,32"/>
-<area shape="rect" id="node5" href="$_mouse_8h.html#a00999098bfcb2999de2bd5812c0d82a0" title="unsubscribes the mouse interruptions " alt="" coords="168,56,313,83"/>
-<area shape="rect" id="node6" href="$_timer_8h.html#aa79b46d5d51c653d8ac4dbbde2f7a1c2" title="unsubscribes timer interrupts " alt="" coords="171,107,310,133"/>
-<area shape="rect" id="node3" href="$_duck_hunt_8h.html#a8d079dbe8fe6897f8930a45bacac842f" title="unsubscribes the needed interrupts for the game " alt="" coords="369,56,448,83"/>
-<area shape="rect" id="node4" href="$main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="main" alt="" coords="496,56,547,83"/>
-</map>
