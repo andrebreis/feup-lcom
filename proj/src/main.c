@@ -28,8 +28,8 @@ int main(){
 	int menuChoice = 0;
 	char* playerName = malloc(sizeof(char)*6);
 	//playGame(iv);
-	/*do{
-
+	do{
+		menuChoice = menu(iv);
 		switch(menuChoice){
 		case 0:
 			score = playGame(iv);
@@ -38,13 +38,17 @@ int main(){
 			if(playerPlace != -1)
 				insertScore(playerName, score, playerPlace);
 			break;
+		case 1:
+			printHighscores(iv);
 		}
-	}while(menuChoice != 2);*/
-	menuChoice = menu(iv);
-	playGame(iv);
-	showGameOver(iv, 50);
-	//sleep(2);
+	}while(menuChoice != 2);
+
+	//menuChoice = menu(iv);
+	//playGame(iv);
+	//showGameOver(iv, 50);
 	exitGame();
+	flipBuffer();
+	sleep(5);
 	videoGraphicsExit();
 	return 0;
 }

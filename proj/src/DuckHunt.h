@@ -5,7 +5,7 @@
 #include "bitmap.h"
 #include "Duck.h"
 
-#define DUCKLIFETIME 450
+#define DUCKLIFETIME 480
 #define DEATHTIMER 120
 
 typedef struct{
@@ -17,9 +17,11 @@ typedef struct{
 int menu(InterruptVariables* iv);
 
 void drawScreen(Bitmap* background, Bitmap* foreground, Bitmap* scoreboard,
-		unsigned int score, Duck* duck, int numDucks);
+		unsigned int score, Duck* duck, int numDucks, int numFails);
 
 unsigned int calculateScore(Duck* duck, int duckLifeTime);
+
+int calculateLifetime(int timeCounter);
 
 int initializeGame(InterruptVariables* iv);
 

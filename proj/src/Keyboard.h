@@ -11,6 +11,7 @@
 #define A_KEY			0x9E
 #define B_KEY			0xB0
 #define ENTER_KEY		0x9C
+#define ESC_KEY			0x81
 
 int subscribeKeyboardInt();
 

@@ -28,18 +28,43 @@ int initializeGame(InterruptVariables* iv) {
 }
 
 void drawScreen(Bitmap* background, Bitmap* foreground, Bitmap* scoreboard,
-		unsigned int score, Duck* duck, int numDucks) {
+		unsigned int score, Duck* duck, int numDucks, int numFails) {
+	Bitmap* lifeBox = loadBitmap(
+			"/home/lcom/lcom1516-t2g02/proj/res/images/lifeBox.bmp");
+	Bitmap* lifeDuck = loadBitmap(
+			"/home/lcom/lcom1516-t2g02/proj/res/images/life0.bmp");
+	Bitmap* noLifeDuck = loadBitmap(
+			"/home/lcom/lcom1516-t2g02/proj/res/images/life1.bmp");
 	drawBitmap(background, 0, 0, ALIGN_LEFT);
 	if (numDucks && duck->state != DEAD)
 		drawDuck(*duck);
 	drawTransparentBitmap(foreground, 0, 234, ALIGN_LEFT, 0);
 	drawTransparentBitmap(scoreboard, getHRes() / 2 + 200, 700, ALIGN_LEFT, 0);
-	drawNumber(score, getHRes() / 4 * 3 + 140, 704, 22);
+	drawNumber(score, getHRes() / 4 * 3 + 140, 704, 3);
+	drawTransparentBitmap(lifeBox, getHRes()/2 - 200, 700, ALIGN_LEFT, 0);
+	int i;
+	for(i = 1; i <= 3; i++){
+		if(i>numFails)
+			drawTransparentBitmap(lifeDuck, getHRes()/2 -190 + 25*i, 710, ALIGN_LEFT, 0);
+		else
+			drawTransparentBitmap(noLifeDuck, getHRes()/2 -190 + 25*i, 710, ALIGN_LEFT, 0);
+	}
+	free(lifeBox);
+	free(lifeDuck);
+	free(noLifeDuck);
 }
 
 unsigned int calculateScore(Duck* duck, int duckLifeTime) {
 	float totalVelocity = abs(duck->xVel) + abs(duck->yVel);
-	return 25 + duckLifeTime / 18 + (totalVelocity - 4) * 10;
+	return 25 + 25 / (abs(duckLifeTime - DUCKLIFETIME) + 1)
+			+ (totalVelocity - 4) * 10;
+}
+
+int calculateLifetime(int timeCounter) {
+	if (timeCounter < (60 * 60 * 2))
+		return DUCKLIFETIME - timeCounter / (30 * 60);
+	else
+		return DUCKLIFETIME / 2;
 }
 
 int menu(InterruptVariables* iv) {
@@ -95,9 +120,6 @@ int menu(InterruptVariables* iv) {
 									&& mouse->cornerY >= 650
 									&& mouse->cornerY <= 686)
 								return 2;
-						}
-						if ((packet[0] & BIT(1)) != 0) {
-							return 2;
 						}
 					}
 					i++;
@@ -159,12 +181,12 @@ unsigned int playGame(InterruptVariables* iv) {
 	createDuck(duck, duckSprites);
 	prepareDuck(duck, 0);
 
-	drawScreen(background, foreground, scoreboard, score, duck, 1);
+	drawScreen(background, foreground, scoreboard, score, duck, 1, 0);
 	drawMouse();
 	flipMouseBuffer();
 	enableSendingDataPackets();
 	sendCommandtoKBC(0x64, 0xF4);
-	while ((failCount < 3 || exit != 1) && forceExit == 0) {
+	while (failCount < 3 || exit != 1) {
 		if ((iv->r = driver_receive(ANY, &iv->msg, &iv->ipcStatus)) != 0) {
 			printf("driver_receive failed with: %d", iv->r);
 			continue;
@@ -193,16 +215,12 @@ unsigned int playGame(InterruptVariables* iv) {
 								score += calculateScore(duck, duckLifeTime);
 								getHit(duck);
 								drawScreen(background, foreground, scoreboard,
-										score, duck, 1);
+										score, duck, 1, failCount);
 							}
 							//}
 						}
 						if ((packet[0] & BIT(0)) == 0)
 							leftButtonFlag = 0;
-						if ((packet[0] & BIT(1)) != 0) {
-							forceExit = 1;
-							break;
-						}
 					}
 					i++;
 				}
@@ -237,14 +255,14 @@ unsigned int playGame(InterruptVariables* iv) {
 						break;
 					case 4:
 						if (deathTimer == 0) {
-							duckLifeTime = DUCKLIFETIME;
+							duckLifeTime = calculateLifetime(timeCounter);
 							prepareDuck(duck, timeCounter);
 						} else
 							deathTimer--;
 						break;
 					}
 					drawScreen(background, foreground, scoreboard, score, duck,
-							1);
+							1, failCount);
 					if (duck->state == FLYING_AWAY)
 						drawTransparentBitmap(fail, getHRes() / 2, 50,
 								ALIGN_CENTER, 0);
@@ -258,8 +276,6 @@ unsigned int playGame(InterruptVariables* iv) {
 					kbdReadKey(&key);
 					if (key == 0xE0)
 						kbdReadKey(&key);
-					if(key == A_KEY)
-						score += 50;
 					unsigned long stat;
 					sys_inb(STAT_REG, &stat);
 					while (stat & OBF) {
@@ -308,11 +324,6 @@ char* showGameOver(InterruptVariables* iv, int score) {
 	Bitmap* letterCursor = loadBitmap(
 			"/home/lcom/lcom1516-t2g02/proj/res/images/letterCursor.bmp");
 
-	drawString("SCORE", 100, 300, 5);
-
-	drawMouse();
-	flipBuffer();
-
 	unsigned char key = 0;
 	char* name = calloc(6, sizeof(char)), packet[3];
 	int i = 0, j = 0;
@@ -337,8 +348,6 @@ char* showGameOver(InterruptVariables* iv, int score) {
 						continue;
 					if ((i % 3) == 2) {
 						updateMousePosition(packet);
-						drawMouse();
-						flipMouseBuffer();
 					}
 				}
 				if (iv->msg.NOTIFY_ARG & iv->timerSet) {
@@ -346,14 +355,18 @@ char* showGameOver(InterruptVariables* iv, int score) {
 						cursorFlag = (cursorFlag + 1) % 2;
 						cursorTimer = 60;
 					}
+					drawBitmap(gameOver, 0, 0, ALIGN_LEFT);
+					drawString("SCORE", 100, 300, 5);
+					drawNumber(score, 400, 305, 5);
+					drawString("WRITE YOUR NAME", 42, 650, 3);
+					drawString("AND PRESS ENTER", 42, 700, 3);
 					if (cursorFlag == 1)
 						drawTransparentBitmap(letterCursor, letterCursorX,
 								letterCursorY, ALIGN_LEFT, 0);
 					cursorTimer--;
-					if(name[0] != "\0")
-						drawString(name, 69, 559, 3);
-					drawMouse();
-					flipMouseBuffer();
+					if (name[0] != "\0")
+						drawString(name, 69, 559, 20);
+					flipBuffer();
 				}
 				if (iv->msg.NOTIFY_ARG & iv->keyboardSet) {
 					kbdReadKey(&key);
@@ -364,7 +377,7 @@ char* showGameOver(InterruptVariables* iv, int score) {
 						j--;
 						letterCursorX -= 53;
 					}
-					if (key == RIGHT_KEY && j != 4) {
+					if (key == RIGHT_KEY && j != 4 && name[j + 1] != '\0') {
 						j++;
 						letterCursorX += 53;
 					} else if (letter >= 'A' && letter <= 'Z') {
@@ -374,12 +387,12 @@ char* showGameOver(InterruptVariables* iv, int score) {
 							letterCursorX += 53;
 						}
 					}
-					/*unsigned long stat;
+					unsigned long stat;
 					sys_inb(STAT_REG, &stat);
 					while (stat & OBF) {
 						kbdReadKey(&key);
 						sys_inb(STAT_REG, &stat);
-					}*/
+					}
 				}
 			}
 		}
