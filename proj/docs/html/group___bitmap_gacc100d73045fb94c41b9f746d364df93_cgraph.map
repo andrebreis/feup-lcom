@@ -1,5 +1,0 @@
-<map id="drawTransparentBitmap" name="drawTransparentBitmap">
-<area shape="rect" id="node2" href="$group__video_graphics.html#gaa55320d571dc2cb8179422a9d8114de0" title="returns the video mode horizontal resolution " alt="" coords="213,5,285,32"/>
-<area shape="rect" id="node3" href="$group__video_graphics.html#ga36218c155eade74951ce7ffd60711a9e" title="returns the video mode vertical resolution " alt="" coords="213,56,285,83"/>
-<area shape="rect" id="node4" href="$group__video_graphics.html#ga1cd7727ad0fc3fe3ffbbb98cd9115c1c" title="returns a pointer to the graphics buffer " alt="" coords="212,107,285,133"/>
-</map>

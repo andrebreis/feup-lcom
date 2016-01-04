@@ -1,5 +1,0 @@
-<map id="lm_free" name="lm_free">
-<area shape="rect" id="node2" href="$group__vbe.html#ga4ef3234e41f2050bc094a22049b69e45" title="Returns information on the input VBE mode, including screen dimensions, color depth and VRAM physical..." alt="" coords="117,5,249,32"/>
-<area shape="rect" id="node3" href="$group__video_graphics.html#gad596f84619be3d5b5dc9c131983fd375" title="Initializes the video module in graphics mode. " alt="" coords="297,5,417,32"/>
-<area shape="rect" id="node4" href="$main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="main" alt="" coords="465,5,516,32"/>
-</map>

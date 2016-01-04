@@ -1,7 +1,0 @@
-<map id="subscribeInt" name="subscribeInt">
-<area shape="rect" id="node2" href="$_keyboard_8h.html#ad722fd703aa7aec1acc25dc7b161a641" title="subscribeKeyboardInt" alt="" coords="145,5,292,32"/>
-<area shape="rect" id="node5" href="$_mouse_8h.html#a41d6a10c11f919dc4496b7eaacb05ea7" title="subscribes the mouse interruptions " alt="" coords="153,56,284,83"/>
-<area shape="rect" id="node6" href="$_timer_8h.html#a958dcb1fd89b0565fe443595dc1d2a22" title="subscribes timer interrupts " alt="" coords="157,107,281,133"/>
-<area shape="rect" id="node3" href="$_duck_hunt_8h.html#af89190ebda169aefddf8e4593c9adf90" title="subscribes the needed interrupts for the game " alt="" coords="340,56,444,83"/>
-<area shape="rect" id="node4" href="$main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="main" alt="" coords="492,56,543,83"/>
-</map>

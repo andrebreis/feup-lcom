@@ -1,6 +1,0 @@
-<map id="setYVel" name="setYVel">
-<area shape="rect" id="node2" href="$_duck_8h.html#a112d5fac732e4b9b4a9c4a87ea017228" title="sets the duck x and y velocity, depending on the time passed since the beginning of the game ..." alt="" coords="121,5,208,32"/>
-<area shape="rect" id="node3" href="$_duck_8h.html#a423f5bf5eb156d2d50a34f2e52279fad" title="prepares the duck values to a new game cycle " alt="" coords="256,5,351,32"/>
-<area shape="rect" id="node4" href="$_duck_hunt_8h.html#adf35d2ff72d3ea5294bcf5865e5667b3" title="makes the game playable for the user and returns the score when the user loses " alt="" coords="399,5,480,32"/>
-<area shape="rect" id="node5" href="$main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="main" alt="" coords="528,5,579,32"/>
-</map>

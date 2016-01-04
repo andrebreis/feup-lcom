@@ -1,7 +1,0 @@
-<map id="writeToMouse" name="writeToMouse">
-<area shape="rect" id="node2" href="$_mouse_8c.html#a8d3f3987b96a716cc9c3aa8e484ff1d7" title="returns the game mouse struct if it exists, returns a new one if it didn&#39;t exist " alt="" coords="190,56,269,83"/>
-<area shape="rect" id="node6" href="$_mouse_8c.html#a1b465b31cc65a2d32f79e8df297edf94" title="sendCommandtoKBC" alt="" coords="156,107,303,133"/>
-<area shape="rect" id="node3" href="$group___bitmap.html#ga3506880ffd407c36eb8aaddd2c1606d2" title="Loads a bmp image. " alt="" coords="351,5,437,32"/>
-<area shape="rect" id="node4" href="$group__video_graphics.html#gaa55320d571dc2cb8179422a9d8114de0" title="returns the video mode horizontal resolution " alt="" coords="358,56,430,83"/>
-<area shape="rect" id="node5" href="$group__video_graphics.html#ga36218c155eade74951ce7ffd60711a9e" title="returns the video mode vertical resolution " alt="" coords="358,107,430,133"/>
-</map>

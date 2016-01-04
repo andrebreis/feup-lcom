@@ -1,5 +1,0 @@
-<map id="updateAnimSprite" name="updateAnimSprite">
-<area shape="rect" id="node2" href="$_duck_8h.html#a7b2ec99bb62b27d929a33e49ac13d056" title="updates the duck position in accord to its velocity and keeps it on the screen borders ..." alt="" coords="179,5,317,32"/>
-<area shape="rect" id="node3" href="$_duck_hunt_8h.html#adf35d2ff72d3ea5294bcf5865e5667b3" title="makes the game playable for the user and returns the score when the user loses " alt="" coords="365,5,447,32"/>
-<area shape="rect" id="node4" href="$main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="main" alt="" coords="495,5,545,32"/>
-</map>

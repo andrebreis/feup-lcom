@@ -1,6 +1,0 @@
-<map id="initializeGame" name="initializeGame">
-<area shape="rect" id="node2" href="$_timer_8c.html#a958dcb1fd89b0565fe443595dc1d2a22" title="subscribes timer interrupts " alt="" coords="169,5,293,32"/>
-<area shape="rect" id="node4" href="$_keyboard_8c.html#ad722fd703aa7aec1acc25dc7b161a641" title="subscribeKeyboardInt" alt="" coords="157,56,304,83"/>
-<area shape="rect" id="node5" href="$_mouse_8c.html#a41d6a10c11f919dc4496b7eaacb05ea7" title="subscribes the mouse interruptions " alt="" coords="165,107,296,133"/>
-<area shape="rect" id="node3" href="$utilities_8c.html#a1bb980526f7f41f407d94271d832d469" title="subscribes interruptions on the given irqLine with the given policy/ies and hookId ..." alt="" coords="352,56,444,83"/>
-</map>
