@@ -1,0 +1,7 @@
+<map id="updateMousePosition" name="updateMousePosition">
+<area shape="rect" id="node2" href="$_duck_hunt_8h.html#a45185f362c362a72d5b2996c3ce80d24" title="shows the menu and deals with the user clicks on its buttons (different return values for each button..." alt="" coords="230,5,285,32"/>
+<area shape="rect" id="node4" href="$_duck_hunt_8h.html#adf35d2ff72d3ea5294bcf5865e5667b3" title="makes the game playable for the user and returns the score when the user loses " alt="" coords="217,56,298,83"/>
+<area shape="rect" id="node5" href="$_duck_hunt_8h.html#af58a2b85742cf4f7dae6ebe9db1c7793" title="shows the game over screen and asks for name input for scores&#45;keeping " alt="" coords="201,107,314,133"/>
+<area shape="rect" id="node6" href="$_scores_8h.html#a2d4d4489a535658567dc64c04e901389" title="prints the highscores information (top10) " alt="" coords="200,157,315,184"/>
+<area shape="rect" id="node3" href="$main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="main" alt="" coords="363,81,413,108"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="Mouse.h" name="Mouse.h">
+<area shape="rect" id="node2" href="$_anim_sprite_8c.html" title="AnimSprite.c" alt="" coords="5,80,103,107"/>
+<area shape="rect" id="node3" href="$_duck_8c.html" title="Duck.c" alt="" coords="127,80,189,107"/>
+<area shape="rect" id="node4" href="$_duck_hunt_8c.html" title="DuckHunt.c" alt="" coords="214,80,305,107"/>
+<area shape="rect" id="node5" href="$_mouse_8c.html" title="Mouse.c" alt="" coords="329,80,401,107"/>
+<area shape="rect" id="node6" href="$video_graphics_8c.html" title="videoGraphics.c" alt="" coords="425,80,539,107"/>
+</map>

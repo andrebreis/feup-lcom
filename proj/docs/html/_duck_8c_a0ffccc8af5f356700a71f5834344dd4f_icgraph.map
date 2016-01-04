@@ -1,0 +1,6 @@
+<map id="initializeDuck" name="initializeDuck">
+<area shape="rect" id="node2" href="$_duck_8h.html#afc3197cc326fb696ada87b3e17f9dedc" title="creates a duck with the given images, and initializes its parameters " alt="" coords="155,5,243,32"/>
+<area shape="rect" id="node5" href="$_duck_8h.html#a423f5bf5eb156d2d50a34f2e52279fad" title="prepares the duck values to a new game cycle " alt="" coords="152,56,247,83"/>
+<area shape="rect" id="node3" href="$_duck_hunt_8h.html#adf35d2ff72d3ea5294bcf5865e5667b3" title="makes the game playable for the user and returns the score when the user loses " alt="" coords="295,31,376,57"/>
+<area shape="rect" id="node4" href="$main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="main" alt="" coords="424,31,475,57"/>
+</map>

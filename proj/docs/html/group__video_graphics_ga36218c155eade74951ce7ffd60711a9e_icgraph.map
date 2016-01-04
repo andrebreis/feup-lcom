@@ -1,0 +1,24 @@
+<map id="getVRes" name="getVRes">
+<area shape="rect" id="node2" href="$group___bitmap.html#ga18d05a1c671f4638bc63d37874efb9d4" title="Draws an unscaled, unrotated bitmap at the given position. " alt="" coords="521,157,612,184"/>
+<area shape="rect" id="node9" href="$group___bitmap.html#gacc100d73045fb94c41b9f746d364df93" title="draws a Bitmap at the given position filtering a defined color. if inverted is != 0..." alt="" coords="125,252,284,279"/>
+<area shape="rect" id="node14" href="$group___bitmap.html#ga6c749a8707a36dcd35393a94c9e5c139" title="draws a bitmap to the Mouse Buffer at given position " alt="" coords="140,391,269,417"/>
+<area shape="rect" id="node16" href="$_mouse_8h.html#a8d3f3987b96a716cc9c3aa8e484ff1d7" title="returns the game mouse struct if it exists, returns a new one if it didn&#39;t exist " alt="" coords="165,563,244,589"/>
+<area shape="rect" id="node23" href="$_mouse_8h.html#a13faf7f6de650c27419132b9de811d17" title="updates the mouse position given the last generated packet " alt="" coords="493,5,640,32"/>
+<area shape="rect" id="node3" href="$_duck_hunt_8h.html#a1ebb5104729bc6e99d81d7cfa2d7016d" title="draws the screen during a normal game cycle " alt="" coords="734,309,825,336"/>
+<area shape="rect" id="node6" href="$_duck_hunt_8h.html#a45185f362c362a72d5b2996c3ce80d24" title="shows the menu and deals with the user clicks on its buttons (different return values for each button..." alt="" coords="932,411,987,437"/>
+<area shape="rect" id="node7" href="$_duck_hunt_8h.html#af58a2b85742cf4f7dae6ebe9db1c7793" title="shows the game over screen and asks for name input for scores&#45;keeping " alt="" coords="723,201,836,228"/>
+<area shape="rect" id="node8" href="$_scores_8h.html#a2d4d4489a535658567dc64c04e901389" title="prints the highscores information (top10) " alt="" coords="722,151,837,177"/>
+<area shape="rect" id="node4" href="$_duck_hunt_8h.html#adf35d2ff72d3ea5294bcf5865e5667b3" title="makes the game playable for the user and returns the score when the user loses " alt="" coords="919,487,1000,513"/>
+<area shape="rect" id="node5" href="$main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="main" alt="" coords="1048,411,1099,437"/>
+<area shape="rect" id="node10" href="$_anim_sprite_8h.html#a9922cba46ba2daa473155b310635aafd" title="draws an animsprite on the given position, and if inverted is != 0, draws it inverted on the x axis ..." alt="" coords="332,284,445,311"/>
+<area shape="rect" id="node12" href="$_font_8h.html#ad27e1bfa3f25a937fdb1ccfdfd01b0b4" title="drawNumber" alt="" coords="519,208,614,235"/>
+<area shape="rect" id="node13" href="$_font_8h.html#a0f6c74a620ed40d4547bf63e3d11a872" title="drawString" alt="" coords="525,56,608,83"/>
+<area shape="rect" id="node11" href="$_duck_8h.html#a6ede88ab548dc3224bef03400d06639c" title="draws the duck on its position " alt="" coords="527,309,606,336"/>
+<area shape="rect" id="node15" href="$group__video_graphics.html#gaab7430a217db9969c46ead48adffbd05" title="copies the graphics buffer to the mouse buffer, and draws the mouse on the mouse buffer ..." alt="" coords="345,512,433,539"/>
+<area shape="rect" id="node17" href="$_duck_8h.html#a34e07d9690ec895599c0de6ec9988095" title="returns 1 if the duck was shot, 0 if it wasn&#39;t " alt="" coords="365,816,413,843"/>
+<area shape="rect" id="node18" href="$_mouse_8h.html#aa0704855e633a5cd57a2829ca759ceb7" title="writes a command to mouse " alt="" coords="337,639,440,665"/>
+<area shape="rect" id="node19" href="$_mouse_8h.html#ac6b0287c219c658030a18f81fd4b7b26" title="enables mouse stream mode " alt="" coords="499,664,634,691"/>
+<area shape="rect" id="node20" href="$_mouse_8h.html#a57f62b6c3ee15c18d87d484139a5915d" title="enables mouse sending data packets mode " alt="" coords="688,613,871,640"/>
+<area shape="rect" id="node21" href="$_mouse_8h.html#af3b3e899753a78e126fe0ff16f158416" title="disables mouse stream mode " alt="" coords="498,715,635,741"/>
+<area shape="rect" id="node22" href="$_duck_hunt_8h.html#a8d079dbe8fe6897f8930a45bacac842f" title="unsubscribes the needed interrupts for the game " alt="" coords="920,715,999,741"/>
+</map>

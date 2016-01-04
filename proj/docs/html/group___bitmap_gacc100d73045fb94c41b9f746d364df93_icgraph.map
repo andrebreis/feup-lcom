@@ -1,0 +1,11 @@
+<map id="drawTransparentBitmap" name="drawTransparentBitmap">
+<area shape="rect" id="node2" href="$_anim_sprite_8h.html#a9922cba46ba2daa473155b310635aafd" title="draws an animsprite on the given position, and if inverted is != 0, draws it inverted on the x axis ..." alt="" coords="212,61,325,87"/>
+<area shape="rect" id="node4" href="$_duck_hunt_8h.html#a1ebb5104729bc6e99d81d7cfa2d7016d" title="draws the screen during a normal game cycle " alt="" coords="536,61,627,87"/>
+<area shape="rect" id="node5" href="$_duck_hunt_8h.html#adf35d2ff72d3ea5294bcf5865e5667b3" title="makes the game playable for the user and returns the score when the user loses " alt="" coords="675,61,756,87"/>
+<area shape="rect" id="node7" href="$_duck_hunt_8h.html#af58a2b85742cf4f7dae6ebe9db1c7793" title="shows the game over screen and asks for name input for scores&#45;keeping " alt="" coords="374,162,487,189"/>
+<area shape="rect" id="node8" href="$_font_8h.html#ad27e1bfa3f25a937fdb1ccfdfd01b0b4" title="drawNumber" alt="" coords="221,111,316,138"/>
+<area shape="rect" id="node10" href="$_font_8h.html#a0f6c74a620ed40d4547bf63e3d11a872" title="drawString" alt="" coords="227,213,310,239"/>
+<area shape="rect" id="node3" href="$_duck_8h.html#a6ede88ab548dc3224bef03400d06639c" title="draws the duck on its position " alt="" coords="391,61,470,87"/>
+<area shape="rect" id="node6" href="$main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="main" alt="" coords="804,162,855,189"/>
+<area shape="rect" id="node9" href="$_scores_8h.html#a2d4d4489a535658567dc64c04e901389" title="prints the highscores information (top10) " alt="" coords="373,213,488,239"/>
+</map>

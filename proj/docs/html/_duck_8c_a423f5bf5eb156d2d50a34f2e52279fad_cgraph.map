@@ -1,0 +1,7 @@
+<map id="prepareDuck" name="prepareDuck">
+<area shape="rect" id="node2" href="$_duck_8c.html#a0ffccc8af5f356700a71f5834344dd4f" title="initializes duck parameters " alt="" coords="148,5,247,32"/>
+<area shape="rect" id="node4" href="$_duck_8c.html#a112d5fac732e4b9b4a9c4a87ea017228" title="sets the duck x and y velocity, depending on the time passed since the beginning of the game ..." alt="" coords="154,56,241,83"/>
+<area shape="rect" id="node3" href="$group__video_graphics.html#gaa55320d571dc2cb8179422a9d8114de0" title="returns the video mode horizontal resolution " alt="" coords="295,5,367,32"/>
+<area shape="rect" id="node5" href="$_duck_8c.html#abeb2bdc722fed1d590d9985429882d3f" title="sets the duck x velocity to the given absolute value (keeps the velocity signal) " alt="" coords="297,56,364,83"/>
+<area shape="rect" id="node6" href="$_duck_8c.html#a56eba22ac4beac69d37bfcaa651ff043" title="sets the duck y velocity to the given absolute value (keeps the velocity signal) " alt="" coords="297,107,365,133"/>
+</map>

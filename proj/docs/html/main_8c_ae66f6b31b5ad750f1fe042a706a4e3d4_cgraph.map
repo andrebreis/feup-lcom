@@ -1,0 +1,51 @@
+<map id="main" name="main">
+<area shape="rect" id="node2" href="$_duck_hunt_8c.html#af89190ebda169aefddf8e4593c9adf90" title="subscribes the needed interrupts for the game " alt="" coords="112,81,216,108"/>
+<area shape="rect" id="node7" href="$group__video_graphics.html#gad596f84619be3d5b5dc9c131983fd375" title="Initializes the video module in graphics mode. " alt="" coords="104,411,224,437"/>
+<area shape="rect" id="node10" href="$_duck_hunt_8c.html#a45185f362c362a72d5b2996c3ce80d24" title="shows the menu and deals with the user clicks on its buttons (different return values for each button..." alt="" coords="137,1247,191,1273"/>
+<area shape="rect" id="node24" href="$_duck_hunt_8c.html#adf35d2ff72d3ea5294bcf5865e5667b3" title="makes the game playable for the user and returns the score when the user loses " alt="" coords="123,765,205,792"/>
+<area shape="rect" id="node37" href="$_duck_hunt_8c.html#af58a2b85742cf4f7dae6ebe9db1c7793" title="shows the game over screen and asks for name input for scores&#45;keeping " alt="" coords="107,1779,221,1805"/>
+<area shape="rect" id="node41" href="$_scores_8c.html#ac50a9b1542654cb50b820bc142f5db7f" title="returns the place where a score belongs, if isn&#39;t top10, returns &#45;1 " alt="" coords="121,1576,207,1603"/>
+<area shape="rect" id="node42" href="$_scores_8c.html#afd519e987870f72f5eb9e1c84a004838" title="inserts a score line on the line of the file where it belongs, updating the file accordingly ..." alt="" coords="120,2133,208,2160"/>
+<area shape="rect" id="node45" href="$_scores_8c.html#a2d4d4489a535658567dc64c04e901389" title="prints the highscores information (top10) " alt="" coords="107,1525,221,1552"/>
+<area shape="rect" id="node46" href="$_duck_hunt_8c.html#a8d079dbe8fe6897f8930a45bacac842f" title="unsubscribes the needed interrupts for the game " alt="" coords="125,2285,203,2312"/>
+<area shape="rect" id="node47" href="$group__video_graphics.html#ga17ab738424ce1da096675bad300c14ae" title="Returns to default Minix 3 text mode (0x03: 25 x 80, 16 colors) " alt="" coords="300,2235,427,2261"/>
+<area shape="rect" id="node3" href="$_timer_8c.html#a958dcb1fd89b0565fe443595dc1d2a22" title="subscribes timer interrupts " alt="" coords="301,56,425,83"/>
+<area shape="rect" id="node5" href="$_keyboard_8c.html#ad722fd703aa7aec1acc25dc7b161a641" title="subscribeKeyboardInt" alt="" coords="290,107,437,133"/>
+<area shape="rect" id="node6" href="$_mouse_8c.html#a41d6a10c11f919dc4496b7eaacb05ea7" title="subscribes the mouse interruptions " alt="" coords="298,5,429,32"/>
+<area shape="rect" id="node4" href="$utilities_8c.html#a1bb980526f7f41f407d94271d832d469" title="subscribes interruptions on the given irqLine with the given policy/ies and hookId ..." alt="" coords="530,56,622,83"/>
+<area shape="rect" id="node8" href="$group__vbe.html#ga4ef3234e41f2050bc094a22049b69e45" title="Returns information on the input VBE mode, including screen dimensions, color depth and VRAM physical..." alt="" coords="297,157,429,184"/>
+<area shape="rect" id="node9" href="$group__lmlib.html#ga00a9c17c01e794a6bfc80fc5c6ab1ed1" title="Initializes the low memory area, the region up to the 1 MByte physical address, by mapping it on the ..." alt="" coords="546,157,606,184"/>
+<area shape="rect" id="node11" href="$group___bitmap.html#ga3506880ffd407c36eb8aaddd2c1606d2" title="Loads a bmp image. " alt="" coords="733,1221,820,1248"/>
+<area shape="rect" id="node12" href="$group___bitmap.html#ga18d05a1c671f4638bc63d37874efb9d4" title="Draws an unscaled, unrotated bitmap at the given position. " alt="" coords="531,1424,621,1451"/>
+<area shape="rect" id="node14" href="$_mouse_8c.html#a8d3f3987b96a716cc9c3aa8e484ff1d7" title="returns the game mouse struct if it exists, returns a new one if it didn&#39;t exist " alt="" coords="537,1015,615,1041"/>
+<area shape="rect" id="node15" href="$group__video_graphics.html#gaab7430a217db9969c46ead48adffbd05" title="copies the graphics buffer to the mouse buffer, and draws the mouse on the mouse buffer ..." alt="" coords="319,1019,407,1045"/>
+<area shape="rect" id="node16" href="$group__video_graphics.html#gac61b79f10c00f01c2ad08608b0c42f81" title="copies the content of the mouse buffer to the video memory " alt="" coords="308,968,419,995"/>
+<area shape="rect" id="node17" href="$_mouse_8c.html#a57f62b6c3ee15c18d87d484139a5915d" title="enables mouse sending data packets mode " alt="" coords="272,1120,455,1147"/>
+<area shape="rect" id="node18" href="$_mouse_8c.html#a1b465b31cc65a2d32f79e8df297edf94" title="sendCommandtoKBC" alt="" coords="503,1120,649,1147"/>
+<area shape="rect" id="node20" href="$_driver_receive_8h.html#a97dc1ee03d586f4b85dc691d09a648d3" title="driver_receive" alt="" coords="314,1323,413,1349"/>
+<area shape="rect" id="node21" href="$_mouse_8c.html#ab7325633b1227a4f203e9e98ae6438c1" title="getPacket" alt="" coords="323,1424,404,1451"/>
+<area shape="rect" id="node22" href="$_mouse_8c.html#a13faf7f6de650c27419132b9de811d17" title="updates the mouse position given the last generated packet " alt="" coords="290,1373,437,1400"/>
+<area shape="rect" id="node23" href="$_keyboard_8c.html#a9b7744cdde3db6c8712a8ac1d6304d79" title="kbdReadKey" alt="" coords="315,1576,411,1603"/>
+<area shape="rect" id="node13" href="$group__video_graphics.html#gaa55320d571dc2cb8179422a9d8114de0" title="returns the video mode horizontal resolution " alt="" coords="904,1233,976,1260"/>
+<area shape="rect" id="node19" href="$_mouse_8c.html#af3b3e899753a78e126fe0ff16f158416" title="disables mouse stream mode " alt="" coords="507,1880,645,1907"/>
+<area shape="rect" id="node25" href="$_anim_sprite_8c.html#a2dc6475f61c8e4f1806632bb8302c5c4" title="creates an animated sprite and gets images from imgName and index " alt="" coords="515,819,637,845"/>
+<area shape="rect" id="node26" href="$_duck_8c.html#afc3197cc326fb696ada87b3e17f9dedc" title="creates a duck with the given images, and initializes its parameters " alt="" coords="319,563,407,589"/>
+<area shape="rect" id="node27" href="$_duck_8c.html#a423f5bf5eb156d2d50a34f2e52279fad" title="prepares the duck values to a new game cycle " alt="" coords="316,613,411,640"/>
+<area shape="rect" id="node28" href="$_duck_hunt_8c.html#a1ebb5104729bc6e99d81d7cfa2d7016d" title="draws the screen during a normal game cycle " alt="" coords="318,715,409,741"/>
+<area shape="rect" id="node29" href="$group___bitmap.html#gacc100d73045fb94c41b9f746d364df93" title="draws a Bitmap at the given position filtering a defined color. if inverted is != 0..." alt="" coords="697,1475,856,1501"/>
+<area shape="rect" id="node31" href="$_duck_8c.html#a4afa8193585a6230847aec2f32142625" title="returns 1 if the duck was shot, 0 if it wasn&#39;t " alt="" coords="339,765,387,792"/>
+<area shape="rect" id="node32" href="$_duck_hunt_8c.html#afa19d8a18c268f4f3457c5f51c5e9fb5" title="calculates the score of a duck hit " alt="" coords="309,664,417,691"/>
+<area shape="rect" id="node33" href="$_duck_8c.html#a73f7e8c6b72611c7dc69bc1a6d42d899" title="actualizes the duck behaviour to get shot " alt="" coords="335,360,391,387"/>
+<area shape="rect" id="node34" href="$_duck_8c.html#a167fcd5fbf34063c9680e5d418ffebb0" title="returns 1 if the duck is dead or if it was dying and should now be dead, updating the state..." alt="" coords="332,411,395,437"/>
+<area shape="rect" id="node35" href="$_duck_hunt_8c.html#ad278ff55269e4bf3e6c0a7cb2f2c9cce" title="calculates the lifetime of the duck (based on the time passed) " alt="" coords="304,461,423,488"/>
+<area shape="rect" id="node36" href="$_duck_8c.html#a7b2ec99bb62b27d929a33e49ac13d056" title="updates the duck position in accord to its velocity and keeps it on the screen borders ..." alt="" coords="294,512,433,539"/>
+<area shape="rect" id="node30" href="$_font_8c.html#ad27e1bfa3f25a937fdb1ccfdfd01b0b4" title="drawNumber" alt="" coords="529,1475,623,1501"/>
+<area shape="rect" id="node38" href="$group__video_graphics.html#ga30afcbbffb2baa48223d4002bdb47946" title="copies the content of the graphics buffer to the video memory " alt="" coords="328,1728,399,1755"/>
+<area shape="rect" id="node39" href="$_font_8c.html#a0f6c74a620ed40d4547bf63e3d11a872" title="drawString" alt="" coords="535,1931,617,1957"/>
+<area shape="rect" id="node40" href="$_keyboard_8c.html#a310a04cfcae5b4dea77290ffed9e135a" title="codeToChar" alt="" coords="318,2032,409,2059"/>
+<area shape="rect" id="node43" href="$_r_t_c_8c.html#a4a54f52996492cdc8a704b68ff5d43dd" title="reads the date from the RTC register and returns it " alt="" coords="330,2184,397,2211"/>
+<area shape="rect" id="node44" href="$_r_t_c_8c.html#a243c7fc158d8f0cf48185134bbdbdf71" title="converts a Date struct to a Human&#45;Friendly string " alt="" coords="324,2133,403,2160"/>
+<area shape="rect" id="node48" href="$_mouse_8c.html#a00999098bfcb2999de2bd5812c0d82a0" title="unsubscribes the mouse interruptions " alt="" coords="291,2437,436,2464"/>
+<area shape="rect" id="node49" href="$_keyboard_8c.html#a894093a9d4c0ebe2550571169988eb5a" title="unsubscribeKeyboardInt" alt="" coords="283,2336,444,2363"/>
+<area shape="rect" id="node50" href="$_timer_8c.html#aa79b46d5d51c653d8ac4dbbde2f7a1c2" title="unsubscribes timer interrupts " alt="" coords="294,2387,433,2413"/>
+</map>

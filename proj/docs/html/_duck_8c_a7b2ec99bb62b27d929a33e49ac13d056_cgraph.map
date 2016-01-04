@@ -1,0 +1,5 @@
+<map id="updateDuckPosition" name="updateDuckPosition">
+<area shape="rect" id="node2" href="$_duck_8c.html#a090ad498518ca1087f84897017bc28e6" title="limits the Duck position to the screen borders " alt="" coords="192,5,331,32"/>
+<area shape="rect" id="node4" href="$_anim_sprite_8c.html#a022e4148ee9232962fbed2eb72ea90f8" title="updates the AnimSprite info (figure being shown, how many frames until change,...) ..." alt="" coords="199,56,324,83"/>
+<area shape="rect" id="node3" href="$group__video_graphics.html#gaa55320d571dc2cb8179422a9d8114de0" title="returns the video mode horizontal resolution " alt="" coords="379,5,451,32"/>
+</map>

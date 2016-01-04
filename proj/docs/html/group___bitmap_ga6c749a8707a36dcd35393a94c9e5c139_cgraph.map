@@ -1,0 +1,5 @@
+<map id="drawMouseBitmap" name="drawMouseBitmap">
+<area shape="rect" id="node2" href="$group__video_graphics.html#gaa55320d571dc2cb8179422a9d8114de0" title="returns the video mode horizontal resolution " alt="" coords="203,5,275,32"/>
+<area shape="rect" id="node3" href="$group__video_graphics.html#ga36218c155eade74951ce7ffd60711a9e" title="returns the video mode vertical resolution " alt="" coords="203,56,275,83"/>
+<area shape="rect" id="node4" href="$group__video_graphics.html#gad17a9b1896391fc3be39feb961013d29" title="returns a pointer to the mouse buffer " alt="" coords="183,107,295,133"/>
+</map>

@@ -1,0 +1,16 @@
+<map id="bitmap.h" name="bitmap.h">
+<area shape="rect" id="node2" href="$_anim_sprite_8h.html" title="AnimSprite.h" alt="" coords="153,80,250,107"/>
+<area shape="rect" id="node6" href="$_duck_hunt_8h.html" title="DuckHunt.h" alt="" coords="52,229,143,256"/>
+<area shape="rect" id="node11" href="$_mouse_8h.html" title="Mouse.h" alt="" coords="296,80,368,107"/>
+<area shape="rect" id="node14" href="$bitmap_8c.html" title="bitmap.c" alt="" coords="392,80,464,107"/>
+<area shape="rect" id="node15" href="$_font_8c.html" title="Font.c" alt="" coords="488,80,547,107"/>
+<area shape="rect" id="node3" href="$_anim_sprite_8c.html" title="AnimSprite.c" alt="" coords="153,155,250,181"/>
+<area shape="rect" id="node4" href="$_duck_8h.html" title="Duck.h" alt="" coords="66,155,129,181"/>
+<area shape="rect" id="node5" href="$_duck_8c.html" title="Duck.c" alt="" coords="273,229,335,256"/>
+<area shape="rect" id="node7" href="$_duck_hunt_8c.html" title="DuckHunt.c" alt="" coords="301,304,392,331"/>
+<area shape="rect" id="node8" href="$main_8c.html" title="main.c" alt="" coords="104,379,165,405"/>
+<area shape="rect" id="node9" href="$_scores_8h.html" title="Scores.h" alt="" coords="23,304,97,331"/>
+<area shape="rect" id="node10" href="$_scores_8c.html" title="Scores.c" alt="" coords="5,379,80,405"/>
+<area shape="rect" id="node12" href="$_mouse_8c.html" title="Mouse.c" alt="" coords="515,155,587,181"/>
+<area shape="rect" id="node13" href="$video_graphics_8c.html" title="videoGraphics.c" alt="" coords="275,155,389,181"/>
+</map>
