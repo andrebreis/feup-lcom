@@ -27,22 +27,49 @@ void *videoGraphicsInit(unsigned short mode);
  */
 int videoGraphicsExit(void);
 
+/**
+ * @brief returns a pixel position on a matrix given its x and y
+ */
 unsigned long getPixelPosition(unsigned short x, unsigned short y);
 
+/**
+ * @brief returns the video mode horizontal resolution
+ */
 unsigned getHRes();
 
+/**
+ * @brief returns the video mode vertical resolution
+ */
 unsigned getVRes();
 
+/**
+ * @brief returns a pointer to the video memory
+ */
 char* getVideoMem();
 
+/**
+ * @brief returns a pointer to the mouse buffer
+ */
 char* getMouseBuffer();
 
+/**
+ * @brief returns a pointer to the graphics buffer
+ */
 char* getBuffer();
 
+/**
+ * @brief copies the content of the graphics buffer to the video memory
+ */
 void flipBuffer();
 
+/**
+ * @brief copies the content of the mouse buffer to the video memory
+ */
 void flipMouseBuffer();
 
+/**
+ * @brief copies the graphics buffer to the mouse buffer, and draws the mouse on the mouse buffer
+ */
 void drawMouse();
 
  /** @} end of videoGraphics */

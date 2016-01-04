@@ -7,8 +7,6 @@
 #include "utilities.h"
 #include "RTC.h"
 
-#define FONT_PATH "/home/lcom/lcom1516-t2g02/proj/res/images/font/"
-
 int main(){
 
 	sef_startup();

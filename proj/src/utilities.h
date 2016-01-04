@@ -10,9 +10,17 @@
 #define PAR_ERR 	BIT(7)
 #define TO_ERR 		BIT(6)
 
-
+/**
+ * @brief checks if a file exists (filename contains path)
+ */
 int fileExists(const char* filename);
 
+/**
+ * @brief subscribes interruptions on the given irqLine with the given policy/ies and hookId
+ */
 int subscribeInt(int irqLine, int policy, int* hookId);
 
+/**
+ * @brief unsubscribes interruptions with given hookId
+ */
 int unsubscribeInt(int* hookId);

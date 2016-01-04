@@ -2,7 +2,7 @@
 #include "videoGraphics.h"
 #include "Mouse.h"
 
-#define IMG_PATH "/home/lcom/lcom1516-t2g02/proj/res/images/"
+#define IMG_PATH "/home/DuckHuntResources/res/images/"
 
 AnimSprite* createAnimSprite(char* imgName, int startingImage, int noImages) {
 	AnimSprite* asp = (AnimSprite*) malloc(sizeof(AnimSprite));

@@ -16,14 +16,27 @@
 #define UIP			BIT(7)
 #define DATA_MODE	BIT(2)
 
+/**
+ * @struct Date
+ * @brief keeps the Date info: year, month, day, hour and minute
+ */
 typedef struct{
 	unsigned long year, month, day, hour, minute;
 }Date;
 
+/**
+ * @brief reads the given register to the given value
+ */
 void readRegister(int reg, unsigned long *value);
 
+/**
+ * @brief reads the date from the RTC register and returns it
+ */
 Date getDate();
 
+/**
+ * @brief converts a Date struct to a Human-Friendly string
+ */
 char* dateToStr(Date date);
 
 #endif /*__RTC_H_*/

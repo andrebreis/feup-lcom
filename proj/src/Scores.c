@@ -8,12 +8,10 @@
 
 #define BUFFER_SIZE 1024
 
-#define SCORES_FILE_PATH "/home/lcom/lcom1516-t2g02/proj/scores.txt"
+#define SCORES_FILE_PATH "/home//DuckHuntResources/res/scores.txt"
 
-// Para um determinado score decide onde inserir o score
 int scorePlace(int score) {
 
-	// Declarar e abrir ficheiro
 	FILE* scoresFile = NULL;
 	scoresFile = fopen(SCORES_FILE_PATH, "r");
 	if (scoresFile == NULL) {
@@ -22,39 +20,28 @@ int scorePlace(int score) {
 		scoresFile = fopen(SCORES_FILE_PATH, "r");
 	}
 
-	// contador de linhas e index onde inserir a linha de score
 	int i = 0;
 	int index = -1;
 
-	// Cria espaço para ler o ficheiro
 	char buffer[BUFFER_SIZE];
-	// Le ate ao final do ficheiro
 	while (fgets(buffer, sizeof(buffer), scoresFile) != NULL) {
-		// Vai buscar todo o texto ate ao espaço (nome)
 		char *dump = strtok(buffer, " ");
-		// Vai buscar todo o texto ate ao proximo espaço (score)
 		char *lineScore = strtok(NULL, " ");
-		// Transforma para int
 		int lineScoreInt = atoi(lineScore);
-		// Compara com o score a inserir
 		if (score > lineScoreInt) {
-			// Guarda index e sai
 			index = i;
 			break;
 		}
 		i++;
 	}
-	// Fecha o ficheiro
 	fclose(scoresFile);
 
 	if (i < 10)
 		index = i;
 
-	// Retorna o index
 	return index;
 }
 
-// Inserir uma linha na linha X de um ficheiro
 void insertScore(char name[5], int score, int line) {
 
 	FILE *fhighscores;
@@ -106,7 +93,7 @@ void printHighScores(InterruptVariables* iv) {
 	int i;
 
 	Bitmap* highscoresBackground = loadBitmap(
-			"/home/lcom/lcom1516-t2g02/proj/res/images/highscores.bmp");
+			"/home//DuckHuntResources/res/images/highscores.bmp");
 	drawBitmap(highscoresBackground, 0, 0, ALIGN_LEFT);
 
 	FILE *fhighscores;

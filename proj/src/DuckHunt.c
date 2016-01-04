@@ -30,11 +30,11 @@ int initializeGame(InterruptVariables* iv) {
 void drawScreen(Bitmap* background, Bitmap* foreground, Bitmap* scoreboard,
 		unsigned int score, Duck* duck, int numDucks, int numFails) {
 	Bitmap* lifeBox = loadBitmap(
-			"/home/lcom/lcom1516-t2g02/proj/res/images/lifeBox.bmp");
+			"/home//DuckHuntResources/res/images/lifeBox.bmp");
 	Bitmap* lifeDuck = loadBitmap(
-			"/home/lcom/lcom1516-t2g02/proj/res/images/life0.bmp");
+			"/home//DuckHuntResources/res/images/life0.bmp");
 	Bitmap* noLifeDuck = loadBitmap(
-			"/home/lcom/lcom1516-t2g02/proj/res/images/life1.bmp");
+			"/home//DuckHuntResources/res/images/life1.bmp");
 	drawBitmap(background, 0, 0, ALIGN_LEFT);
 	if (numDucks && duck->state != DEAD)
 		drawDuck(*duck);
@@ -71,12 +71,12 @@ int calculateLifetime(int timeCounter) {
 
 int menu(InterruptVariables* iv) {
 	Bitmap* menubackground = loadBitmap(
-			"/home/lcom/lcom1516-t2g02/proj/res/images/menubackground.bmp");
+			"/home//DuckHuntResources/res/images/menubackground.bmp");
 	drawBitmap(menubackground, 0, 0, ALIGN_LEFT);
 
 	Mouse* mouse = getMouse();
 	mouse->icon = loadBitmap(
-			"/home/lcom/lcom1516-t2g02/proj/res/images/arrowCursor.bmp");
+			"/home//DuckHuntResources/res/images/arrowCursor.bmp");
 
 	drawMouse();
 	flipMouseBuffer();
@@ -150,18 +150,18 @@ int menu(InterruptVariables* iv) {
 unsigned int playGame(InterruptVariables* iv) {
 
 	Bitmap* background = loadBitmap(
-			"/home/lcom/lcom1516-t2g02/proj/res/images/bluebackground.bmp");
+			"/home//DuckHuntResources/res/images/bluebackground.bmp");
 	Bitmap* foreground = loadBitmap(
-			"/home/lcom/lcom1516-t2g02/proj/res/images/frontbackground.bmp");
+			"/home//DuckHuntResources/res/images/frontbackground.bmp");
 	Bitmap* fail = loadBitmap(
-			"/home/lcom/lcom1516-t2g02/proj/res/images/flyaway.bmp");
+			"/home//DuckHuntResources/res/images/flyaway.bmp");
 	Bitmap* scoreboard = loadBitmap(
-			"/home/lcom/lcom1516-t2g02/proj/res/images/score.bmp");
+			"/home//DuckHuntResources/res/images/score.bmp");
 
 	Mouse* mouse = getMouse();
 	mouse->icon =
 			loadBitmap(
-					"/home/lcom/lcom1516-t2g02/proj/res/images/cursorpointerx2size.bmp");
+					"/home//DuckHuntResources/res/images/cursorpointerx2size.bmp");
 
 	AnimSprite* duckSprites[12];
 	int m;
@@ -343,18 +343,18 @@ unsigned int playGame(InterruptVariables* iv) {
 
 char* showGameOver(InterruptVariables* iv, int score) {
 	Bitmap* gameOver = loadBitmap(
-			"/home/lcom/lcom1516-t2g02/proj/res/images/gameover.bmp");
+			"/home//DuckHuntResources/res/images/gameover.bmp");
 	drawBitmap(gameOver, 0, 0, ALIGN_LEFT);
 
 	flipBuffer();
 
 	Mouse* mouse = getMouse();
 	mouse->icon = loadBitmap(
-			"/home/lcom/lcom1516-t2g02/proj/res/images/arrowCursor.bmp");
+			"/home//DuckHuntResources/res/images/arrowCursor.bmp");
 	int letterCursorX = 69, letterCursorY = 559, cursorTimer = 60, cursorFlag =
 			1;
 	Bitmap* letterCursor = loadBitmap(
-			"/home/lcom/lcom1516-t2g02/proj/res/images/letterCursor.bmp");
+			"/home//DuckHuntResources/res/images/letterCursor.bmp");
 
 	unsigned char key = 0;
 	char* name = calloc(6, sizeof(char)), packet[3];
@@ -446,32 +446,3 @@ void exitGame() {
 	unsubscribeKeyboardInt();
 	unsubscribeTimerInt();
 }
-
-//logfd = fopen("/home/lcom/lcom1516-t2g02/proj/log.txt", "w");
-
-/*unsigned char konamiCode[10] = { UP, UP, DOWN, DOWN, LEFT, RIGHT, LEFT,
- RIGHT, B, A };
- unsigned char userKonami[10];*/
-
-/*Bitmap* duck = loadBitmap("/home/lcom/lcom1516-t2g02/proj/res/images/newduck.bmp");
- drawTransparentBitmap(duck, 50, 50, ALIGN_LEFT);
- flipBuffer();*/
-
-/*Bitmap* cursor = loadBitmap("/home/lcom/lcom1516-t2g02/proj/res/images/cursorpointerx2size.bmp");
-
- FILE * logfd;
-
- logfd = fopen("/home/lcom/lcom1516-t2g02/proj/log.txt", "w");
-
- char* video_mem = getVideoMem();
- int i;
- for(i=0; i < duck->bitmapInfoHeader.imageSize; i++){
- char test = (char) cursor->bitmapData[i];
- fprintf(logfd, "%d\n", test);
- }
-
-
- fclose(logfd);*/
-
-//sleep(5);
-//videoGraphicsExit();

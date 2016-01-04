@@ -55,8 +55,14 @@ Bitmap* loadBitmap(const char* filename);
  */
 void drawBitmap(Bitmap* bitmap, int x, int y, Alignment alignment);
 
+/**
+ * @brief draws a bitmap to the Mouse Buffer at given position
+ */
 void drawMouseBitmap(Bitmap* bmp, int x, int y, Alignment alignment);
 
+/**
+ * @brief draws a Bitmap at the given position filtering a defined color. if inverted is != 0, draws it inverted on the x axis
+ */
 void drawTransparentBitmap(Bitmap* bitmap, int x, int y, Alignment alignment, int inverted);
 
 /**

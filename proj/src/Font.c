@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define FONT_PATH "/home/lcom/lcom1516-t2g02/proj/res/images/font/"
+#define FONT_PATH "/home/DuckHuntResources/res/images/font/"
 
 void drawNumber(unsigned int number, int x, int y, int distance) {
 	int i, digit;
@@ -34,8 +34,6 @@ void drawNumber(unsigned int number, int x, int y, int distance) {
 
 void drawString(char* string, int x, int y, int distance){
 	int i;
-	FILE* f = fopen("/home/lcom/lcom1516-t2g02/proj/log.txt", "w");
-	fclose(f);
 	for(i = 0; i < strlen(string); i++){
 		if(string[i] == ' ')
 			x += 32;
@@ -55,9 +53,6 @@ void drawString(char* string, int x, int y, int distance){
 		else{
 			char path[1024];
 			sprintf(path, "%s%c.bmp", FONT_PATH, string[i]);
-			f= fopen("/home/lcom/lcom1516-t2g02/proj/log.txt", "a");
-			fprintf(f, "%s\n", path);
-			fclose(f);
 			Bitmap* temp = loadBitmap(path);
 			if(isdigit(string[i]))
 				drawTransparentBitmap(temp, x, y+12, ALIGN_LEFT, 0);
@@ -67,5 +62,4 @@ void drawString(char* string, int x, int y, int distance){
 			free(temp);
 		}
 	}
-	//fclose(f);
 }
