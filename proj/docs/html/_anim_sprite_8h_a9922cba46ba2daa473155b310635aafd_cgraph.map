@@ -1,0 +1,6 @@
+<map id="drawAnimSprite" name="drawAnimSprite">
+<area shape="rect" id="node2" href="$group___bitmap.html#gacc100d73045fb94c41b9f746d364df93" title="draws a Bitmap at the given position filtering a defined color. if inverted is != 0..." alt="" coords="167,56,325,83"/>
+<area shape="rect" id="node3" href="$group__video_graphics.html#gaa55320d571dc2cb8179422a9d8114de0" title="returns the video mode horizontal resolution " alt="" coords="374,5,446,32"/>
+<area shape="rect" id="node4" href="$group__video_graphics.html#ga36218c155eade74951ce7ffd60711a9e" title="returns the video mode vertical resolution " alt="" coords="374,56,446,83"/>
+<area shape="rect" id="node5" href="$group__video_graphics.html#ga1cd7727ad0fc3fe3ffbbb98cd9115c1c" title="returns a pointer to the graphics buffer " alt="" coords="373,107,447,133"/>
+</map>

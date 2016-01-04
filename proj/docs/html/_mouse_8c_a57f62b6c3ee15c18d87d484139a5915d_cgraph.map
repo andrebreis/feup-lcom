@@ -1,0 +1,10 @@
+<map id="enableSendingDataPackets" name="enableSendingDataPackets">
+<area shape="rect" id="node2" href="$_mouse_8c.html#a1b465b31cc65a2d32f79e8df297edf94" title="sendCommandtoKBC" alt="" coords="572,5,719,32"/>
+<area shape="rect" id="node3" href="$_mouse_8c.html#af3b3e899753a78e126fe0ff16f158416" title="disables mouse stream mode " alt="" coords="236,43,373,69"/>
+<area shape="rect" id="node4" href="$_mouse_8c.html#aa0704855e633a5cd57a2829ca759ceb7" title="writes a command to mouse " alt="" coords="421,81,524,108"/>
+<area shape="rect" id="node9" href="$_mouse_8c.html#ac6b0287c219c658030a18f81fd4b7b26" title="enables mouse stream mode " alt="" coords="237,144,372,171"/>
+<area shape="rect" id="node5" href="$_mouse_8c.html#a8d3f3987b96a716cc9c3aa8e484ff1d7" title="returns the game mouse struct if it exists, returns a new one if it didn&#39;t exist " alt="" coords="606,81,685,108"/>
+<area shape="rect" id="node6" href="$group___bitmap.html#ga3506880ffd407c36eb8aaddd2c1606d2" title="Loads a bmp image. " alt="" coords="767,31,853,57"/>
+<area shape="rect" id="node7" href="$group__video_graphics.html#gaa55320d571dc2cb8179422a9d8114de0" title="returns the video mode horizontal resolution " alt="" coords="774,81,846,108"/>
+<area shape="rect" id="node8" href="$group__video_graphics.html#ga36218c155eade74951ce7ffd60711a9e" title="returns the video mode vertical resolution " alt="" coords="774,132,846,159"/>
+</map>

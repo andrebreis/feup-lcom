@@ -1,0 +1,5 @@
+<map id="readRegister" name="readRegister">
+<area shape="rect" id="node2" href="$_r_t_c_8h.html#a4a54f52996492cdc8a704b68ff5d43dd" title="reads the date from the RTC register and returns it " alt="" coords="148,5,215,32"/>
+<area shape="rect" id="node3" href="$_scores_8h.html#afd519e987870f72f5eb9e1c84a004838" title="inserts a score line on the line of the file where it belongs, updating the file accordingly ..." alt="" coords="263,5,351,32"/>
+<area shape="rect" id="node4" href="$main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="main" alt="" coords="399,5,449,32"/>
+</map>

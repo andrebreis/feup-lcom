@@ -1,0 +1,4 @@
+<map id="setVelocity" name="setVelocity">
+<area shape="rect" id="node2" href="$_duck_8c.html#abeb2bdc722fed1d590d9985429882d3f" title="sets the duck x velocity to the given absolute value (keeps the velocity signal) " alt="" coords="141,5,207,32"/>
+<area shape="rect" id="node3" href="$_duck_8c.html#a56eba22ac4beac69d37bfcaa651ff043" title="sets the duck y velocity to the given absolute value (keeps the velocity signal) " alt="" coords="140,56,208,83"/>
+</map>
