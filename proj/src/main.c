@@ -27,7 +27,6 @@ int main(){
 	int playerPlace;
 	int menuChoice = 0;
 	char* playerName = malloc(sizeof(char)*6);
-	//playGame(iv);
 	do{
 		menuChoice = menu(iv);
 		switch(menuChoice){
@@ -43,12 +42,7 @@ int main(){
 		}
 	}while(menuChoice != 2);
 
-	//menuChoice = menu(iv);
-	//playGame(iv);
-	//showGameOver(iv, 50);
 	exitGame();
-
-
 	videoGraphicsExit();
 	return 0;
 }

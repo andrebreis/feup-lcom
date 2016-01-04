@@ -17,6 +17,4 @@ void updateAnimSprite(AnimSprite* asp);
 
 void drawAnimSprite(AnimSprite* asp, int x, int y, int inverted);
 
-//int isHit(AnimSprite* asp);
-
 #endif /** __ANIMDPRITE_H **/

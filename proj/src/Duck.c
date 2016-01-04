@@ -2,15 +2,16 @@
 #include "videoGraphics.h"
 #include "Mouse.h"
 
+#include <stdio.h>
+
 #define BOTTOM_OF_SCREEN getVRes() - 210
 
 void initializeDuck(Duck* duck) {
-	int width = 86; //duck->duckSprites[0].maps[0]->bitmapInfoHeader.width; -- TODO FIND WHY NOT WORKING
+	int width = 86;
 	duck->color = rand() % 3;
 	duck->mode = rand() % 3;
 	switch (duck->mode) {
 	case 0:
-		//duck->x = rand() % ((getHRes() + 3 * width) / 2) - width + 1;
 		duck->x = rand() % getHRes() - width / 2;
 		duck->y = BOTTOM_OF_SCREEN;
 		duck->xVel = rand() % 2 * 2 - 1;
@@ -42,28 +43,19 @@ void createDuck(Duck* duck, AnimSprite* duckSprites[12]) {
 }
 
 void keepDuckOnScreen(Duck* duck) {
-	int width = 86; //duck->duckSprites[0]->maps[0]->bitmapInfoHeader.width;
-	int height = 80; //duck->duckSprites[0]->maps[0]->bitmapInfoHeader.height;
-	/*if (duck->x <= -width) {
-	 duck->x = -width + 1;*/
+	int width = 86;
+	int height = 80;
 	if (duck->x < 0) {
 		duck->x = 0;
 		if(duck->state < 2)
 			duck->xVel = duck->xVel * (-1);
-	} /*else if (duck->x >= getHRes() + width) {
-	 duck->x = getHRes() + width - 1;
-	 duck->xVel = -duck->xVel;
-	 }*/
+	}
 	else if (duck->x + width/2 > getHRes()) {
 		duck->x = getHRes() - width/2;
 		if(duck->state < 2)
 			duck->xVel = duck->xVel * (-1);
 	}
 
-	/*if (duck->y <= -height) {
-	 duck->y = -height + 1;
-	 duck->yVel = -duck->yVel;
-	 }*/
 	if (duck->y <= 0) {
 		duck->y = 0;
 		if(duck->state < 2){
@@ -85,7 +77,6 @@ void updateDuckPosition(Duck* duck) {
 	duck->x += duck->xVel;
 	duck->y += duck->yVel;
 	keepDuckOnScreen(duck);
-	//if(duck->xVel)
 	updateAnimSprite(duck->duckSprites[duck->state+4*duck->color]);
 }
 
@@ -119,7 +110,7 @@ int isHit(const Duck duck) {
 	if (mouse->middleX >= duck.x && mouse->middleX <= duck.x + width
 			&& mouse->middleY >= duck.y && mouse->middleY <= duck.y + height) {
 		int firstPixelPosition = (mouse->middleY - duck.y) * width * 2
-				+ (mouse->middleX - duck.x) * 2; //2 -> bytesperpixel
+				+ (mouse->middleX - duck.x) * 2;
 		if (currentBitmap->bitmapData[firstPixelPosition] != 116
 				|| currentBitmap->bitmapData[firstPixelPosition + 2] != 116
 				|| currentBitmap->bitmapData[firstPixelPosition + width * 2]

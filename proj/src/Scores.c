@@ -125,13 +125,13 @@ void printHighScores(InterruptVariables* iv) {
 		i++;
 	}
 
-	drawString("NR NAME SCORE HOUR DATE", 5, 150);
+	drawString("NR NAME SCORE HOUR DATE", 5, 140, 2);
 
 	for (i = 0; i < 10; i++) {
 		if (highscores[i][0] == '\0')
 			continue;
-		drawNumber(i+1, 25, 215 + i * 50);
-		drawString(highscores[i], 75, 200 + i*50);
+		drawNumber(i+1, 50, 205 + i * 50, 5);
+		drawString(highscores[i], 75, 190 + i*50, 2);
 	}
 
 	flipBuffer();

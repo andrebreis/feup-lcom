@@ -5,6 +5,12 @@ AnimSprite.o:	Mouse.h
 AnimSprite.o:	bitmap.h
 AnimSprite.o:	videoGraphics.h
 
+Duck.o:	/usr/include/minix/dir.h
+Duck.o:	/usr/include/minix/types.h
+Duck.o:	/usr/include/sys/null.h
+Duck.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include-fixed/ansi.h
+Duck.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include-fixed/stdio.h
+Duck.o:	/usr/pkg/gcc44/lib/gcc/i686-pc-minix/4.4.3/include/stdarg.h
 Duck.o:	AnimSprite.h
 Duck.o:	Duck.c
 Duck.o:	Duck.h

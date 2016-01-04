@@ -41,13 +41,15 @@ void drawScreen(Bitmap* background, Bitmap* foreground, Bitmap* scoreboard,
 	drawTransparentBitmap(foreground, 0, 234, ALIGN_LEFT, 0);
 	drawTransparentBitmap(scoreboard, getHRes() / 2 + 200, 700, ALIGN_LEFT, 0);
 	drawNumber(score, getHRes() / 4 * 3 + 140, 704, 3);
-	drawTransparentBitmap(lifeBox, getHRes()/2 - 200, 700, ALIGN_LEFT, 0);
+	drawTransparentBitmap(lifeBox, getHRes() / 2 - 200, 700, ALIGN_LEFT, 0);
 	int i;
-	for(i = 1; i <= 3; i++){
-		if(i>numFails)
-			drawTransparentBitmap(lifeDuck, getHRes()/2 -190 + 25*i, 710, ALIGN_LEFT, 0);
+	for (i = 1; i <= 3; i++) {
+		if (i > numFails)
+			drawTransparentBitmap(lifeDuck, getHRes() / 2 - 190 + 25 * i, 710,
+					ALIGN_LEFT, 0);
 		else
-			drawTransparentBitmap(noLifeDuck, getHRes()/2 -190 + 25*i, 710, ALIGN_LEFT, 0);
+			drawTransparentBitmap(noLifeDuck, getHRes() / 2 - 190 + 25 * i, 710,
+					ALIGN_LEFT, 0);
 	}
 	free(lifeBox);
 	free(lifeDuck);
@@ -170,6 +172,12 @@ unsigned int playGame(InterruptVariables* iv) {
 		duckSprites[m + 3] = createAnimSprite("awayduck", m, 4);
 	}
 
+	unsigned char konamiCode[10] = { UP_KEY, UP_KEY, DOWN_KEY, DOWN_KEY,
+	LEFT_KEY, RIGHT_KEY, LEFT_KEY, RIGHT_KEY, B_KEY, A_KEY };
+
+	unsigned char userKonami[10];
+
+	int konamiIndex = 0, konamiFlag = 0;
 	char packet[3];
 	int returnValue, i = 0, j = 0;
 	int leftButtonFlag = 0, failCount = 0, exit = 0, forceExit = 0;
@@ -208,7 +216,6 @@ unsigned int playGame(InterruptVariables* iv) {
 						flipMouseBuffer();
 						if ((packet[0] & BIT(0)) != 0 && leftButtonFlag == 0) {
 							leftButtonFlag = 1;
-							//if (konamiComplete == 0) {
 							if (isHit(*duck) && duck->state != DYING
 									&& duck->state != DEAD
 									&& duck->state != FLYING_AWAY) {
@@ -217,7 +224,6 @@ unsigned int playGame(InterruptVariables* iv) {
 								drawScreen(background, foreground, scoreboard,
 										score, duck, 1, failCount);
 							}
-							//}
 						}
 						if ((packet[0] & BIT(0)) == 0)
 							leftButtonFlag = 0;
@@ -282,23 +288,49 @@ unsigned int playGame(InterruptVariables* iv) {
 						kbdReadKey(&key);
 						sys_inb(STAT_REG, &stat);
 					}
+					if (key == konamiCode[konamiIndex]) {
+						userKonami[konamiIndex] = key;
+						konamiIndex++;
+						if (konamiIndex == 10) {
+							konamiIndex = 0;
+							konamiFlag = (konamiFlag + 1) % 3;
+							AnimSprite* profSprites[12];
+							if (konamiFlag) {
+								if (konamiFlag == 1) {
+									for (m = 0; m <= 8; m += 4) {
+										profSprites[m] = createAnimSprite(
+												"upprof", m, 4);
+										profSprites[m + 1] = createAnimSprite(
+												"downprof", m, 4);
+										profSprites[m + 2] = createAnimSprite(
+												"deadprof", m / 2, 2);
+										profSprites[m + 3] = createAnimSprite(
+												"awayprof", m, 4);
+									}
+								} else {
+									for (m = 12; m <= 20; m += 4) {
+										profSprites[m - 12] = createAnimSprite(
+												"upprof", m, 4);
+										profSprites[m + 1 - 12] =
+												createAnimSprite("downprof", m,
+														4);
+										profSprites[m + 2 - 12] =
+												createAnimSprite("deadprof",
+														m / 2, 2);
+										profSprites[m + 3 - 12] =
+												createAnimSprite("awayprof", m,
+														4);
+									}
+								}
+								for (m = 0; m < 12; m++)
+									duck->duckSprites[m] = profSprites[m];
+							} else {
+								for (m = 0; m < 12; m++)
+									duck->duckSprites[m] = duckSprites[m];
+							}
+						}
+					}
 				}
-				/*else if (key == konamiCode[konamiIndex]) {
-				 userKonami[konamiIndex] = key;
-				 konamiIndex++;
-				 if (konamiIndex == 10) {
-				 j = 0;
-				 konamiIndex = 0;
-				 konamiComplete = 350;
-				 duck->y = getVRes();
-				 duckSide = (duckSide + 1) % 2;
-				 if (duckSide)
-				 duck->x = getHRes();
-				 else
-				 duck->x = 0;
-				 }
-				 }
-				 }*/
 				break;
 			default:
 				break; /* no other notifications expected: do nothing */
